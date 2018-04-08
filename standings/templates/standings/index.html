@@ -1,0 +1,27 @@
+{% extends 'standings/base.html' %}
+
+{% block content %}
+<script>
+    $(document).ready(function() {
+        $('table').tablesort();
+    });
+</script>
+
+<h1>League list</h1>
+<table class="ui sortable small fixed compact celled table">
+    <thead>
+        <tr>
+            <th class="ui sorted ascending">Name</th>
+            <th class="ui center aligned">Divisions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for league in leagues %}
+        <tr>
+            <td><a href="{% url 'league' league.id %}">{{ league.name }}</a></td>
+            <td class="ui center aligned">{{ league.division_set.count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

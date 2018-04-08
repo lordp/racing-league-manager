@@ -1,0 +1,39 @@
+{% extends 'standings/base.html' %}
+{% load standings_extras %}
+
+{% block content %}
+<h3>{{ race.name }}</h3>
+{% include 'standings/breadcrumb.html' with object=race.breadcrumbs %}
+<table class="ui small selectable collapsing compact celled striped table">
+    <thead>
+        <tr>
+            <th>Pos</th>
+            <th>QPos</th>
+            <th>Name</th>
+            <th>Team</th>
+            <th>Laps</th>
+            <th>Time</th>
+            <th>Gap</th>
+            <th>DNF</th>
+            <th>Fastest Lap</th>
+            <th>Points</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in race.result_set.all %}
+        <tr>
+            <td class="center aligned">{{ result.position }}</td>
+            <td class="center aligned">{{ result.qualifying }}</td>
+            <td><a href="{% url 'driver' result.driver.id %}">{{ result.driver.name }}</a></td>
+            <td><a href="{% url 'team' result.team.id %}">{{ result.team.name }}</a></td>
+            <td class="center aligned">{{ result.race_laps }}</td>
+            <td class="right aligned">{{ result.race_time|format_time }}</td>
+            <td class="right aligned">{{ result.gap }}</td>
+            <td>{{ result.dnf_reason }}</td>
+            <td class="{% if result.fastest_lap %}fastest-lap-race{% endif %}">{{ result.fastest_lap_value|format_time }}</td>
+            <td class="center aligned">{{ result.points }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

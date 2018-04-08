@@ -1,0 +1,21 @@
+{% extends 'standings/base.html' %}
+
+{% block content %}
+{% include 'standings/breadcrumb.html' with object=league.breadcrumbs %}
+<table class="ui small fixed compact celled table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th class="ui center aligned">Seasons</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for division in league.division_set.all %}
+        <tr>
+            <td><a href="{% url 'division' division.id %}">{{ division.name }}</a></td>
+            <td class="ui center aligned">{{ division.season_set.count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

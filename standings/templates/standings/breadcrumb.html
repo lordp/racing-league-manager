@@ -1,0 +1,10 @@
+<div class="ui breadcrumb">
+    <a class="section" href="{% url 'index' %}">Home</a>
+    <div class="divider"> > </div>
+    {% for thing in object %}
+    <a class="section" href="{% url thing.url thing.object.id %}">{{ thing.object.name }}</a>
+    {% if not forloop.last %}
+    <div class="divider"> > </div>
+    {% endif %}
+    {% endfor %}
+</div>

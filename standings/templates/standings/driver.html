@@ -1,0 +1,36 @@
+{% extends 'standings/base.html' %}
+{% load standings_extras %}
+
+{% block content %}
+<h1>{{ driver.name }}</h1>
+{% for _, season in seasons.items %}
+{% include 'standings/breadcrumb.html' with object=season.season.breadcrumbs %}
+<table class="ui small selectable collapsing compact celled table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Points</th>
+            {% for race in season.season.race_set.all %}
+            <th>{{ race.short_name }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for _, team in season.teams.items %}
+        <tr>
+            <td><a href="{% url 'team' team.team.id %}">{{ team.team.name }}</a></td>
+            <td class="ui center aligned">{{ team.points }}</td>
+            {% for race in season.season.race_set.all %}
+                {% with result=team.results|find_result:race %}
+            <td class="ui center aligned {{ result|get_css_classes:season.season }}"{% if result.has_notes %} data-tooltip="{{ result|collate_notes }}"{% endif %}>
+                {{ result|get_position }}
+                {% if result.has_notes %}<div class="note"></div>{% endif %}
+            </td>
+                {% endwith %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+{% endblock %}
