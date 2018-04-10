@@ -13,48 +13,42 @@ def index_view(request):
 
 
 def season_view(request, season_id):
-    season = Season.objects.get(pk=season_id)
+    season = Season.objects.prefetch_related('point_system').get(pk=season_id)
 
     drivers = {}
     teams = {}
 
-    driver_list = Driver.objects.filter(
-        pk__in=Result.objects.filter(
-            race__season__id=season_id
-        ).values_list('driver', flat=True).distinct().prefetch_related('driver')
-    )
+    results = Result.objects.filter(race__season=season).prefetch_related('race').prefetch_related(
+        'driver').prefetch_related('team').prefetch_related('race__track')
 
-    for driver in driver_list:
-        if driver.id not in drivers:
-            results = driver.result_set.filter(race__season__id=season.id).all()
+    for result in results:
+        if result.driver_id not in drivers:
             try:
-                best_finish = SortCriteria.objects.get(season=season, driver=driver).best_finish
+                best_finish = SortCriteria.objects.get(season=season, driver=result.driver).best_finish
             except SortCriteria.DoesNotExist:
                 best_finish = 0
 
-            drivers[driver.id] = {
-                "driver": driver,
-                "points": sum([x.points for x in results]),
-                "results": results,
-                "position": 0,
-                "best_finish": best_finish,
+            drivers[result.driver_id] = {
+                'driver': result.driver,
+                'points': result.points,
+                'results': [result],
+                'position': 0,
+                'best_finish': best_finish
             }
+        else:
+            drivers[result.driver_id]['results'].append(result)
+            drivers[result.driver_id]['points'] += result.points
 
-    team_list = Team.objects.filter(
-        pk__in=Result.objects.filter(
-            race__season__id=season_id
-        ).values_list('team', flat=True).distinct().prefetch_related('team')
-    )
-
-    for team in team_list:
-        if team.id not in teams:
-            results = team.result_set.filter(race__season__id=season.id).all()
-            teams[team.id] = {
-                "team": team,
-                "points": sum([x.points for x in results]),
-                "results": results,
+        if result.team.id not in teams:
+            teams[result.team.id] = {
+                "team": result.team,
+                "points": result.points,
+                "results": [result],
                 "position": 0
             }
+        else:
+            teams[result.team_id]['results'].append(result)
+            teams[result.team_id]['points'] += result.points
 
     sorted_drivers = []
     driver_sort = sorted(drivers, key=lambda item: drivers[item]['best_finish'])

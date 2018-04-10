@@ -39,12 +39,16 @@ def position_colour(position, season):
 
 @register.filter(name='find_result')
 def find_result(results, race):
-    return results.filter(race__id=race.id).first()
+    try:
+        result = [result for result in results if result.race_id == race.id][0]
+    except IndexError:
+        result = None
+    return result
 
 
 @register.filter(name='find_results')
 def find_results(results, race):
-    return results.filter(race__id=race.id)
+    return [result for result in results if result.race_id == race.id]
 
 
 @register.filter(name='get_position')
@@ -54,23 +58,15 @@ def get_position(result):
 
 @register.filter(name='get_points')
 def get_points(results, season):
-    if results.count() == 0:
+    if len(results) == 0:
         return 0
 
     points = 0
     ps = season.point_system.to_dict()
     for result in results:
-        # ps = result.race.season.point_system.to_dict()
+        if result.race.point_system:
+            ps = result.race.point_system.to_dict()
         points += ps.get(result.position, 0)
-
-    return points
-
-
-@register.filter(name='get_result_points')
-def get_result_points(result, season):
-    points = 0
-    ps = season.point_system.to_dict()
-    points += ps.get(result.position, 0)
 
     return points
 
@@ -99,18 +95,20 @@ def get_css_classes(result, season):
 @register.filter(name='collate_notes')
 def collate_notes(result):
     notes = []
-    if result.note != '' and result.note is not None:
-        notes.append(result.note)
 
-    if result.subbed_by is not None:
-        notes.append(
-            '{} reserved for {}'.format(result.subbed_by.name, result.driver.name)
-        )
+    if result is not None:
+        if result.note != '' and result.note is not None:
+            notes.append(result.note)
 
-    if result.allocate_points is not None:
-        notes.append(
-            'WCC points allocated to {}'.format(result.allocate_points.name)
-        )
+        if result.subbed_by is not None:
+            notes.append(
+                '{} reserved for {}'.format(result.subbed_by.name, result.driver.name)
+            )
+
+        if result.allocate_points is not None:
+            notes.append(
+                'WCC points allocated to {}'.format(result.allocate_points.name)
+            )
 
     note = '; '.join([n for n in notes if n is not None])
     return note
