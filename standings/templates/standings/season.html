@@ -18,7 +18,9 @@
             <th>Points</th>
             {% for race in season.race_set.all %}
                 <th class="ui center aligned"><div class='tooltip' data-html="{{ race.tooltip }}">
+                    {{ race.round_number }}<br/>
                     <a href="{% url 'race' race.id %}">{{ race.short_name }}</a><br/>
+                    <img src="{{ race.track.country.flag }}">
                 </div></th>
             {% endfor %}
         </tr>
