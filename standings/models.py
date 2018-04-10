@@ -71,7 +71,7 @@ class Track(models.Model):
     country = CountryField(blank=True)
 
     def __str__(self):
-        return '{} ({})'.format(self.name, self.country)
+        return '{} ({}, {})'.format(self.name, self.country, self.version)
 
 
 class Season(models.Model):
