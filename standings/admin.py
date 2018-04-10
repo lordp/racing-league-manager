@@ -3,9 +3,6 @@ from django.urls import reverse, path
 from django.utils.safestring import mark_safe
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
-from django.apps import apps
-from django.forms.models import inlineformset_factory
-from django.forms import ModelForm, TextInput, Widget, ModelChoiceField
 from .models import *
 import os
 import contextlib
