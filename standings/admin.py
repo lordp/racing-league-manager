@@ -11,6 +11,7 @@ admin.site.site_header = 'FSR Admin'
 admin.site.site_title = "FSR Admin"
 
 
+@admin.register(Result)
 class ResultAdmin(admin.ModelAdmin):
     @staticmethod
     def season(obj):
@@ -42,6 +43,7 @@ class ResultAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(Race)
 class RaceAdmin(admin.ModelAdmin):
     list_filter = ['season']
     list_display = ('name', 'season')
@@ -93,6 +95,7 @@ class RaceAdmin(admin.ModelAdmin):
     apply_penalties.short_description = 'Apply penalties and adjust time/positions'
 
 
+@admin.register(Season)
 class SeasonAdmin(admin.ModelAdmin):
     @staticmethod
     def league(obj):
@@ -105,6 +108,7 @@ class SeasonAdmin(admin.ModelAdmin):
     list_display = ('name', 'league', 'division')
 
 
+@admin.register(Driver)
 class DriverAdmin(admin.ModelAdmin):
     list_display = ('name', 'result_count', 'public_profile', 'country', 'shortname', 'city', 'birthday', 'helmet')
     search_fields = ['name']
@@ -141,12 +145,14 @@ class DriverAdmin(admin.ModelAdmin):
         }
 
 
+@admin.register(Lap)
 class LapAdmin(admin.ModelAdmin):
     list_display = ('result', 'lap_number', 'position', 'sector_1', 'sector_2', 'sector_3', 'lap_time', 'pitstop')
     list_filter = ['result__race', 'result__driver']
     ordering = ['lap_number']
 
 
+@admin.register(LogFile)
 class LogFileAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
@@ -159,10 +165,9 @@ class LogFileAdmin(admin.ModelAdmin):
         super().delete_model(request, obj)
 
 
-admin.site.register([League, Division, Team, PointSystem, Track])
-admin.site.register(Season, SeasonAdmin)
-admin.site.register(Driver, DriverAdmin)
-admin.site.register(Result, ResultAdmin)
-admin.site.register(Race, RaceAdmin)
-admin.site.register(LogFile, LogFileAdmin)
-admin.site.register(Lap, LapAdmin)
+@admin.register(Track)
+class TrackAdmin(admin.ModelAdmin):
+    list_display = ('name', 'length', 'country', 'version')
+
+
+admin.site.register([League, Division, Team, PointSystem])
