@@ -2,6 +2,12 @@
 {% load standings_extras %}
 
 {% block content %}
+<script>
+    $(document).ready(function() {
+        $('th div.tooltip').popup();
+    });
+</script>
+
 {% include 'standings/breadcrumb.html' with object=season.breadcrumbs %}
 <table class="ui small selectable collapsing compact celled unstackable table">
     <thead>
@@ -11,7 +17,7 @@
             <th></th>
             <th>Points</th>
             {% for race in season.race_set.all %}
-                <th class="ui center aligned"><div data-tooltip="{{ race.start_time }}">
+                <th class="ui center aligned"><div class='tooltip' data-html="{{ race.tooltip }}">
                     <a href="{% url 'race' race.id %}">{{ race.short_name }}</a><br/>
                 </div></th>
             {% endfor %}

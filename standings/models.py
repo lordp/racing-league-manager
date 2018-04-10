@@ -165,6 +165,13 @@ class Race(models.Model):
                 sort_criteria.best_finish = result.position
             sort_criteria.save()
 
+    def tooltip(self):
+        tooltip = "{name}<br/>{time}".format(
+            time=self.start_time.strftime('%B %d %Y @ %H:%M'),
+            name=self.name,
+        )
+        return tooltip
+
 
 class Driver(models.Model):
     name = models.CharField(max_length=50)
