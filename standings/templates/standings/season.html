@@ -44,6 +44,7 @@
         {% endfor %}
     </tbody>
 </table>
+{% if not season.teams_disabled %}
 <table class="ui small selectable collapsing compact celled unstackable table">
     <thead>
         <tr>
@@ -74,4 +75,5 @@
         {% endfor %}
     </tbody>
 </table>
+{% endif %}
 {% endblock %}

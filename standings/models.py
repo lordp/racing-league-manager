@@ -85,6 +85,7 @@ class Season(models.Model):
     classification_type = models.CharField(max_length=10, blank=True)
     percent_classified = models.IntegerField(default=0)
     laps_classified = models.IntegerField(default=0)
+    teams_disabled = models.BooleanField(default=False)
 
     def __str__(self):
         return "{} ({})".format(self.name, self.division.name)

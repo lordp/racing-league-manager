@@ -39,16 +39,17 @@ def season_view(request, season_id):
             drivers[result.driver_id]['results'].append(result)
             drivers[result.driver_id]['points'] += result.points
 
-        if result.team.id not in teams:
-            teams[result.team.id] = {
-                "team": result.team,
-                "points": result.points,
-                "results": [result],
-                "position": 0
-            }
-        else:
-            teams[result.team_id]['results'].append(result)
-            teams[result.team_id]['points'] += result.points
+        if not season.teams_disabled:
+            if result.team.id not in teams:
+                teams[result.team.id] = {
+                    "team": result.team,
+                    "points": result.points,
+                    "results": [result],
+                    "position": 0
+                }
+            else:
+                teams[result.team_id]['results'].append(result)
+                teams[result.team_id]['points'] += result.points
 
     sorted_drivers = []
     driver_sort = sorted(drivers, key=lambda item: drivers[item]['best_finish'])
