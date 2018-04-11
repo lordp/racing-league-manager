@@ -3,7 +3,7 @@ from django.urls import reverse, path
 from django.utils.safestring import mark_safe
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
-from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter
+from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 from .models import *
 import os
 import contextlib
@@ -20,7 +20,13 @@ class ResultAdmin(admin.ModelAdmin):
 
     list_display = ('race', 'season', 'driver', 'team', 'position')
     list_select_related = ['race__season']
-    list_filter = (('race', RelatedDropdownFilter), ('driver', RelatedDropdownFilter))
+    list_filter = (
+        ('race__season__division__league', RelatedDropdownFilter),
+        ('race__season__division', RelatedDropdownFilter),
+        ('race__season', RelatedDropdownFilter),
+        ('race', RelatedDropdownFilter),
+        ('driver', RelatedDropdownFilter),
+    )
     search_fields = ['driver__name']
 
     fieldsets = [
