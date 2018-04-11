@@ -21,6 +21,7 @@
             <th>BOG</th>
             <th>SFP</th>
             <th>Desc</th>
+            <th>PP</th>
         </tr>
         </thead>
         <tbody>
@@ -36,6 +37,7 @@
             <td><input type="checkbox" name="qpen-bog-{{ result.id }}" {% if result.qualifying_penalty_bog %}checked="checked"{% endif %}/></td>
             <td><input type="checkbox" name="qpen-sfp-{{ result.id }}" {% if result.qualifying_penalty_sfp %}checked="checked"{% endif %}/></td>
             <td><input type="text" name="qpen-desc-{{ result.id }}" value="{{ result.qualifying_penalty_description }}"/></td>
+            <td><input type="text" name="pen-pts-{{ result.id }}" value="{{ result.penalty_points }}"/></td>
         </tr>
         </tbody>
     {% endfor %}

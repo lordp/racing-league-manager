@@ -237,6 +237,7 @@ class Result(models.Model):
     points = models.IntegerField(default=0)
     gap = models.CharField(default='-', max_length=25)
     fastest_lap_value = models.FloatField('Fastest lap', default=0)
+    penalty_points = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['position']

@@ -86,6 +86,7 @@ class RaceAdmin(admin.ModelAdmin):
                 result.qualifying_penalty_sfp = True if 'qpen-sfp-{}'.format(result.id) in request.POST else False
                 result.qualifying_penalty_grid = request.POST.get('qpen-grid-{}'.format(result.id), 0)
                 result.qualifying_penalty_description = request.POST.get('qpen-desc-{}'.format(result.id), '')
+                result.penalty_points = request.POST.get('pen-pts-{}'.format(result.id), 0)
                 result.save()
 
             messages.add_message(request, messages.INFO, "Results for '{}' updated".format(race.name))
