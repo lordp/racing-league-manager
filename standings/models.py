@@ -284,6 +284,12 @@ class LogFile(models.Model):
         with open(self.file.name) as infile:
             tree = etree.XML(infile.read().encode('utf-8'))
 
+        qualify = len(tree.xpath('//Qualify'))
+        if qualify > 0:
+            session = 'qualify'
+        else:
+            session = 'race'
+
         duplicates = []
         drivers = tree.xpath('//Driver')
         for driver in drivers:
@@ -301,17 +307,25 @@ class LogFile(models.Model):
             (team_obj, created) = Team.objects.get_or_create(name=team_name)
 
             (result, created) = Result.objects.get_or_create(
-                race=self.race, driver=driver_obj, team=team_obj, dnf_reason=''
+                race=self.race, driver=driver_obj, team=team_obj
             )
 
             result.fastest_lap = driver.xpath('./LapRankIncludingDiscos')[0].text == '1'
             result.car_class = driver.xpath('./CarClass')[0].text
             result.car = driver.xpath('./VehFile')[0].text
-            result.qualifying = driver.xpath('./GridPos')[0].text
-            result.position = driver.xpath('./Position')[0].text
-            result.race_laps = driver.xpath('./Laps')[0].text
+            if session == 'race':
+                result.qualifying = driver.xpath('./GridPos')[0].text
+                result.position = driver.xpath('./Position')[0].text
+                result.race_laps = driver.xpath('./Laps')[0].text
+            else:
+                result.qualifying_laps = driver.xpath('./Laps')[0].text
+                result.qualifying = driver.xpath('./Position')[0].text
+
             if driver.xpath('./FinishStatus')[0].text == 'Finished Normally':
-                result.race_time = driver.xpath('./FinishTime')[0].text
+                try:
+                    result.race_time = driver.xpath('./FinishTime')[0].text
+                except IndexError:
+                    result.race_time = 0
             else:
                 result.race_time = 0
                 try:
@@ -327,7 +341,7 @@ class LogFile(models.Model):
             laps = driver.xpath('.//Lap')
             for lap in laps:
                 lap_number = int(lap.get('num'))
-                (lap_obj, created) = Lap.objects.get_or_create(result=result, lap_number=lap_number)
+                (lap_obj, created) = Lap.objects.get_or_create(result=result, lap_number=lap_number, session=session)
 
                 lap_obj.position = int(lap.get('p'))
                 lap_obj.sector_1 = self.get_float(lap.get('s1'))
