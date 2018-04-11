@@ -19,7 +19,7 @@ def position_display(result):
     return special_positions.get(result.position, result.position)
 
 
-def position_colour(position, season):
+def position_colour(result, season):
     colours = {
         '-': 'default',
         0: 'default',
@@ -31,10 +31,14 @@ def position_colour(position, season):
         'DNS': 'default'
     }
 
-    ps = season.point_system.to_dict()
+    if result.race.point_system:
+        ps = result.race.point_system.to_dict()
+    else:
+        ps = season.point_system.to_dict()
+
     colours.update({x: 'green' for x in range(4, len(ps) + 1)})
 
-    return "pos-{}".format(str(colours.get(position['position'], 'blue')))
+    return "pos-{}".format(str(colours.get(result.position, 'blue')))
 
 
 @register.filter(name='find_result')
@@ -81,7 +85,7 @@ def get_css_classes(result, season):
     ret = []
 
     if result is not None:
-        ret.append(position_colour({"position": result.position}, season))
+        ret.append(position_colour(result, season))
         if result.position == 1:
             ret.append("pole-position")
         if result.fastest_lap:
