@@ -12,9 +12,10 @@ class PointSystem(models.Model):
     name = models.CharField(max_length=25)
     race_points = models.CharField(max_length=100)
     qualifying_points = models.CharField(max_length=100, blank=True)
-    lead_lap = models.IntegerField(default=0)
-    fastest_lap = models.IntegerField(default=0)
-    most_laps_lead = models.IntegerField(default=0)
+    pole_position = models.FloatField(default=0)
+    lead_lap = models.FloatField(default=0)
+    fastest_lap = models.FloatField(default=0)
+    most_laps_lead = models.FloatField(default=0)
 
     def __str__(self):
         return "{} ({})".format(self.name, self.race_points)
@@ -234,7 +235,7 @@ class Result(models.Model):
     qualifying_penalty_sfp = models.BooleanField('Start from pits', default=False)
     qualifying_penalty_description = models.CharField('Description', max_length=100, blank=True)
     dnf_reason = models.CharField('DNF Reason', max_length=50, blank=True, default='')
-    points = models.IntegerField(default=0)
+    points = models.FloatField(default=0)
     gap = models.CharField(default='-', max_length=25)
     fastest_lap_value = models.FloatField('Fastest lap', default=0)
     penalty_points = models.IntegerField(default=0)
