@@ -232,7 +232,7 @@ class Result(models.Model):
     qualifying_penalty_bog = models.BooleanField('Back of grid', default=False)
     qualifying_penalty_sfp = models.BooleanField('Start from pits', default=False)
     qualifying_penalty_description = models.CharField('Description', max_length=100, blank=True)
-    dnf_reason = models.CharField('DNF Reason', max_length=50, blank=True)
+    dnf_reason = models.CharField('DNF Reason', max_length=50, blank=True, default='')
     points = models.IntegerField(default=0)
     gap = models.CharField(default='-', max_length=25)
     fastest_lap_value = models.FloatField('Fastest lap', default=0)
