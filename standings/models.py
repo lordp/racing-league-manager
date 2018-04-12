@@ -143,6 +143,8 @@ class Race(models.Model):
         total_lap_count = 0
 
         ps = self.point_system if self.point_system else self.season.point_system
+        ll = self.laps_lead()
+        ml = ll.first()
 
         for result in self.result_set.all():
             if result.position == 1:
@@ -155,10 +157,28 @@ class Race(models.Model):
             else:
                 result.gap = standings.utils.format_time(result.race_time - total_race_time)
 
+            # check classification rules
             if self.season.allocate_points(total_lap_count, result.race_laps):
                 result.points = ps.to_dict().get(result.position, 0)
+                if result.fastest_lap:
+                    result.points += ps.fastest_lap
             else:
                 result.points = 0
+
+            # pole position
+            if result.qualifying == 1:
+                result.points += ps.pole_position
+
+            # most laps lead
+            if ml['driver_id'] == result.driver_id:
+                result.points += ps.most_laps_lead
+
+            # points per lap lead
+            for driver in ll:
+                result.points += (ps.lead_lap * driver['first_place'])
+
+            # multiplier
+            result.points *= result.points_multiplier
 
             result.save()
 
@@ -173,6 +193,10 @@ class Race(models.Model):
             name=self.name,
         )
         return tooltip
+
+    def laps_lead(self):
+        return Result.objects.values('driver_id').filter(race=self, lap__position=1).annotate(
+            first_place=Count('lap__position')).order_by('-first_place')
 
 
 class Driver(models.Model):
