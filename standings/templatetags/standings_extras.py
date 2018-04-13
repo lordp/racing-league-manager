@@ -86,7 +86,7 @@ def get_css_classes(result, season):
 
     if result is not None:
         ret.append(position_colour(result, season))
-        if result.position == 1:
+        if result.qualifying == 1:
             ret.append("pole-position")
         if result.fastest_lap:
             ret.append("fastest-lap")
