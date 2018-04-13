@@ -175,7 +175,8 @@ class Race(models.Model):
 
             # points per lap lead
             for driver in ll:
-                result.points += (ps.lead_lap * driver['first_place'])
+                if driver['driver_id'] == result.driver_id:
+                    result.points += (ps.lead_lap * driver['first_place'])
 
             # multiplier
             result.points *= result.points_multiplier
