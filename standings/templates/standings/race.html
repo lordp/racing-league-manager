@@ -31,7 +31,7 @@
             <td class="right aligned">{{ result.gap }}</td>
             <td>{{ result.dnf_reason }}</td>
             <td class="{% if result.fastest_lap %}fastest-lap-race{% endif %}">{{ result.fastest_lap_value|format_time }}</td>
-            <td class="center aligned">{{ result.points }}</td>
+            <td class="center aligned">{{ result.points|format_float }}</td>
         </tr>
         {% endfor %}
     </tbody>

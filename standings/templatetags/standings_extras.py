@@ -80,6 +80,11 @@ def format_time(seconds):
     return standings.utils.format_time(seconds)
 
 
+@register.filter(name='format_float')
+def format_float(num):
+    return standings.utils.format_float(num)
+
+
 @register.filter(name='get_css_classes')
 def get_css_classes(result, season):
     ret = []

@@ -19,7 +19,7 @@
         {% for driver in season.drivers %}
         <tr>
             <td><a href="{% url 'driver' driver.driver.id %}">{{ driver.driver.name }}</a></td>
-            <td class="ui center aligned">{{ driver.points }}</td>
+            <td class="ui center aligned">{{ driver.points|format_float }}</td>
             {% for race in season.season.race_set.all %}
                 {% with result=driver.results|find_result:race %}
             <td class="ui center aligned {{ result|get_css_classes:season.season }}"{% if result.note %} data-tooltip="{{ result.note }}" {% endif %}>

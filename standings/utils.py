@@ -7,3 +7,7 @@ def format_time(seconds):
         return '{m:0.0f}m{s:06.3f}'.format(m=m, s=s)
     else:
         return '{s:0.3f}'.format(s=s)
+
+
+def format_float(num):
+    return format(num, '.15g')
