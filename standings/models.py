@@ -327,9 +327,10 @@ class LogFile(models.Model):
             except Driver.DoesNotExist:
                 driver_obj = Driver.objects.create(name=driver_name)
             except Driver.MultipleObjectsReturned:
+                driver_obj = Driver.objects.filter(name__unaccent=driver_name).annotate(
+                    result_count=Count('result')).order_by('-result_count').first()
                 if driver_name not in duplicates:
                     duplicates.append(driver_name)
-                continue
 
             team_name = driver.xpath('./CarType')[0].text
             (team_obj, created) = Team.objects.get_or_create(name=team_name)
@@ -391,8 +392,8 @@ class LogFile(models.Model):
             result.save()
 
         if duplicates:
-            msg = 'The following drivers had duplicate records, please delete or merge into one driver - {}'.format(
-                ', '.join(duplicates)
+            msg = 'The following drivers have duplicate records, results ' \
+                  'have been applied to the one with the most results - {}'.format(', '.join(duplicates)
             )
 
             messages.add_message(request, messages.WARNING, msg)
