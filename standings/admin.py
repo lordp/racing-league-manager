@@ -81,9 +81,11 @@ class RaceAdmin(admin.ModelAdmin):
                 result.race_time = request.POST.get('race-time-{}'.format(result.id))
                 result.race_penalty_time = request.POST.get('pen-time-{}'.format(result.id), 0)
                 result.race_penalty_positions = request.POST.get('pen-pos-{}'.format(result.id), 0)
+                result.race_penalty_dsq = True if 'pen-dsq-{}'.format(result.id) in request.POST else False
                 result.race_penalty_description = request.POST.get('pen-desc-{}'.format(result.id), '')
                 result.qualifying_penalty_bog = True if 'qpen-bog-{}'.format(result.id) in request.POST else False
                 result.qualifying_penalty_sfp = True if 'qpen-sfp-{}'.format(result.id) in request.POST else False
+                result.qualifying_penalty_dsq = True if 'qpen-dsq-{}'.format(result.id) in request.POST else False
                 result.qualifying_penalty_grid = request.POST.get('qpen-grid-{}'.format(result.id), 0)
                 result.qualifying_penalty_description = request.POST.get('qpen-desc-{}'.format(result.id), '')
                 result.penalty_points = request.POST.get('pen-pts-{}'.format(result.id), 0)

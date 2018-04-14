@@ -273,6 +273,8 @@ class Result(models.Model):
     race_fastest_lap = models.FloatField('Fastest lap (R)', default=0)
     qualifying_fastest_lap = models.FloatField('Fastest lap (Q)', default=0)
     penalty_points = models.IntegerField(default=0)
+    race_penalty_dsq = models.BooleanField(default=False)
+    qualifying_penalty_dsq = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['position']

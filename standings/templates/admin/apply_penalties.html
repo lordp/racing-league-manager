@@ -6,22 +6,24 @@
     <table>
         <thead>
         <tr>
-            <th colspan="3">Driver Info</th>
-            <th colspan="3">Race Penalties</th>
-            <th colspan="4">Qualifying Penalties</th>
+            <th colspan="4">Driver Info</th>
+            <th colspan="4">Race Penalties</th>
+            <th colspan="5">Qualifying Penalties</th>
         </tr>
         <tr>
             <th>Driver</th>
             <th>Position</th>
             <th>Time</th>
+            <th>PP</th>
             <th>Time</th>
             <th>Pos</th>
+            <th>DSQ</th>
             <th>Desc</th>
             <th>Grid</th>
             <th>BOG</th>
             <th>SFP</th>
+            <th>DSQ</th>
             <th>Desc</th>
-            <th>PP</th>
         </tr>
         </thead>
         <tbody>
@@ -30,14 +32,16 @@
             <td>{{ result.driver.name }}</td>
             <td><input type="text" name="position-{{ result.id }}" value="{{ result.position }}" size="2"/></td>
             <td><input type="text" name="race-time-{{ result.id }}" value="{{ result.race_time }}" size="8"/></td>
+            <td><input type="text" name="pen-pts-{{ result.id }}" value="{{ result.penalty_points }}"/></td>
             <td><input type="text" name="pen-time-{{ result.id }}" value="{{ result.race_penalty_time }}" size="2"/></td>
             <td><input type="text" name="pen-pos-{{ result.id }}" value="{{ result.race_penalty_positions }}" size="2"/></td>
+            <td><input type="checkbox" name="pen-dsq-{{ result.id }}" {% if result.race_penalty_dsq %}checked="checked"{% endif %}/></td>
             <td><input type="text" name="pen-desc-{{ result.id }}" value="{{ result.race_penalty_description }}"/></td>
             <td><input type="text" name="qpen-grid-{{ result.id }}" value="{{ result.qualifying_penalty_grid }}" size="2"/></td>
             <td><input type="checkbox" name="qpen-bog-{{ result.id }}" {% if result.qualifying_penalty_bog %}checked="checked"{% endif %}/></td>
             <td><input type="checkbox" name="qpen-sfp-{{ result.id }}" {% if result.qualifying_penalty_sfp %}checked="checked"{% endif %}/></td>
+            <td><input type="checkbox" name="qpen-dsq-{{ result.id }}" {% if result.qualifying_penalty_dsq %}checked="checked"{% endif %}/></td>
             <td><input type="text" name="qpen-desc-{{ result.id }}" value="{{ result.qualifying_penalty_description }}"/></td>
-            <td><input type="text" name="pen-pts-{{ result.id }}" value="{{ result.penalty_points }}"/></td>
         </tr>
         </tbody>
     {% endfor %}
