@@ -271,7 +271,9 @@ class Result(models.Model):
     def has_notes(self):
         return (self.note != '' and self.note is not None) \
                or self.subbed_by is not None \
-               or self.allocate_points is not None
+               or self.allocate_points is not None \
+               or (self.race_penalty_description != '' and self.race_penalty_description is not None) \
+               or (self.qualifying_penalty_description != '' and self.qualifying_penalty_description is not None)
 
     def __str__(self):
         return "{race} ({driver}, {position})".format(

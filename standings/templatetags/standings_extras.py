@@ -109,6 +109,12 @@ def collate_notes(result):
         if result.note != '' and result.note is not None:
             notes.append(result.note)
 
+        if result.race_penalty_description != '' and result.race_penalty_description is not None:
+            notes.append("R: {}".format(result.race_penalty_description))
+
+        if result.qualifying_penalty_description != '' and result.qualifying_penalty_description is not None:
+            notes.append("Q: {}".format(result.qualifying_penalty_description))
+
         if result.subbed_by is not None:
             notes.append(
                 '{} reserved for {}'.format(result.subbed_by.name, result.driver.name)
