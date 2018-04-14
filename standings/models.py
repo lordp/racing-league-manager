@@ -130,6 +130,14 @@ class Race(models.Model):
     def __str__(self):
         return "{} ({}, {})".format(self.name, self.season.name, self.season.division.name)
 
+    @property
+    def qualifying_order(self):
+        return self.result_set.order_by('qualifying')
+
+    @property
+    def race_order(self):
+        return self.result_set.order_by('position')
+
     def breadcrumbs(self):
         return [
             {"url": "league", "object": self.season.division.league},
@@ -262,7 +270,8 @@ class Result(models.Model):
     dnf_reason = models.CharField('DNF Reason', max_length=50, blank=True, default='')
     points = models.FloatField(default=0)
     gap = models.CharField(default='-', max_length=25)
-    fastest_lap_value = models.FloatField('Fastest lap', default=0)
+    race_fastest_lap = models.FloatField('Fastest lap (R)', default=0)
+    qualifying_fastest_lap = models.FloatField('Fastest lap (Q)', default=0)
     penalty_points = models.IntegerField(default=0)
 
     class Meta:
@@ -387,16 +396,20 @@ class LogFile(models.Model):
                 if lap_obj.lap_time > 0 and (lap_obj.lap_time < fastest_lap or fastest_lap == 0):
                     fastest_lap = lap_obj.lap_time
 
-            if result.race_time == 0:
-                result.race_time = race_time
+            if session == 'race':
+                result.race_fastest_lap = fastest_lap
+                if result.race_time == 0:
+                    result.race_time = race_time
+            else:
+                result.qualifying_fastest_lap = fastest_lap
+                if result.qualifying_time == 0:
+                    result.qualifying_time = race_time
 
-            result.fastest_lap_value = fastest_lap
             result.save()
 
         if duplicates:
             msg = 'The following drivers have duplicate records, results ' \
-                  'have been applied to the one with the most results - {}'.format(', '.join(duplicates)
-            )
+                  'have been applied to the one with the most results - {}'.format(', '.join(duplicates))
 
             messages.add_message(request, messages.WARNING, msg)
 
