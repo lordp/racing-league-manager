@@ -4,6 +4,7 @@ from django.utils.safestring import mark_safe
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
+from django.db.models import Max, F
 from .models import *
 import os
 import contextlib
@@ -76,12 +77,14 @@ class RaceAdmin(admin.ModelAdmin):
     def apply_penalties(self, request, queryset):
         if 'apply' in request.POST:
             race = Race.objects.get(pk=request.POST.get('_selected_action'))
+            dsq = []
+            max_pos = race.result_set.aggregate(Max('position'))['position__max']
+
             for result in race.result_set.all():
                 result.position = request.POST.get('position-{}'.format(result.id))
                 result.race_time = request.POST.get('race-time-{}'.format(result.id))
                 result.race_penalty_time = request.POST.get('pen-time-{}'.format(result.id), 0)
                 result.race_penalty_positions = request.POST.get('pen-pos-{}'.format(result.id), 0)
-                result.race_penalty_dsq = True if 'pen-dsq-{}'.format(result.id) in request.POST else False
                 result.race_penalty_description = request.POST.get('pen-desc-{}'.format(result.id), '')
                 result.qualifying_penalty_bog = True if 'qpen-bog-{}'.format(result.id) in request.POST else False
                 result.qualifying_penalty_sfp = True if 'qpen-sfp-{}'.format(result.id) in request.POST else False
@@ -89,6 +92,18 @@ class RaceAdmin(admin.ModelAdmin):
                 result.qualifying_penalty_grid = request.POST.get('qpen-grid-{}'.format(result.id), 0)
                 result.qualifying_penalty_description = request.POST.get('qpen-desc-{}'.format(result.id), '')
                 result.penalty_points = request.POST.get('pen-pts-{}'.format(result.id), 0)
+
+                if 'pen-dsq-{}'.format(result.id) in request.POST:
+                    result.race_penalty_dsq = True
+                    dsq.append(result)
+                else:
+                    result.race_penalty_dsq = False
+
+                result.save()
+
+            for result in dsq:
+                race.result_set.filter(position__gt=result.position).update(position=F('position') - 1)
+                result.position = max_pos
                 result.save()
 
             messages.add_message(request, messages.INFO, "Results for '{}' updated".format(race.name))
