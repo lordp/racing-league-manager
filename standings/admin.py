@@ -209,4 +209,19 @@ class TrackAdmin(admin.ModelAdmin):
     list_display = ('name', 'length', 'country', 'version')
 
 
-admin.site.register([League, Division, Team, PointSystem])
+@admin.register(SeasonPenalty)
+class SeasonPenaltyAdmin(admin.ModelAdmin):
+    list_display = ('season', 'driver', 'team', 'points', 'disqualified')
+    list_select_related = ('season', 'driver', 'team')
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        obj.process()
+
+
+@admin.register(Team)
+class TeamAdmin(admin.ModelAdmin):
+    ordering = ('name',)
+
+
+admin.site.register([League, Division, PointSystem])

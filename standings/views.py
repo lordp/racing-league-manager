@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Season, Driver, Team, League, Division, Result, Race, SortCriteria
+from .models import Season, Driver, Team, League, Division, Result, Race, SortCriteria, SeasonPenalty
 
 
 def index_view(request):
@@ -14,6 +14,7 @@ def index_view(request):
 
 def season_view(request, season_id):
     season = Season.objects.prefetch_related('point_system').get(pk=season_id)
+    season_penalty = SeasonPenalty.objects.filter(season=season)
 
     drivers = {}
     teams = {}
@@ -28,12 +29,19 @@ def season_view(request, season_id):
             except SortCriteria.DoesNotExist:
                 best_finish = 0
 
+            try:
+                sp = season_penalty.get(driver=result.driver)
+                result.points -= sp.points
+            except SeasonPenalty.DoesNotExist:
+                sp = None
+
             drivers[result.driver_id] = {
                 'driver': result.driver,
                 'points': result.points,
                 'results': [result],
                 'position': 0,
-                'best_finish': best_finish
+                'best_finish': best_finish,
+                'season_penalty': sp
             }
         else:
             drivers[result.driver_id]['results'].append(result)
@@ -41,11 +49,18 @@ def season_view(request, season_id):
 
         if not season.teams_disabled:
             if result.team.id not in teams:
+                try:
+                    sp = season_penalty.get(team=result.team)
+                    result.points -= sp.points
+                except SeasonPenalty.DoesNotExist:
+                    sp = None
+
                 teams[result.team.id] = {
-                    "team": result.team,
-                    "points": result.points,
-                    "results": [result],
-                    "position": 0
+                    'team': result.team,
+                    'points': result.points,
+                    'results': [result],
+                    'position': 0,
+                    'season_penalty': sp
                 }
             else:
                 teams[result.team_id]['results'].append(result)
@@ -59,7 +74,9 @@ def season_view(request, season_id):
         sorted_drivers.append(drivers[driver])
 
     sorted_teams = []
-    for pos, team in enumerate(sorted(teams, key=lambda item: teams[item]['points'], reverse=True)):
+    team_sort = sorted(teams, key=lambda item: teams[item]['season_penalty'] is None, reverse=True)
+    team_sort = sorted(team_sort, key=lambda item: teams[item]['points'], reverse=True)
+    for pos, team in enumerate(team_sort):
         teams[team]["position"] = pos + 1
         sorted_teams.append(teams[team])
 

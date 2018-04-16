@@ -153,6 +153,7 @@ class Race(models.Model):
         ps = self.point_system if self.point_system else self.season.point_system
         ll = self.laps_lead()
         ml = ll.first()
+        season_penalty = SeasonPenalty.objects.filter(season=self.season)
 
         for result in self.result_set.all():
             if result.position == 1:
@@ -189,11 +190,22 @@ class Race(models.Model):
             # multiplier
             result.points *= result.points_multiplier
 
+            try:
+                sp = season_penalty.get(driver=result.driver)
+            except SeasonPenalty.DoesNotExist:
+                sp = None
+
+            if sp and sp.disqualified:
+                result.points = 0
+
             result.save()
 
             (sort_criteria, _) = SortCriteria.objects.get_or_create(season=self.season, driver=result.driver)
             if result.position < sort_criteria.best_finish or sort_criteria.best_finish == 0:
                 sort_criteria.best_finish = result.position
+            if sp and sp.disqualified:
+                sort_criteria.best_finish = 99
+
             sort_criteria.save()
 
     def tooltip(self):
@@ -416,3 +428,39 @@ class LogFile(models.Model):
             messages.add_message(request, messages.WARNING, msg)
 
         self.race.fill_attributes()
+
+
+class SeasonPenalty(models.Model):
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
+    driver = models.ForeignKey(Driver, null=True, blank=True, on_delete=models.SET_NULL)
+    team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.SET_NULL)
+    points = models.IntegerField(default=0)
+    disqualified = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name_plural = 'Season Penalties'
+
+    def process(self):
+        qs = None
+        if self.disqualified:
+            if self.driver:
+                qs = Result.objects.filter(driver=self.driver)
+            elif self.team:
+                qs = Result.objects.filter(team=self.team)
+
+            if qs:
+                qs.update(points=0)
+
+
+    def __str__(self):
+        string = '{}'.format(self.season)
+        if self.driver:
+            string = '{}, {}'.format(string, self.driver)
+        if self.team:
+            string = '{}, {}'.format(string, self.team)
+        if self.points > 0:
+            string = '{}, docked {} points'.format(string, self.points)
+        if self.disqualified:
+            string = '{}, disqualified'.format(string)
+
+        return string

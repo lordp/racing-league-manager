@@ -31,7 +31,10 @@
             <td class="ui center aligned">{{ driver.position }}</td>
             <td><a href="{% url 'driver' driver.driver.id %}">{{ driver.driver.name }}</a></td>
             <td><img src="{{ driver.driver.country.flag }}"></td>
-            <td class="ui center aligned">{{ driver.points|format_float }}</td>
+            <td class="ui center aligned"{% if driver.season_penalty %} data-tooltip="{{ driver.season_penalty }}"{% endif %}>
+                {{ driver.points|format_float }}
+                {% if driver.season_penalty %}<div class="note"></div>{% endif %}
+            </td>
             {% for race in season.race_set.all %}
                 {% with result=driver.results|find_result:race %}
             <td class="ui center aligned {{ result|get_css_classes:season }}"{% if result.has_notes %} data-tooltip="{{ result|collate_notes }}"{% endif %}>
@@ -63,7 +66,10 @@
             <td class="ui center aligned">{{ team.position }}</td>
             <td class="team-{{ team.team.css_class }}"><a href="{% url 'team' team.team.id %}">{{ team.team.name }}</a></td>
             <td><img src="{{ team.team.country.flag }}"></td>
-            <td class="ui center aligned">{{ team.points|format_float }}</td>
+            <td class="ui center aligned"{% if team.season_penalty %} data-tooltip="{{ team.season_penalty }}"{% endif %}>
+                {{ team.points|format_float }}
+                {% if team.season_penalty %}<div class="note"></div>{% endif %}
+            </td>
             {% for race in season.race_set.all %}
                 {% with result=team.results|find_results:race %}
             <td class="ui center aligned">
