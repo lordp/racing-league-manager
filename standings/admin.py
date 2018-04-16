@@ -78,6 +78,7 @@ class RaceAdmin(admin.ModelAdmin):
         if 'apply' in request.POST:
             race = Race.objects.get(pk=request.POST.get('_selected_action'))
             dsq = []
+            pens = set()
             max_pos = race.result_set.aggregate(Max('position'))['position__max']
 
             for result in race.result_set.filter(finalized=False):
@@ -99,6 +100,10 @@ class RaceAdmin(admin.ModelAdmin):
                 else:
                     result.race_penalty_dsq = False
 
+                if int(request.POST.get('pen-time-{}'.format(result.id), 0)) > 0:
+                    result.race_time = float(result.race_time) + float(result.race_penalty_time)
+                    pens.add(result.race_laps)
+
                 result.finalized = True
                 result.save()
 
@@ -106,6 +111,14 @@ class RaceAdmin(admin.ModelAdmin):
                 race.result_set.filter(position__gt=result.position).update(position=F('position') - 1)
                 result.position = max_pos
                 result.save()
+
+            for result_laps in pens:
+                for index, result in enumerate(race.result_set.filter(race_laps=result_laps).order_by('race_time')):
+                    result.position = index + 1
+                    result.save()
+
+            if dsq or pens:
+                race.fill_attributes()
 
             messages.add_message(request, messages.INFO, "Results for '{}' updated".format(race.name))
             return redirect(reverse("admin:standings_race_changelist"))
