@@ -80,7 +80,7 @@ class RaceAdmin(admin.ModelAdmin):
             dsq = []
             max_pos = race.result_set.aggregate(Max('position'))['position__max']
 
-            for result in race.result_set.all():
+            for result in race.result_set.filter(finalized=False):
                 result.position = request.POST.get('position-{}'.format(result.id))
                 result.race_time = request.POST.get('race-time-{}'.format(result.id))
                 result.race_penalty_time = request.POST.get('pen-time-{}'.format(result.id), 0)
@@ -99,6 +99,7 @@ class RaceAdmin(admin.ModelAdmin):
                 else:
                     result.race_penalty_dsq = False
 
+                result.finalized = True
                 result.save()
 
             for result in dsq:
