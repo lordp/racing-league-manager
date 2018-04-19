@@ -114,6 +114,76 @@ class Season(models.Model):
 
         return True
 
+    def get_standings(self):
+        season_penalty = self.seasonpenalty_set
+
+        drivers = {}
+        teams = {}
+
+        results = Result.objects.filter(race__season=self).prefetch_related('race').prefetch_related(
+            'driver').prefetch_related('team').prefetch_related('race__track')
+
+        for result in results:
+            if result.driver_id not in drivers:
+                try:
+                    best_finish = self.sortcriteria_set.get(driver=result.driver).best_finish
+                except SortCriteria.DoesNotExist:
+                    best_finish = 0
+
+                try:
+                    sp = season_penalty.get(driver=result.driver)
+                    result.points -= sp.points
+                except SeasonPenalty.DoesNotExist:
+                    sp = None
+
+                drivers[result.driver_id] = {
+                    'driver': result.driver,
+                    'points': result.points,
+                    'results': [result],
+                    'position': 0,
+                    'best_finish': best_finish,
+                    'season_penalty': sp
+                }
+            else:
+                drivers[result.driver_id]['results'].append(result)
+                drivers[result.driver_id]['points'] += result.points
+
+            if not self.teams_disabled:
+                if result.team.id not in teams:
+                    try:
+                        sp = season_penalty.get(team=result.team)
+                        result.points -= sp.points
+                    except SeasonPenalty.DoesNotExist:
+                        sp = None
+
+                    teams[result.team.id] = {
+                        'team': result.team,
+                        'points': result.points,
+                        'results': [result],
+                        'position': 0,
+                        'season_penalty': sp
+                    }
+                else:
+                    teams[result.team_id]['results'].append(result)
+                    teams[result.team_id]['points'] += result.points
+
+        sorted_drivers = []
+        driver_sort = sorted(drivers, key=lambda item: drivers[item]['best_finish'])
+        driver_sort = sorted(driver_sort, key=lambda item: drivers[item]['points'], reverse=True)
+        for pos, driver in enumerate(driver_sort):
+            drivers[driver]["position"] = pos + 1
+            sorted_drivers.append(drivers[driver])
+
+        sorted_teams = []
+        team_sort = sorted(teams, key=lambda item: teams[item]['season_penalty'] is None, reverse=True)
+        team_sort = sorted(team_sort, key=lambda item: teams[item]['points'], reverse=True)
+        for pos, team in enumerate(team_sort):
+            teams[team]["position"] = pos + 1
+            sorted_teams.append(teams[team])
+
+        return sorted_drivers, sorted_teams
+
+
 
 class Race(models.Model):
     season = models.ForeignKey(Season, on_delete=models.CASCADE)
