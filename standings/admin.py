@@ -144,8 +144,14 @@ class SeasonAdmin(admin.ModelAdmin):
     def division(obj):
         return obj.division.name
 
-    list_display = ('name', 'league', 'division')
+    list_display = ('name', 'league', 'division', 'race_count')
 
+    def get_queryset(self, request):
+        return Season.objects.annotate(race_count=Count('race'))
+
+    @staticmethod
+    def race_count(obj):
+        return obj.race_count
 
 @admin.register(Driver)
 class DriverAdmin(admin.ModelAdmin):
