@@ -20,7 +20,7 @@ class ResultAdmin(admin.ModelAdmin):
         return obj.race.season.name
 
     list_display = ('race', 'season', 'driver', 'team', 'position')
-    list_select_related = ['race__season']
+    list_select_related = ['race', 'race__season', 'race__season__division', 'race__season__division__league']
     list_filter = (
         ('race__season__division__league', RelatedDropdownFilter),
         ('race__season__division', RelatedDropdownFilter),
