@@ -122,7 +122,8 @@ class RaceAdmin(admin.ModelAdmin):
                 result.save()
 
             for result_laps in pens:
-                for index, result in enumerate(race.result_set.filter(race_laps=result_laps).order_by('race_time')):
+                for index, result in enumerate(
+                        race.result_set.filter(race_laps=result_laps, race_penalty_dsq=False).order_by('race_time')):
                     result.position = index + 1
                     result.save()
 
