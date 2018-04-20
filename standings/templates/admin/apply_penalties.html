@@ -12,6 +12,7 @@
         </tr>
         <tr>
             <th>Driver</th>
+            <th>Finalised</th>
             <th>Position</th>
             <th>Time</th>
             <th>PP</th>
@@ -30,6 +31,7 @@
     {% for result in results %}
         <tr>
             <td>{{ result.driver.name }}</td>
+            <td><input type="checkbox" name="finalized-{{ result.id }}" {% if result.finalized %}checked="checked"{% endif %}/></td>
             <td><input type="text" name="position-{{ result.id }}" value="{{ result.position }}" size="2"/></td>
             <td><input type="text" name="race-time-{{ result.id }}" value="{{ result.race_time }}" size="8"/></td>
             <td><input type="text" name="pen-pts-{{ result.id }}" value="{{ result.penalty_points }}"/></td>
