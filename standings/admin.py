@@ -109,6 +109,7 @@ class RaceAdmin(admin.ModelAdmin):
                 result.save()
 
             for result in dsq:
+                result.refresh_from_db()
                 race.result_set.filter(position__gt=result.position).update(position=F('position') - 1)
                 result.position = max_pos
                 result.save()
