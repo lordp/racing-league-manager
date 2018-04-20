@@ -57,7 +57,7 @@ class RaceAdmin(admin.ModelAdmin):
     list_display = ('name', 'season')
     list_select_related = ('season', 'season__division')
     ordering = ['name']
-    actions = ['update_results', 'apply_penalties']
+    actions = ['update_results', 'apply_penalties', 'unfinalise']
 
     def get_urls(self):
         urls = super().get_urls()
@@ -73,6 +73,14 @@ class RaceAdmin(admin.ModelAdmin):
         messages.add_message(request, messages.INFO, "{} race(s) updated".format(queryset.count()))
         return redirect(reverse("admin:standings_race_changelist"))
     update_results.short_description = 'Update result information (points, gaps, etc)'
+
+    def unfinalise(self, request, queryset):
+        for obj in queryset:
+            Result.objects.filter(race=obj).update(finalized=False)
+
+        messages.add_message(request, messages.INFO, "{} race(s) unfinalised".format(queryset.count()))
+        return redirect(reverse("admin:standings_race_changelist"))
+    unfinalise.short_description = 'Set all results for a race to be unfinalised'
 
     def apply_penalties(self, request, queryset):
         if 'apply' in request.POST:
