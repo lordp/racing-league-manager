@@ -32,7 +32,7 @@
             <td>{{ result.driver.name }}</td>
             <td><input type="text" name="position-{{ result.id }}" value="{{ result.position }}" size="2"/></td>
             <td><input type="text" name="race-time-{{ result.id }}" value="{{ result.race_time }}" size="8"/></td>
-            <td><input type="text" name="pen-pts-{{ result.id }}" value="{{ result.penalty_points }}"/></td>
+            <td><input type="text" name="pen-pts-{{ result.id }}" value="{{ result.penalty_points }}" size="3"/></td>
             <td><input type="text" name="pen-time-{{ result.id }}" value="{{ result.race_penalty_time }}" size="2"/></td>
             <td><input type="text" name="pen-pos-{{ result.id }}" value="{{ result.race_penalty_positions }}" size="2"/></td>
             <td><input type="checkbox" name="pen-dsq-{{ result.id }}" {% if result.race_penalty_dsq %}checked="checked"{% endif %}/></td>
