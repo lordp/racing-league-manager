@@ -6,6 +6,7 @@ from datetime import date
 from lxml import etree
 import os
 import standings.utils
+from .utils import apply_positions
 
 
 class PointSystem(models.Model):
@@ -174,17 +175,15 @@ class Season(models.Model):
         driver_sort = sorted(drivers, key=lambda item: drivers[item]['best_finish'])
         driver_sort = sorted(driver_sort, key=lambda item: drivers[item]['points'], reverse=True)
         for pos, driver in enumerate(driver_sort):
-            drivers[driver]["position"] = pos + 1
             sorted_drivers.append(drivers[driver])
 
         sorted_teams = []
         team_sort = sorted(teams, key=lambda item: teams[item]['season_penalty'] is None, reverse=True)
         team_sort = sorted(team_sort, key=lambda item: teams[item]['points'], reverse=True)
         for pos, team in enumerate(team_sort):
-            teams[team]["position"] = pos + 1
             sorted_teams.append(teams[team])
 
-        return sorted_drivers, sorted_teams
+        return apply_positions(sorted_drivers), apply_positions(sorted_teams)
 
 
 
@@ -523,7 +522,6 @@ class SeasonPenalty(models.Model):
 
             if qs:
                 qs.update(points=0)
-
 
     def __str__(self):
         string = '{}'.format(self.season)
