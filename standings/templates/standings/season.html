@@ -30,7 +30,7 @@
         <tr>
             <td class="ui center aligned">{{ driver.position }}</td>
             <td><a href="{% url 'driver' driver.driver.id %}">{{ driver.driver.name }}</a></td>
-            <td><img src="{{ driver.driver.country.flag }}"></td>
+            <td><img src="{{ driver.driver.country.flag }}" title="{{ driver.driver.country.name }}"></td>
             <td class="ui center aligned"{% if driver.season_penalty %} data-tooltip="{{ driver.season_penalty }}"{% endif %}>
                 {{ driver.points|format_float }}
                 {% if driver.season_penalty %}<div class="note"></div>{% endif %}
@@ -72,7 +72,7 @@
         <tr>
             <td class="ui center aligned" rowspan="{{ team.driver_count }}">{{ team.position }}</td>
             <td class="team-{{ team.team.css_class }}" rowspan="{{ team.driver_count }}"><a href="{% url 'team' team.team.id %}">{{ team.team.name }}</a></td>
-            <td rowspan="{{ team.driver_count }}"><img src="{{ team.team.country.flag }}"></td>
+            <td rowspan="{{ team.driver_count }}"><img src="{{ team.team.country.flag }}" title="{{ team.team.country.name }}"></td>
             <td rowspan="{{ team.driver_count }}" class="ui center aligned"{% if team.season_penalty %} data-tooltip="{{ team.season_penalty }}"{% endif %}>
                 {{ team.points|format_float }}
                 {% if team.season_penalty %}<div class="note"></div>{% endif %}
