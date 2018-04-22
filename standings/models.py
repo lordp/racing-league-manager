@@ -160,12 +160,15 @@ class Season(models.Model):
                         'team': result.team,
                         'points': result.points,
                         'results': [result],
-                        'position': 0,
+                        'drivers': {result.driver},
                         'season_penalty': sp
                     }
                 else:
                     teams[result.team_id]['results'].append(result)
                     teams[result.team_id]['points'] += result.points
+                    teams[result.team_id]['drivers'].add(result.driver)
+
+                teams[result.team.id]['driver_count'] = len(teams[result.team.id]['drivers'])
 
         sorted_drivers = []
         driver_sort = sorted(drivers, key=lambda item: drivers[item]['best_finish'])
