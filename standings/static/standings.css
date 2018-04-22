@@ -54,6 +54,17 @@
     position: absolute;
 }
 
+.fsr-header {
+    margin: 0 0 10px 0;
+    padding: 10px;
+    background-color: #242728 !important;
+}
+
+.team-driver-position {
+    font-size: 10px;
+    padding: 1px 7px !important;
+}
+
 .team-ferrari {
     color: white;
     background-color: rgb(224, 8, 29);

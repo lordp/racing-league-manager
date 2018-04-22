@@ -48,36 +48,57 @@
     </tbody>
 </table>
 {% if not season.teams_disabled %}
-<table class="ui small selectable collapsing compact celled unstackable table">
+<table class="ui small collapsing compact celled structured table">
     <thead>
         <tr>
             <th>Pos</th>
             <th>Name</th>
             <th></th>
             <th>Points</th>
+            <th></th>
             {% for race in season.race_set.all %}
-                <th class="ui center aligned"><a href="{% url 'race' race.id %}">{{ race.short_name }}</a></th>
+                <th class="ui center aligned"><div class='tooltip' data-html="{{ race.tooltip }}">
+                    {{ race.round_number }}<br/>
+                    <a href="{% url 'race' race.id %}">{{ race.short_name }}</a><br/>
+                    <img src="{{ race.track.country.flag }}">
+                </div></th>
             {% endfor %}
         </tr>
     </thead>
     <tbody>
         {% for team in teams %}
+            {% for driver in team.drivers %}
+                {% if forloop.first %}
         <tr>
-            <td class="ui center aligned">{{ team.position }}</td>
-            <td class="team-{{ team.team.css_class }}"><a href="{% url 'team' team.team.id %}">{{ team.team.name }}</a></td>
-            <td><img src="{{ team.team.country.flag }}"></td>
-            <td class="ui center aligned"{% if team.season_penalty %} data-tooltip="{{ team.season_penalty }}"{% endif %}>
+            <td class="ui center aligned" rowspan="{{ team.driver_count }}">{{ team.position }}</td>
+            <td class="team-{{ team.team.css_class }}" rowspan="{{ team.driver_count }}"><a href="{% url 'team' team.team.id %}">{{ team.team.name }}</a></td>
+            <td rowspan="{{ team.driver_count }}"><img src="{{ team.team.country.flag }}"></td>
+            <td rowspan="{{ team.driver_count }}" class="ui center aligned"{% if team.season_penalty %} data-tooltip="{{ team.season_penalty }}"{% endif %}>
                 {{ team.points|format_float }}
                 {% if team.season_penalty %}<div class="note"></div>{% endif %}
             </td>
+            <td class="team-driver-position">{{ driver.name }}</td>
             {% for race in season.race_set.all %}
-                {% with result=team.results|find_results:race %}
-            <td class="ui center aligned">
-                {{ result|get_points:season }}
+                {% with result=team.results|find_results:race|find_driver:driver %}
+            <td class="ui center aligned {{ result|get_css_classes:season }} team-driver-position">
+                {{ result|get_position }}
             </td>
                 {% endwith %}
             {% endfor %}
         </tr>
+                {% else %}
+        <tr>
+            <td class="team-driver-position">{{ driver.name }}</td>
+            {% for race in season.race_set.all %}
+                {% with result=team.results|find_results:race|find_driver:driver %}
+            <td class="ui center aligned {{ result|get_css_classes:season }} team-driver-position">
+                {{ result|get_position }}
+            </td>
+                {% endwith %}
+            {% endfor %}
+        </tr>
+                {% endif %}
+            {% endfor %}
         {% endfor %}
     </tbody>
 </table>

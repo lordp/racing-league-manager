@@ -50,6 +50,15 @@ def find_result(results, race):
     return result
 
 
+@register.filter(name='find_driver')
+def find_driver(results, driver):
+    try:
+        result = [result for result in results if result.driver_id == driver.id][0]
+    except IndexError:
+        result = None
+    return result
+
+
 @register.filter(name='find_results')
 def find_results(results, race):
     return [result for result in results if result.race_id == race.id]
