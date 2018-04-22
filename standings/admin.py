@@ -41,7 +41,7 @@ class ResultAdmin(admin.ModelAdmin):
             'qualifying_penalty_sfp', 'qualifying_penalty_description', 'qualifying_fastest_lap'
         ]}),
         ('Race', {'fields': [
-            'race_laps', 'race_time', 'gap', 'dnf_reason',
+            'position', 'race_laps', 'race_time', 'gap', 'dnf_reason',
             'fastest_lap', 'race_fastest_lap'
         ]}),
         ('Race Penalties', {'fields': [
