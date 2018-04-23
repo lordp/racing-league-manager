@@ -185,6 +185,60 @@ class Season(models.Model):
 
         return apply_positions(sorted_drivers), apply_positions(sorted_teams)
 
+    def generate_image(self, mode, data):
+        from PIL import Image, ImageDraw, ImageFont
+        from django.core.files.storage import get_storage_class
+        from django.conf import settings
+        from standings.utils import format_float
+
+        static_storage = get_storage_class(settings.STATICFILES_STORAGE)()
+
+        division = self.division.name.lower().replace(' ', '_')
+        top = Image.open(static_storage.open("top10/fsr-top-{}.png".format(division)))
+        bottom = Image.open(static_storage.open("top10/fsr-bottom.png"))
+        row_left = Image.open(static_storage.open("top10/fsr-row-left.png"))
+        row_mid = Image.open(static_storage.open("top10/fsr-row-mid.png"))
+        row_right = Image.open(static_storage.open("top10/fsr-row-right.png"))
+
+        standings_image = Image.new('RGB', (300, 555))
+
+        standings_image.paste(top, (0, 0))
+        standings_image.paste(bottom, (0, standings_image.height - bottom.height))
+
+        draw = ImageDraw.Draw(standings_image)
+        font = ImageFont.truetype(static_storage.open('top10/DINPro-CondBlack.otf'), 22)
+        height = top.size[1]
+
+        for row in range(0, 10):
+            for num in range(0, top.size[0]):
+                if num < 45:
+                    standings_image.paste(row_left, (num, height))
+                elif num < 238:
+                    standings_image.paste(row_mid, (num, height))
+                else:
+                    standings_image.paste(row_right, (num, height))
+
+            pos_text = str(row + 1)
+            (pos_width, _) = font.getsize(text=pos_text)
+            draw.text(((45 - pos_width) / 2, height + 5), pos_text, font=font)
+
+            name_text = data[row][mode].name
+            (_, name_height) = font.getsize(text=name_text)
+            draw.text((50, height + 5), name_text, font=font)
+
+            pts_text = format_float(data[row]["points"])
+            (pts_width, _) = font.getsize(text=pts_text)
+            draw.text((238 + ((62 - pts_width) / 2), height + 5), pts_text, fill=(0, 0, 0), font=font)
+
+            height += 40
+
+        standings_image.save(static_storage.path('top10/standings-{}-{}-{}.png'.format(mode, division, self.name)))
+
+    def generate_top10(self):
+        standings_driver, standings_team = self.get_standings()
+
+        self.generate_image('driver', standings_driver)
+        self.generate_image('team', standings_team)
 
 
 class Race(models.Model):

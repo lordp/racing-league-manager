@@ -155,6 +155,7 @@ class SeasonAdmin(admin.ModelAdmin):
         return obj.division.name
 
     list_display = ('name', 'league', 'division', 'race_count')
+    actions = ['generate_top10']
 
     def get_queryset(self, request):
         return Season.objects.annotate(race_count=Count('race'))
@@ -162,6 +163,15 @@ class SeasonAdmin(admin.ModelAdmin):
     @staticmethod
     def race_count(obj):
         return obj.race_count
+
+    def generate_top10(self, request, queryset):
+        for obj in queryset:
+            obj.generate_top10()
+
+        messages.add_message(request, messages.INFO, "Top 10 images generated")
+        return redirect(reverse("admin:standings_season_changelist"))
+    generate_top10.short_description = 'Generate top 10 images'
+
 
 @admin.register(Driver)
 class DriverAdmin(admin.ModelAdmin):
