@@ -1,0 +1,46 @@
+{% extends 'standings/base.html' %}
+
+{% block content %}
+<script>
+    $(document).ready(function() {
+        ts = $('table').tablesort();
+        $('thead th.number').data('sortBy', function (th, td, tablesort) {
+            return parseInt(td.text());
+        });
+    });
+</script>
+
+<h1>Season Stats</h1>
+{% include 'standings/breadcrumb.html' with object=season.breadcrumbs %}
+
+<table class="ui sortable small fixed compact celled table">
+    <thead>
+        <tr>
+            <th class="ui">Driver</th>
+            <th class="ui center aligned number sorted ascending">Wins</th>
+            <th class="ui center aligned number">Points Finishes</th>
+            <th class="ui center aligned number">Podiums</th>
+            <th class="ui center aligned number">Pole Positions</th>
+            <th class="ui center aligned number">Fastest Laps</th>
+            <th class="ui center aligned number">Laps Led</th>
+            <th class="ui center aligned number">Laps Completed</th>
+            <th class="ui center aligned">Season Winner</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stat in stats.all %}
+        <tr>
+            <td><a href="{% url 'driver' stat.driver.id %}">{{ stat.driver.name }}</a></td>
+            <td class="ui center aligned">{{ stat.wins }}</td>
+            <td class="ui center aligned">{{ stat.points_finishes }}</td>
+            <td class="ui center aligned">{{ stat.podiums }}</td>
+            <td class="ui center aligned">{{ stat.pole_positions }}</td>
+            <td class="ui center aligned">{{ stat.fastest_laps }}</td>
+            <td class="ui center aligned">{{ stat.laps_lead }}</td>
+            <td class="ui center aligned">{{ stat.laps_completed }}</td>
+            <td class="ui center aligned">{{ stat.winner }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -26,6 +26,18 @@ def season_view(request, season_id):
     return render(request, 'standings/season.html', context)
 
 
+def season_stats_view(request, season_id):
+    season = Season.objects.get(pk=season_id)
+    stats = season.seasonstats_set.order_by('-wins')
+
+    context = {
+        "season": season,
+        "stats": stats
+    }
+
+    return render(request, 'standings/season_stats.html', context)
+
+
 def team_view(request, team_id):
     team_drivers = {}
     team = Team.objects.get(pk=team_id)

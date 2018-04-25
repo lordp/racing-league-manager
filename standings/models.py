@@ -240,6 +240,10 @@ class Season(models.Model):
         self.generate_image('driver', standings_driver)
         self.generate_image('team', standings_team)
 
+    def update_stats(self):
+        for stat in self.seasonstats_set.all():
+            stat.update_stats()
+
 
 class Race(models.Model):
     season = models.ForeignKey(Season, on_delete=models.CASCADE)
@@ -376,6 +380,53 @@ class SeasonStats(models.Model):
     season = models.ForeignKey(Season, on_delete=models.CASCADE)
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
     best_finish = models.IntegerField(default=0)
+    wins = models.IntegerField(default=0)
+    podiums = models.IntegerField(default=0)
+    points_finishes = models.IntegerField(default=0)
+    pole_positions = models.IntegerField(default=0)
+    fastest_laps = models.IntegerField(default=0)
+    laps_lead = models.IntegerField(default=0)
+    laps_completed = models.IntegerField(default=0)
+    winner = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name_plural = 'Season stats'
+
+    def update_stats(self):
+        self.wins = 0
+        self.podiums = 0
+        self.points_finishes = 0
+        self.pole_positions = 0
+        self.fastest_laps = 0
+        self.laps_lead = 0
+        self.laps_completed = 0
+        self.winner = False
+
+        for result in Result.objects.filter(race__season=self.season, driver=self.driver):
+            if self.best_finish == 0 or self.best_finish > result.position:
+                self.best_finish = result.position
+
+            if (result.race.point_system and result.position <= len(
+                    result.race.point_system.to_dict())) or result.position <= len(
+                    self.season.point_system.to_dict()):
+                self.points_finishes += 1
+
+            if result.position == 1:
+                self.wins += 1
+
+            if 1 <= result.position <= 3:
+                self.podiums += 1
+
+            if result.qualifying == 1:
+                self.pole_positions += 1
+
+            if result.fastest_lap:
+                self.fastest_laps += 1
+
+            self.laps_lead += result.lap_set.filter(position=1, session='race').aggregate(Count('id'))['id__count']
+            self.laps_completed += result.lap_set.filter(session='race').aggregate(Count('id'))['id__count']
+
+        self.save()
 
 
 class Result(models.Model):

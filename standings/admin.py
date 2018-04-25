@@ -155,7 +155,7 @@ class SeasonAdmin(admin.ModelAdmin):
         return obj.division.name
 
     list_display = ('name', 'league', 'division', 'race_count')
-    actions = ['generate_top10']
+    actions = ['generate_top10', 'update_stats']
 
     def get_queryset(self, request):
         return Season.objects.annotate(race_count=Count('race'))
@@ -171,6 +171,14 @@ class SeasonAdmin(admin.ModelAdmin):
         messages.add_message(request, messages.INFO, "Top 10 images generated")
         return redirect(reverse("admin:standings_season_changelist"))
     generate_top10.short_description = 'Generate top 10 images'
+
+    def update_stats(self, request, queryset):
+        for obj in queryset:
+            obj.update_stats()
+
+        messages.add_message(request, messages.INFO, "Season stats updated")
+        return redirect(reverse("admin:standings_season_changelist"))
+    update_stats.short_description = 'Update season based stats'
 
 
 @admin.register(Driver)
@@ -248,6 +256,23 @@ class SeasonPenaltyAdmin(admin.ModelAdmin):
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     ordering = ('name',)
+
+
+@admin.register(SeasonStats)
+class SeasonStatsAdmin(admin.ModelAdmin):
+    list_filter = ['season', 'driver']
+    list_select_related = ['season', 'driver']
+    list_display = ['season', 'driver', 'best_finish', 'wins', 'podiums', 'points_finishes',
+                    'pole_positions', 'fastest_laps', 'laps_lead', 'laps_completed', 'winner']
+    actions = ['update_stats']
+
+    def update_stats(self, request, queryset):
+        for obj in queryset:
+            obj.update_stats()
+
+        messages.add_message(request, messages.INFO, "Stats for {} drivers updated".format(queryset.count()))
+        return redirect(reverse("admin:standings_seasonstats_changelist"))
+    update_stats.short_description = 'Update season stats'
 
 
 admin.site.register([League, Division, PointSystem])
