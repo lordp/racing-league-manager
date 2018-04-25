@@ -127,8 +127,8 @@ class Season(models.Model):
         for result in results:
             if result.driver_id not in drivers:
                 try:
-                    best_finish = self.sortcriteria_set.get(driver=result.driver).best_finish
-                except SortCriteria.DoesNotExist:
+                    best_finish = self.seasonstats_set.get(driver=result.driver).best_finish
+                except SeasonStats.DoesNotExist:
                     best_finish = 0
 
                 try:
@@ -326,13 +326,13 @@ class Race(models.Model):
 
             result.save()
 
-            (sort_criteria, _) = SortCriteria.objects.get_or_create(season=self.season, driver=result.driver)
-            if result.position < sort_criteria.best_finish or sort_criteria.best_finish == 0:
-                sort_criteria.best_finish = result.position
+            (season_stats, _) = SeasonStats.objects.get_or_create(season=self.season, driver=result.driver)
+            if result.position < season_stats.best_finish or season_stats.best_finish == 0:
+                season_stats.best_finish = result.position
             if sp and sp.disqualified:
-                sort_criteria.best_finish = 99
+                season_stats.best_finish = 99
 
-            sort_criteria.save()
+            season_stats.save()
 
     def tooltip(self):
         tooltip = "{name}<br/>{time}".format(
@@ -372,7 +372,7 @@ class Team(models.Model):
         return "{} ({})".format(self.name, self.id)
 
 
-class SortCriteria(models.Model):
+class SeasonStats(models.Model):
     season = models.ForeignKey(Season, on_delete=models.CASCADE)
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
     best_finish = models.IntegerField(default=0)

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Season, Driver, Team, League, Division, Result, Race, SortCriteria, SeasonPenalty
+from .models import Season, Driver, Team, League, Division, Result, Race, SeasonStats, SeasonPenalty
 
 
 def index_view(request):
