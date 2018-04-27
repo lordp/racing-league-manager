@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, Min
 from django_countries.fields import CountryField
 from django.contrib import messages
 from datetime import date
@@ -74,6 +74,62 @@ class Track(models.Model):
 
     def __str__(self):
         return '{} ({}, {})'.format(self.name, self.country, self.version)
+
+    def collate_results(self, session_type):
+        best = {}
+
+        if session_type == 'race':
+            results = Result.objects.filter(race__track=self, race_fastest_lap__gt=0).\
+                values('race__season_id', 'driver_id', 'race_id').annotate(
+                Min('race_fastest_lap')).order_by('race_fastest_lap')
+            key = 'race_fastest_lap__min'
+        else:
+            results = Result.objects.filter(race__track=self, qualifying_fastest_lap__gt=0).\
+                values('race__season_id', 'driver_id', 'race_id').annotate(
+                Min('qualifying_fastest_lap')).order_by('qualifying_fastest_lap')
+            key = 'qualifying_fastest_lap__min'
+
+        for result in results:
+            if result['race__season_id'] not in best:
+                best[result['race__season_id']] = {
+                    'driver': result['driver_id'],
+                    'race': result['race_id'],
+                    'lap_time': result[key],
+                    'update': True
+                }
+            elif result[key] < best[result['race__season_id']]['lap_time']:
+                best[result['race__season_id']] = {
+                    'new_driver': result['driver_id'],
+                    'new_race': result['race_id'],
+                    'lap_time': result[key],
+                    'update': True
+                }
+
+        return best
+
+    def update_records(self):
+        best = {
+            'race': self.collate_results('race'),
+            'qualifying': self.collate_results('qualifying')
+        }
+
+        for session_type, session_best in best.items():
+            for season, record in session_best.items():
+                if record['update']:
+                    (tr, created) = TrackRecord.objects.get_or_create(
+                        driver_id=record['driver'],
+                        race_id=record['race'],
+                        season_id=season,
+                        track=self
+                    )
+
+                    if 'new_driver' in record:
+                        tr.driver_id = record['new_driver'],
+                        tr.race_id = record['new_race']
+
+                    tr.lap_time = record['lap_time']
+                    tr.session_type = session_type
+                    tr.save()
 
 
 class Season(models.Model):
@@ -374,6 +430,15 @@ class Team(models.Model):
 
     def __str__(self):
         return "{} ({})".format(self.name, self.id)
+
+
+class TrackRecord(models.Model):
+    track = models.ForeignKey(Track, on_delete=models.CASCADE)
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
+    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
+    race = models.ForeignKey(Race, on_delete=models.CASCADE)
+    session_type = models.CharField(max_length=10)
+    lap_time = models.FloatField(default=0)
 
 
 class SeasonStats(models.Model):

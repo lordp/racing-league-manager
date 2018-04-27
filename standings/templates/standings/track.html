@@ -1,0 +1,28 @@
+{% extends 'standings/base.html' %}
+{% load standings_extras %}
+
+{% block content %}
+<h3>{{ track.name }}</h3>
+<table class="ui small selectable compact celled striped table">
+    <thead>
+        <tr>
+            <th>Session</th>
+            <th>Season</th>
+            <th>Race</th>
+            <th>Driver</th>
+            <th>Lap Time</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for record in records %}
+        <tr>
+            <td>{{ record.session_type|capfirst }}</td>
+            <td><a href="{% url 'season' record.season_id %}">{{ record.season.name }}</a></td>
+            <td><a href="{% url 'race' record.race_id %}">{{ record.race.name }}</a></td>
+            <td><a href="{% url 'driver' record.driver_id %}">{{ record.driver.name }}</a></td>
+            <td>{{ record.lap_time|format_time }}</td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+{% endblock %}

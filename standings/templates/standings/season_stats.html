@@ -13,7 +13,7 @@
 <h1>Season Stats</h1>
 {% include 'standings/breadcrumb.html' with object=season.breadcrumbs %}
 
-<table class="ui sortable small fixed compact celled table">
+<table class="ui sortable small compact celled table">
     <thead>
         <tr>
             <th class="ui">Driver</th>
@@ -31,14 +31,14 @@
         {% for stat in stats.all %}
         <tr>
             <td><a href="{% url 'driver' stat.driver.id %}">{{ stat.driver.name }}</a></td>
-            <td class="ui center aligned">{{ stat.wins }}</td>
-            <td class="ui center aligned">{{ stat.points_finishes }}</td>
-            <td class="ui center aligned">{{ stat.podiums }}</td>
-            <td class="ui center aligned">{{ stat.pole_positions }}</td>
-            <td class="ui center aligned">{{ stat.fastest_laps }}</td>
-            <td class="ui center aligned">{{ stat.laps_lead }}</td>
-            <td class="ui center aligned">{{ stat.laps_completed }}</td>
-            <td class="ui center aligned">{{ stat.winner }}</td>
+            <td class="ui center aligned collapsing">{{ stat.wins }}</td>
+            <td class="ui center aligned collapsing">{{ stat.points_finishes }}</td>
+            <td class="ui center aligned collapsing">{{ stat.podiums }}</td>
+            <td class="ui center aligned collapsing">{{ stat.pole_positions }}</td>
+            <td class="ui center aligned collapsing">{{ stat.fastest_laps }}</td>
+            <td class="ui center aligned collapsing">{{ stat.laps_lead }}</td>
+            <td class="ui center aligned collapsing">{{ stat.laps_completed }}</td>
+            <td class="ui center aligned collapsing">{{ stat.winner }}</td>
         </tr>
         {% endfor %}
     </tbody>

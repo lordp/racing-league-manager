@@ -8,6 +8,7 @@ from django.db.models import Max, F
 from .models import *
 import os
 import contextlib
+from .utils import format_time
 
 admin.site.site_header = 'FSR Admin'
 admin.site.site_title = "FSR Admin"
@@ -240,7 +241,23 @@ class LogFileAdmin(admin.ModelAdmin):
 
 @admin.register(Track)
 class TrackAdmin(admin.ModelAdmin):
-    list_display = ('name', 'length', 'country', 'version')
+    list_display = ('name', 'length', 'country', 'version', 'race_count')
+    actions = ['update_records']
+
+    def update_records(self, request, queryset):
+        for obj in queryset:
+            obj.update_records()
+
+        messages.add_message(request, messages.INFO, "Records for {} tracks updated".format(queryset.count()))
+        return redirect(reverse("admin:standings_track_changelist"))
+    update_records.short_description = 'Update track records'
+
+    def get_queryset(self, request):
+        return Track.objects.annotate(race_count=Count('race'))
+
+    @staticmethod
+    def race_count(obj):
+        return obj.race_count
 
 
 @admin.register(SeasonPenalty)
@@ -273,6 +290,18 @@ class SeasonStatsAdmin(admin.ModelAdmin):
         messages.add_message(request, messages.INFO, "Stats for {} drivers updated".format(queryset.count()))
         return redirect(reverse("admin:standings_seasonstats_changelist"))
     update_stats.short_description = 'Update season stats'
+
+
+@admin.register(TrackRecord)
+class TrackRecordAdmin(admin.ModelAdmin):
+    list_select_related = ['track', 'driver', 'race', 'season']
+    list_display = ['track', 'driver', 'race', 'season', 'session_type', 'formatted_lap_time']
+
+    def formatted_lap_time(self, obj):
+        return format_time(obj.lap_time)
+
+    formatted_lap_time.short_description = 'Lap Time'
+    formatted_lap_time.admin_order_field = 'formatted_lap_time'
 
 
 admin.site.register([League, Division, PointSystem])

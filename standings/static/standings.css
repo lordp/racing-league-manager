@@ -65,6 +65,18 @@
     padding: 1px 7px !important;
 }
 
+div [class*="left floated"] {
+    float: left;
+    margin-left: 0.25em;
+    margin-bottom: 0.25em;
+}
+
+div [class*="right floated"] {
+    float: right;
+    margin-right: 0.25em;
+    margin-bottom: 0.25em;
+}
+
 .team-ferrari {
     color: white;
     background-color: rgb(224, 8, 29);

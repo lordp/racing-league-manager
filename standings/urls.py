@@ -11,4 +11,5 @@ urlpatterns = [
     path('league/<int:league_id>/', views.league_view, name='league'),
     path('division/<int:division_id>/', views.division_view, name='division'),
     path('race/<int:race_id>/', views.race_view, name='race'),
+    path('track/<int:track_id>/', views.track_view, name='track'),
 ]
