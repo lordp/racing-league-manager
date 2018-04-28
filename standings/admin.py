@@ -123,9 +123,10 @@ class RaceAdmin(admin.ModelAdmin):
                 result.save()
 
             for result_laps in pens:
-                for index, result in enumerate(
-                        race.result_set.filter(race_laps=result_laps, race_penalty_dsq=False).order_by('race_time')):
-                    result.position = index + 1
+                results = race.result_set.filter(race_laps=result_laps, race_penalty_dsq=False).order_by('race_time')
+                highest_position = results.aggregate(Min('position'))['position__min']
+                for index, result in enumerate(results):
+                    result.position = highest_position + index
                     result.save()
 
             if dsq or pens:
