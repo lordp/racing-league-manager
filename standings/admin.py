@@ -277,7 +277,11 @@ class TeamAdmin(admin.ModelAdmin):
 
 @admin.register(SeasonStats)
 class SeasonStatsAdmin(admin.ModelAdmin):
-    list_filter = ['season', 'driver']
+    list_filter = (
+        ('season', RelatedDropdownFilter),
+        ('driver', RelatedDropdownFilter),
+    )
+
     list_select_related = ['season', 'driver']
     list_display = ['season', 'driver', 'best_finish', 'wins', 'podiums', 'points_finishes',
                     'pole_positions', 'fastest_laps', 'laps_lead', 'laps_completed', 'winner']
