@@ -18,6 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     path('', include('standings.urls')),
-    path('api/', include('standings_api.urls')),
     path('admin/', admin.site.urls),
 ]
