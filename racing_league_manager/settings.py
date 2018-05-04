@@ -35,6 +35,7 @@ INTERNAL_IPS = ['127.0.0.1']
 
 INSTALLED_APPS = [
     'django_countries',
+    'django_admin_select2',
     'standings.apps.StandingsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'django_admin_listfilter_dropdown',
     'rest_framework',
 ]
 
@@ -130,6 +132,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = 'standings/static'
 
 LOGGING = {
     'version': 1,
