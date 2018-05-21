@@ -33,9 +33,12 @@ INTERNAL_IPS = ['127.0.0.1']
 
 # Application definition
 
+CORS_ORIGIN_ALLOW_ALL=True
+
 INSTALLED_APPS = [
     'django_countries',
     'django_admin_select2',
+    'corsheaders',
     'standings.apps.StandingsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,6 +52,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
