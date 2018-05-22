@@ -466,6 +466,7 @@ class SeasonStats(models.Model):
         self.laps_lead = 0
         self.laps_completed = 0
         self.winner = False
+        self.best_finish = 0
 
         for result in Result.objects.filter(race__season=self.season, driver=self.driver):
             if self.best_finish == 0 or self.best_finish > result.position:
