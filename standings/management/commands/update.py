@@ -1,5 +1,5 @@
-from django.core.management.base import BaseCommand, CommandError
-from standings.models import SeasonStats, Season
+from django.core.management.base import BaseCommand
+from standings.models import Season, Track
 
 
 class Command(BaseCommand):
@@ -8,3 +8,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for season in Season.objects.all():
             season.update_stats()
+
+        for track in Track.objects.all():
+            track.update_records()
