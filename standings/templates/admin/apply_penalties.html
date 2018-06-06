@@ -1,4 +1,18 @@
 {% extends "admin/base_site.html" %}
+{% load i18n static standings_extras %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> &rsaquo;
+{% for crumb in race.breadcrumbs %}
+    {% if not forloop.last %}
+<a href="{% url crumb|admin_breadcrumb %}">{{ crumb.object.name }}</a> &rsaquo;
+    {% else %}
+        {{ crumb.object.name }}
+    {% endif %}
+{% endfor %}
+</div>
+{% endblock %}
 
 {% block content %}
 <form action="" method="post">

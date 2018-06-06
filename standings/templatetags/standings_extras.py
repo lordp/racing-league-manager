@@ -136,3 +136,8 @@ def collate_notes(result):
 
     note = '; '.join([n for n in notes if n is not None])
     return note
+
+
+@register.filter(name='admin_breadcrumb')
+def admin_breadcrumb(breadcrumb):
+    return 'admin:standings_{}_changelist'.format(breadcrumb['url'])
