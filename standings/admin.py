@@ -140,7 +140,8 @@ class RaceAdmin(admin.ModelAdmin):
             context = dict(
                 self.admin_site.each_context(request),
                 race=race,
-                results=results
+                results=results,
+                title="Apply penalties"
             )
             return TemplateResponse(request, "admin/apply_penalties.html", context)
     apply_penalties.short_description = 'Apply penalties and adjust time/positions'
