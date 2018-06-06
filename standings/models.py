@@ -297,7 +297,8 @@ class Season(models.Model):
         self.generate_image('team', standings_team)
 
     def update_stats(self):
-        for stat in self.seasonstats_set.all():
+        for driver in Driver.objects.filter(result__race__season=self).distinct():
+            (stat, _) = SeasonStats.objects.get_or_create(season=self, driver=driver)
             stat.update_stats()
 
 
