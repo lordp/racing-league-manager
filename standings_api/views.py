@@ -104,7 +104,8 @@ class DriverStats(APIView):
                     "podiums",
                     "points_finishes",
                     "pole_positions",
-                    "wins"
+                    "wins",
+                    "attendance"
                 ]
 
                 driver_stats = {
@@ -115,7 +116,8 @@ class DriverStats(APIView):
                     "podiums": 0,
                     "points_finishes": 0,
                     "pole_positions": 0,
-                    "wins": 0
+                    "wins": 0,
+                    "attendance": 0
                 }
 
                 for stat in stats:
