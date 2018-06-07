@@ -446,6 +446,7 @@ class SeasonStats(models.Model):
     season = models.ForeignKey(Season, on_delete=models.CASCADE)
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
     best_finish = models.IntegerField(default=0)
+    attendance = models.IntegerField(default=0)
     wins = models.IntegerField(default=0)
     podiums = models.IntegerField(default=0)
     points_finishes = models.IntegerField(default=0)
@@ -470,6 +471,8 @@ class SeasonStats(models.Model):
         self.best_finish = 0
 
         for result in Result.objects.filter(race__season=self.season, driver=self.driver):
+            self.attendance += 1
+
             if self.best_finish == 0 or self.best_finish > result.position:
                 self.best_finish = result.position
 
