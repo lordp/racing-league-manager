@@ -569,6 +569,7 @@ class Lap(models.Model):
 class LogFile(models.Model):
     file = models.FileField(upload_to='log_files/%Y/%m/%d')
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
+    summary = models.TextField(default='', blank=True)
 
     @staticmethod
     def get_float(value):
