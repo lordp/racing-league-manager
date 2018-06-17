@@ -240,6 +240,37 @@ class LogFileAdmin(admin.ModelAdmin):
 
         super().delete_model(request, obj)
 
+    def response_add(self, request, obj, post_url_continue=None):
+        return redirect(reverse("admin:standings_logfile_summary", args=(obj.id,)))
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('<int:logfile_id>/summary', self.summary, name='standings_logfile_summary'),
+        ]
+        return my_urls + urls
+
+    def summary(self, request, logfile_id):
+        log_file = LogFile.objects.get(pk=logfile_id)
+        summary = json.loads(log_file.summary)
+        duplicates = []
+        laps = []
+
+        for driver_id in summary['duplicates']:
+            driver = Driver.objects.get(pk=driver_id)
+            duplicates.append({'id': driver.id, 'name': driver.name})
+
+        for lap_id in summary['lap_errors']:
+            lap = Lap.objects.get(pk=lap_id)
+            laps.append({'id': lap.id, 'number': lap.lap_number, 'name': lap.result.driver.name})
+
+        context = dict(
+            self.admin_site.each_context(request),
+            log_file=log_file,
+            duplicates=duplicates,
+            lap_errors=laps,
+        )
+        return TemplateResponse(request, "admin/summary.html", context)
 
 @admin.register(Track)
 class TrackAdmin(admin.ModelAdmin):

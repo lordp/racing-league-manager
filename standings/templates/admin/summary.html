@@ -1,0 +1,47 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static standings_extras %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> &rsaquo;
+{% for crumb in log_file.breadcrumbs %}
+    {% if not forloop.last %}
+<a href="{% url crumb|admin_breadcrumb %}">{{ crumb.object.name }}</a> &rsaquo;
+    {% else %}
+        {{ crumb.object.name }}
+    {% endif %}
+{% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}
+{% if duplicates %}
+    <h2>Duplicate Drivers</h2>
+    <p>The following drivers have duplicate records - results have been added to the record with the most results:</p>
+    <ul>
+    {% for driver in duplicates %}
+        <li><a href="{% url 'admin:standings_result_changelist' %}?driver__id__exact={{ driver.id }}">{{ driver.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% if lap_errors %}
+    <h2>Lap Errors</h2>
+    <p>The following laps had missing information in the log file and may need to be fixed:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Driver</th>
+                <th>Lap number</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lap in lap_errors %}
+            <tr>
+                <td>{{ lap.name }}</td>
+                <td><a href="{% url 'admin:standings_lap_change' lap.id %}">{{ lap.number }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}

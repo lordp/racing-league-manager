@@ -7,6 +7,7 @@ from lxml import etree
 import os
 import standings.utils
 from .utils import apply_positions
+import json
 
 
 class PointSystem(models.Model):
@@ -592,6 +593,7 @@ class LogFile(models.Model):
             session = 'race'
 
         duplicates = []
+        lap_errors = []
         drivers = tree.xpath('//Driver')
         for driver in drivers:
             driver_name = driver.xpath('./Name')[0].text.strip()
@@ -603,7 +605,7 @@ class LogFile(models.Model):
                 driver_obj = Driver.objects.filter(name__unaccent=driver_name).annotate(
                     result_count=Count('result')).order_by('-result_count').first()
                 if driver_name not in duplicates:
-                    duplicates.append(driver_name)
+                    duplicates.append(driver_obj.id)
 
             team_name = driver.xpath('./CarType')[0].text
             (team_obj, created) = Team.objects.get_or_create(name=team_name)
@@ -654,6 +656,9 @@ class LogFile(models.Model):
 
                 lap_obj.save()
 
+                if lap.text == '--.----':
+                    lap_errors.append(lap_obj.id)
+
                 race_time += lap_obj.lap_time
                 if lap_obj.lap_time > 0 and (lap_obj.lap_time < fastest_lap or fastest_lap == 0):
                     fastest_lap = lap_obj.lap_time
@@ -669,11 +674,8 @@ class LogFile(models.Model):
 
             result.save()
 
-        if duplicates:
-            msg = 'The following drivers have duplicate records, results ' \
-                  'have been applied to the one with the most results - {}'.format(', '.join(duplicates))
-
-            messages.add_message(request, messages.WARNING, msg)
+        self.summary = json.dumps({'duplicates': duplicates, 'lap_errors': lap_errors})
+        self.save()
 
         self.race.fill_attributes()
 
