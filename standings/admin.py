@@ -80,7 +80,12 @@ class RaceAdmin(admin.ModelAdmin):
             Result.objects.filter(race=obj).update(finalized=False)
 
         messages.add_message(request, messages.INFO, "{} race(s) unfinalised".format(queryset.count()))
-        return redirect(reverse("admin:standings_race_changelist"))
+        return redirect(
+            "{}?season__id__exact={}".format(
+                reverse("admin:standings_race_changelist"),
+                request.GET['season__id__exact']
+            )
+        )
     unfinalise.short_description = 'Set all results for a race to be unfinalised'
 
     def apply_penalties(self, request, queryset):
@@ -133,7 +138,12 @@ class RaceAdmin(admin.ModelAdmin):
                 race.fill_attributes()
 
             messages.add_message(request, messages.INFO, "Results for '{}' updated".format(race.name))
-            return redirect(reverse("admin:standings_race_changelist"))
+            return redirect(
+                "{}?season__id__exact={}".format(
+                    reverse("admin:standings_race_changelist"),
+                    request.GET['season__id__exact']
+                )
+            )
         else:
             race = queryset.first()
             results = race.result_set.all()
