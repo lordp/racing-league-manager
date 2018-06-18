@@ -644,27 +644,30 @@ class LogFile(models.Model):
 
             laps = driver.xpath('.//Lap')
             for lap in laps:
-                lap_number = int(lap.get('num'))
-                (lap_obj, created) = Lap.objects.get_or_create(result=result, lap_number=lap_number, session=session)
+                try:
+                    lap_number = int(lap.get('num'))
+                    (lap_obj, created) = Lap.objects.get_or_create(result=result, lap_number=lap_number, session=session)
 
-                lap_obj.position = int(lap.get('p'))
-                lap_obj.sector_1 = self.get_float(lap.get('s1'))
-                lap_obj.sector_2 = self.get_float(lap.get('s2'))
-                lap_obj.sector_3 = self.get_float(lap.get('s3'))
-                lap_obj.pitstop = lap.get('pit') == '1'
-                lap_obj.lap_time = self.get_float(lap.text)
+                    lap_obj.position = int(lap.get('p'))
+                    lap_obj.sector_1 = self.get_float(lap.get('s1'))
+                    lap_obj.sector_2 = self.get_float(lap.get('s2'))
+                    lap_obj.sector_3 = self.get_float(lap.get('s3'))
+                    lap_obj.pitstop = lap.get('pit') == '1'
+                    lap_obj.lap_time = self.get_float(lap.text)
 
-                lap_obj.save()
+                    lap_obj.save()
 
-                if lap.text == '--.----':
-                    if driver_obj.name not in lap_errors:
-                        lap_errors[driver_obj.name] = []
-                    tmp_lap = {"number": lap_obj.lap_number, "id": lap_obj.id}
-                    lap_errors[driver_obj.name].append(tmp_lap)
+                    if lap.text == '--.----':
+                        if driver_obj.name not in lap_errors:
+                            lap_errors[driver_obj.name] = []
+                        tmp_lap = {"number": lap_obj.lap_number, "id": lap_obj.id}
+                        lap_errors[driver_obj.name].append(tmp_lap)
 
-                race_time += lap_obj.lap_time
-                if lap_obj.lap_time > 0 and (lap_obj.lap_time < fastest_lap or fastest_lap == 0):
-                    fastest_lap = lap_obj.lap_time
+                    race_time += lap_obj.lap_time
+                    if lap_obj.lap_time > 0 and (lap_obj.lap_time < fastest_lap or fastest_lap == 0):
+                        fastest_lap = lap_obj.lap_time
+                except TypeError:
+                    pass
 
             if session == 'race':
                 result.race_fastest_lap = fastest_lap
