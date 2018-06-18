@@ -593,7 +593,7 @@ class LogFile(models.Model):
             session = 'race'
 
         duplicates = []
-        lap_errors = []
+        lap_errors = {}
         drivers = tree.xpath('//Driver')
         for driver in drivers:
             driver_name = driver.xpath('./Name')[0].text.strip()
@@ -657,7 +657,10 @@ class LogFile(models.Model):
                 lap_obj.save()
 
                 if lap.text == '--.----':
-                    lap_errors.append(lap_obj.id)
+                    if driver_obj.name not in lap_errors:
+                        lap_errors[driver_obj.name] = []
+                    tmp_lap = {"number": lap_obj.lap_number, "id": lap_obj.id}
+                    lap_errors[driver_obj.name].append(tmp_lap)
 
                 race_time += lap_obj.lap_time
                 if lap_obj.lap_time > 0 and (lap_obj.lap_time < fastest_lap or fastest_lap == 0):

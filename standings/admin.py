@@ -260,15 +260,11 @@ class LogFileAdmin(admin.ModelAdmin):
             driver = Driver.objects.get(pk=driver_id)
             duplicates.append({'id': driver.id, 'name': driver.name})
 
-        for lap_id in summary['lap_errors']:
-            lap = Lap.objects.get(pk=lap_id)
-            laps.append({'id': lap.id, 'number': lap.lap_number, 'name': lap.result.driver.name})
-
         context = dict(
             self.admin_site.each_context(request),
             log_file=log_file,
             duplicates=duplicates,
-            lap_errors=laps,
+            lap_errors=summary['lap_errors'],
         )
         return TemplateResponse(request, "admin/summary.html", context)
 
