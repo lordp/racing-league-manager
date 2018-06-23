@@ -57,8 +57,8 @@
             <td><input title="DSQ" type="checkbox" name="qpen-dsq-{{ result.id }}" {% if result.qualifying_penalty_dsq %}checked="checked"{% endif %}/></td>
             <td><input title="Qualifying Penalty Desc" type="text" name="qpen-desc-{{ result.id }}" value="{{ result.qualifying_penalty_description }}"/></td>
         </tr>
-        </tbody>
     {% endfor %}
+        </tbody>
     </table>
 
     <input type="hidden" name="_selected_action" value="{{ race.id }}" />
