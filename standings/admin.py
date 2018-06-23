@@ -83,7 +83,7 @@ class RaceAdmin(admin.ModelAdmin):
         return redirect(
             "{}?season__id__exact={}".format(
                 reverse("admin:standings_race_changelist"),
-                request.GET['season__id__exact']
+                request.GET.get('season__id__exact', None)
             )
         )
     unfinalise.short_description = 'Set all results for a race to be unfinalised'
@@ -141,7 +141,7 @@ class RaceAdmin(admin.ModelAdmin):
             return redirect(
                 "{}?season__id__exact={}".format(
                     reverse("admin:standings_race_changelist"),
-                    request.GET['season__id__exact']
+                    request.GET.get('season__id__exact', None)
                 )
             )
         else:
