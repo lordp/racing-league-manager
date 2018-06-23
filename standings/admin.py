@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin import helpers
 from django.urls import reverse, path
 from django.utils.safestring import mark_safe
 from django.template.response import TemplateResponse
@@ -199,7 +200,7 @@ class DriverAdmin(admin.ModelAdmin):
     list_display = ('name', 'result_count', 'public_profile', 'country', 'shortname', 'city', 'birthday', 'helmet')
     search_fields = ['name']
     ordering = ['name']
-    actions = ['move_results']
+    actions = ['merge_results']
 
     def get_queryset(self, request):
         return Driver.objects.annotate(result_count=Count('result'))
@@ -213,13 +214,27 @@ class DriverAdmin(admin.ModelAdmin):
     result_count.short_description = 'Results count'
     result_count.admin_order_field = 'result_count'
 
-    def move_results(self, request, queryset):
-        for obj in queryset:
-            obj.collect_results()
+    def merge_results(self, request, queryset):
+        if 'apply' in request.POST:
+            chosen_driver = request.POST.get('chosen_driver', None)
+            if chosen_driver:
+                chosen_driver = Driver.objects.get(pk=chosen_driver)
+                chosen_driver.collect_results(queryset)
+                messages.add_message(request, messages.INFO, "Results moved to '{}'".format(chosen_driver.name))
+            else:
+                messages.add_message(request, messages.WARNING, "No driver was chosen")
 
-        messages.add_message(request, messages.INFO, "Results for {} drivers moved".format(queryset.count()))
-        return redirect(reverse("admin:standings_driver_changelist"))
-    move_results.short_description = 'Merge driver results'
+            return redirect(reverse("admin:standings_driver_changelist"))
+        else:
+            context = {
+                **self.admin_site.each_context(request),
+                'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
+                'drivers': queryset,
+                'driver_ids': map(str, queryset.values_list('id', flat=True)),
+                'title': "Merge results",
+            }
+            return TemplateResponse(request, "admin/merge_results.html", context)
+    merge_results.short_description = 'Merge driver results'
 
     @staticmethod
     def public_profile(obj):

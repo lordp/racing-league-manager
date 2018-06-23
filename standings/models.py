@@ -419,10 +419,9 @@ class Driver(models.Model):
     def __str__(self):
         return "{} ({})".format(self.name, self.country)
 
-    def collect_results(self):
-        for driver in Driver.objects.filter(name=self.name):
-            if driver is not self:
-                driver.result_set.update(driver=self)
+    def collect_results(self, other_driver_ids):
+        for driver in Driver.objects.filter(id__in=other_driver_ids):
+            driver.result_set.update(driver=self)
 
 
 class Team(models.Model):

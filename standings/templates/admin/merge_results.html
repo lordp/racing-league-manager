@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static standings_extras %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<h2>Select the driver you wish to move results to</h2>
+<form action="" method="post">
+    {% csrf_token %}
+    <ul>
+        {% for driver in drivers %}
+            <li><input type="radio" name="chosen_driver" value="{{ driver.id }}" title="{{ driver.name }}"> {{ driver.name }}</li>
+        {% endfor %}
+    </ul>
+    {% for driver_id in driver_ids %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ driver_id }}" />
+    {% endfor %}
+    <input type="hidden" name="action" value="merge_results" />
+    <input type="submit" name="apply" value="Merge Results"/>
+</form>
+{% endblock %}
