@@ -220,6 +220,10 @@ class DriverAdmin(admin.ModelAdmin):
             if chosen_driver:
                 chosen_driver = Driver.objects.get(pk=chosen_driver)
                 chosen_driver.collect_results(queryset)
+                if request.POST.get('delete_others', None):
+                    for driver in queryset.exclude(id=chosen_driver.id).all():
+                        driver.delete()
+
                 messages.add_message(request, messages.INFO, "Results moved to '{}'".format(chosen_driver.name))
             else:
                 messages.add_message(request, messages.WARNING, "No driver was chosen")
