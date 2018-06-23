@@ -20,11 +20,13 @@
     <table>
         <thead>
         <tr>
+            <th></th>
             <th colspan="4">Driver Info</th>
             <th colspan="4">Race Penalties</th>
             <th colspan="5">Qualifying Penalties</th>
         </tr>
         <tr>
+            <th>Finalized?</th>
             <th>Driver</th>
             <th>Position</th>
             <th>Time</th>
@@ -43,6 +45,7 @@
         <tbody>
     {% for result in results %}
         <tr>
+            <td style="text-align: center">{% if result.finalized %}<strong>Yes</strong>{% else %}No{% endif %}</td>
             <td>{{ result.driver.name }}</td>
             <td><input title="Race Pos" type="text" name="position-{{ result.id }}" value="{{ result.position }}" size="2"/></td>
             <td><input title="Race Time" type="text" name="race-time-{{ result.id }}" value="{{ result.race_time }}" size="8"/></td>
