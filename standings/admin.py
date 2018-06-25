@@ -284,17 +284,24 @@ class LogFileAdmin(admin.ModelAdmin):
         log_file = LogFile.objects.get(pk=logfile_id)
         summary = json.loads(log_file.summary)
         duplicates = []
-        laps = []
+        lap_errors = []
 
         for driver_id in summary['duplicates']:
             driver = Driver.objects.get(pk=driver_id)
             duplicates.append({'id': driver.id, 'name': driver.name})
 
+        for driver_id in summary['lap_errors']:
+            driver = Driver.objects.get(pk=driver_id)
+            lap_errors.append({
+                'driver': {'id': driver.id, 'name': driver.name},
+                'laps': summary['lap_errors'][driver_id]
+            })
+
         context = dict(
             self.admin_site.each_context(request),
             log_file=log_file,
             duplicates=duplicates,
-            lap_errors=summary['lap_errors'],
+            lap_errors=lap_errors,
         )
         return TemplateResponse(request, "admin/summary.html", context)
 

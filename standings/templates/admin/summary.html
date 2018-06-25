@@ -35,11 +35,11 @@
             </tr>
         </thead>
         <tbody>
-            {% for driver, laps in lap_errors.items %}
+            {% for error in lap_errors %}
             <tr>
-                <td>{{ driver }}</td>
+                <td><a href="{% url 'admin:standings_lap_changelist' %}?result__driver__id={{ error.driver.id }}&result__race__id={{ log_file.race.id }}&session={{ log_file.session }}">{{ error.driver.name }}</a></td>
                 <td>
-                    {% for lap in laps %}
+                    {% for lap in error.laps %}
                     <a href="{% url 'admin:standings_lap_change' lap.id %}">{{ lap.number }}</a>{% if not forloop.last %},{% endif %}
                     {% endfor %}
                 </td>
