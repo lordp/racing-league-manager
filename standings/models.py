@@ -1,7 +1,6 @@
 from django.db import models
 from django.db.models import Count, Min
 from django_countries.fields import CountryField
-from django.contrib import messages
 from datetime import date
 from lxml import etree
 import os
