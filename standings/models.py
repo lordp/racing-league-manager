@@ -657,10 +657,9 @@ class LogFile(models.Model):
                     lap_obj.save()
 
                     if lap.text == '--.----':
-                        if driver_obj.name not in lap_errors:
-                            lap_errors[driver_obj.name] = []
-                        tmp_lap = {"number": lap_obj.lap_number, "id": lap_obj.id}
-                        lap_errors[driver_obj.name].append(tmp_lap)
+                        if driver_obj.id not in lap_errors:
+                            lap_errors[driver_obj.id] = []
+                        lap_errors[driver_obj.id].append({"number": lap_obj.lap_number, "id": lap_obj.id})
 
                     race_time += lap_obj.lap_time
                     if lap_obj.lap_time > 0 and (lap_obj.lap_time < fastest_lap or fastest_lap == 0):
