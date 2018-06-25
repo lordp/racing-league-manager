@@ -569,6 +569,7 @@ class LogFile(models.Model):
     file = models.FileField(upload_to='log_files/%Y/%m/%d')
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
     summary = models.TextField(default='', blank=True)
+    session = models.CharField(max_length=10, default='')
 
     @staticmethod
     def get_float(value):
@@ -586,9 +587,9 @@ class LogFile(models.Model):
 
         qualify = len(tree.xpath('//Qualify'))
         if qualify > 0:
-            session = 'qualify'
+            self.session = 'qualify'
         else:
-            session = 'race'
+            self.session = 'race'
 
         duplicates = []
         lap_errors = {}
@@ -615,7 +616,7 @@ class LogFile(models.Model):
             result.fastest_lap = driver.xpath('./LapRankIncludingDiscos')[0].text == '1'
             result.car_class = driver.xpath('./CarClass')[0].text
             result.car = driver.xpath('./VehFile')[0].text
-            if session == 'race':
+            if self.session == 'race':
                 result.qualifying = driver.xpath('./GridPos')[0].text
                 result.position = driver.xpath('./Position')[0].text
                 result.race_laps = driver.xpath('./Laps')[0].text
@@ -644,7 +645,7 @@ class LogFile(models.Model):
             for lap in laps:
                 try:
                     lap_number = int(lap.get('num'))
-                    (lap_obj, created) = Lap.objects.get_or_create(result=result, lap_number=lap_number, session=session)
+                    (lap_obj, _) = Lap.objects.get_or_create(result=result, lap_number=lap_number, session=self.session)
 
                     lap_obj.position = int(lap.get('p'))
                     lap_obj.sector_1 = self.get_float(lap.get('s1'))
@@ -667,7 +668,7 @@ class LogFile(models.Model):
                 except TypeError:
                     pass
 
-            if session == 'race':
+            if self.session == 'race':
                 result.race_fastest_lap = fastest_lap
                 if result.race_time == 0:
                     result.race_time = race_time
