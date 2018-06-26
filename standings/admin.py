@@ -302,6 +302,7 @@ class LogFileAdmin(admin.ModelAdmin):
             log_file=log_file,
             duplicates=duplicates,
             lap_errors=lap_errors,
+            title="Log file summary"
         )
         return TemplateResponse(request, "admin/summary.html", context)
 
