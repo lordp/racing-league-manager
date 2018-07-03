@@ -160,6 +160,9 @@ class Standings(APIView):
                 else:
                     data.append({
                         'name': row['driver'].name,
+                        'id': row['driver'].id,
+                        'team': row['team'].name,
+                        'team_id': row['team'].id,
                         'position': row['position'],
                         'points': row['points'],
                         'best_finish': row['best_finish']

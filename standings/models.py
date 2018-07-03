@@ -195,6 +195,7 @@ class Season(models.Model):
 
                 drivers[result.driver_id] = {
                     'driver': result.driver,
+                    'team': result.team,
                     'points': result.points,
                     'results': [result],
                     'position': 0,
