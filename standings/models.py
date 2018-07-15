@@ -575,7 +575,7 @@ class LogFile(models.Model):
     file = models.FileField(upload_to='log_files/%Y/%m/%d')
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
     summary = models.TextField(default='', blank=True)
-    session = models.CharField(max_length=10, default='')
+    session = models.CharField(max_length=10, default='', blank=True)
 
     @staticmethod
     def get_float(value):
