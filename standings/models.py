@@ -428,6 +428,7 @@ class Team(models.Model):
     name = models.CharField(max_length=50)
     url = models.CharField(max_length=100, blank=True)
     country = CountryField(blank=True)
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return "{} ({})".format(self.name, self.id)
