@@ -433,6 +433,10 @@ class Team(models.Model):
     def __str__(self):
         return "{} ({})".format(self.name, self.id)
 
+    def collect_results(self, other_team_ids):
+        for team in Team.objects.filter(id__in=other_team_ids):
+            team.result_set.update(team=self)
+
 
 class TrackRecord(models.Model):
     track = models.ForeignKey(Track, on_delete=models.CASCADE)

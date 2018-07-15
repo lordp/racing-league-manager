@@ -1,0 +1,28 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static standings_extras %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<h2>Select the team you wish to move results to</h2>
+<form action="" method="post">
+    {% csrf_token %}
+    <ul>
+        {% for team in teams %}
+            <li><input type="radio" name="chosen_team" value="{{ team.id }}" title="{{ team.name }}"> {{ team.name }} ({{ team.result_set.count }} results)</li>
+        {% endfor %}
+    </ul>
+    <p>
+        <input type="checkbox" name="delete_others" value="delete_others" title="Delete other teams?"> Delete other teams? (WARNING: Cannot be undone)
+    </p>
+    {% for team_id in team_ids %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ team_id }}" />
+    {% endfor %}
+    <input type="hidden" name="action" value="merge_results" />
+    <input type="submit" name="apply" value="Merge Results"/>
+</form>
+{% endblock %}

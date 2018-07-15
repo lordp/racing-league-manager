@@ -339,7 +339,49 @@ class SeasonPenaltyAdmin(admin.ModelAdmin):
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
+    list_display = ('name', 'result_count', 'country', 'parent')
     ordering = ('name',)
+    actions = ['merge_results']
+
+    def get_queryset(self, request):
+        return Team.objects.annotate(result_count=Count('result'))
+
+    def result_count(self, obj):
+        return mark_safe('<a href="{}">{}</a>'.format(
+            "{}?{}".format(reverse('admin:standings_result_changelist'), 'team__id__exact={}'.format(obj.id)),
+            obj.result_count)
+        )
+
+    result_count.short_description = 'Results count'
+    result_count.admin_order_field = 'result_count'
+
+    def merge_results(self, request, queryset):
+        if 'apply' in request.POST:
+            chosen_team = request.POST.get('chosen_team', None)
+            if chosen_team:
+                chosen_team = Team.objects.get(pk=chosen_team)
+                chosen_team.collect_results(queryset)
+                if request.POST.get('delete_others', None):
+                    for team in queryset.exclude(id=chosen_team.id).all():
+                        team.delete()
+
+                messages.add_message(request, messages.INFO, "Results moved to '{}'".format(chosen_team.name))
+            else:
+                messages.add_message(request, messages.WARNING, "No team was chosen")
+
+            return redirect(reverse("admin:standings_team_changelist"))
+        else:
+            context = {
+                **self.admin_site.each_context(request),
+                'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
+                'teams': queryset,
+                'team_ids': map(str, queryset.values_list('id', flat=True)),
+                'title': "Merge results",
+            }
+            return TemplateResponse(request, "admin/merge_team_results.html", context)
+    merge_results.short_description = 'Merge team results'
+
+
 
 
 @admin.register(SeasonStats)
