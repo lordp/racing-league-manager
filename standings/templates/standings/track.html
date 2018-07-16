@@ -3,12 +3,22 @@
 
 {% block content %}
 <h3>{{ track.name }}</h3>
+<table class="ui small selectable compact celled striped collapsing table">
+    <tbody>
+        <tr><td><strong>Length:</strong></td><td>{{ track.length }}</td></tr>
+        <tr><td><strong>Country:</strong></td><td><img src="{{ track.country.flag }}"> {{ track.country.name }}</td></tr>
+        <tr><td><strong>Version:</strong></td><td>{{ track.version }}</td></tr>
+    </tbody>
+</table>
+<h4>Track Records</h4>
 <table class="ui small selectable compact celled striped table">
     <thead>
         <tr>
-            <th>Session</th>
+            <th>League</th>
+            <th>Division</th>
             <th>Season</th>
             <th>Race</th>
+            <th>Session</th>
             <th>Driver</th>
             <th>Lap Time</th>
         </tr>
@@ -16,9 +26,11 @@
     <tbody>
 {% for record in records %}
         <tr>
-            <td>{{ record.session_type|capfirst }}</td>
+            <td><a href="{% url 'league' record.season.division.league_id %}">{{ record.season.division.league.name }}</a></td>
+            <td><a href="{% url 'division' record.season.division_id %}">{{ record.season.division.name }}</a></td>
             <td><a href="{% url 'season' record.season_id %}">{{ record.season.name }}</a></td>
             <td><a href="{% url 'race' record.race_id %}">{{ record.race.name }}</a></td>
+            <td>{{ record.session_type|capfirst }}</td>
             <td><a href="{% url 'driver' record.driver_id %}">{{ record.driver.name }}</a></td>
             <td>{{ record.lap_time|format_time }}</td>
         </tr>
