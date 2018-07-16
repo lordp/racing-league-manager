@@ -1,0 +1,32 @@
+{% extends 'standings/base.html' %}
+{% load standings_extras %}
+
+{% block content %}
+<h3><a href="{% url 'race' result.race.id %}">{{ result.race.name }}</a> / <a href="{% url 'driver' result.driver.id %}">{{ result.driver.name }}</a></h3>
+<table class="ui small selectable compact celled striped table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Pos</th>
+            <th>S1</th>
+            <th>S2</th>
+            <th>S3</th>
+            <th>Time</th>
+            <th>Pitstop?</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for lap in laps %}
+        <tr>
+            <td>{{ lap.lap_number }}</td>
+            <td>{{ lap.position }}</td>
+            <td>{{ lap.sector_1|format_time }}</td>
+            <td>{{ lap.sector_2|format_time }}</td>
+            <td>{{ lap.sector_3|format_time }}</td>
+            <td>{{ lap.lap_time|format_time }}</td>
+            <td>{% if lap.pitstop %}<strong>Yes</strong>{% else %}No{% endif %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

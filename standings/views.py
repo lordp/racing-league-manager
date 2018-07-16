@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Season, Driver, Team, League, Division, Race, Track
+from .models import Season, Driver, Team, League, Division, Race, Track, Result
 
 
 def index_view(request):
@@ -145,3 +145,15 @@ def track_view(request, track_id):
     }
 
     return render(request, 'standings/track.html', context)
+
+
+def laps_view(request, result_id):
+    result = Result.objects.get(pk=result_id)
+    laps = result.lap_set.filter(session='race').order_by('lap_number')
+
+    context = {
+        'result': result,
+        'laps': laps,
+    }
+
+    return render(request, 'standings/laps.html', context)
