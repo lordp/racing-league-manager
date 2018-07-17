@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from .models import Season, Driver, Team, League, Division, Race, Track, Result
 
 
@@ -13,7 +13,7 @@ def index_view(request):
 
 
 def season_view(request, season_id):
-    season = Season.objects.prefetch_related('point_system').get(pk=season_id)
+    season = get_object_or_404(Season, pk=season_id)
 
     standings_driver, standings_team = season.get_standings()
 
@@ -27,7 +27,7 @@ def season_view(request, season_id):
 
 
 def season_stats_view(request, season_id):
-    season = Season.objects.get(pk=season_id)
+    season = get_object_or_404(Season, pk=season_id)
     stats = season.seasonstats_set.order_by('-wins')
 
     context = {
@@ -40,7 +40,7 @@ def season_stats_view(request, season_id):
 
 def team_view(request, team_id):
     team_drivers = {}
-    team = Team.objects.get(pk=team_id)
+    team = get_object_or_404(Team, pk=team_id)
     for res in team.result_set.all():
         season = res.race.season    
         ps = season.point_system.to_dict()
@@ -76,7 +76,7 @@ def team_view(request, team_id):
 
 def driver_view(request, driver_id):
     seasons = {}
-    driver = Driver.objects.get(pk=driver_id)
+    driver = get_object_or_404(Driver, pk=driver_id)
     for res in driver.result_set.all():
         season = res.race.season
         ps = season.point_system.to_dict()
@@ -106,7 +106,7 @@ def driver_view(request, driver_id):
 
 
 def league_view(request, league_id):
-    league = League.objects.get(pk=league_id)
+    league = get_object_or_404(League, pk=league_id)
 
     context = {
         'league': league,
@@ -116,7 +116,7 @@ def league_view(request, league_id):
 
 
 def division_view(request, division_id):
-    division = Division.objects.get(pk=division_id)
+    division = get_object_or_404(Division, pk=division_id)
 
     context = {
         'division': division,
@@ -126,7 +126,7 @@ def division_view(request, division_id):
 
 
 def race_view(request, race_id):
-    race = Race.objects.get(pk=race_id)
+    race = get_object_or_404(Race, pk=race_id)
 
     context = {
         'race': race,
@@ -136,7 +136,7 @@ def race_view(request, race_id):
 
 
 def track_view(request, track_id):
-    track = Track.objects.get(pk=track_id)
+    track = get_object_or_404(Track, pk=track_id)
     track_records = track.trackrecord_set.order_by('season', 'race')
 
     context = {
@@ -148,7 +148,7 @@ def track_view(request, track_id):
 
 
 def laps_view(request, result_id):
-    result = Result.objects.get(pk=result_id)
+    result = get_object_or_404(Result, pk=result_id)
     laps = result.lap_set.filter(session='race').order_by('lap_number')
 
     context = {
