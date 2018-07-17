@@ -587,6 +587,18 @@ class LogFile(models.Model):
     def __str__(self):
         return '{} ({})'.format(os.path.basename(self.file.path), self.race)
 
+    def name(self):
+        return os.path.basename(self.file.path)
+
+    def breadcrumbs(self):
+        return [
+            {"url": "league", "object": self.race.season.division.league},
+            {"url": "division", "object": self.race.season.division},
+            {"url": "season", "object": self.race.season},
+            {"url": "race", "object": self.race},
+            {"url": "logfile", "object": self},
+        ]
+
     def process(self, request):
         with open(self.file.name) as infile:
             tree = etree.XML(infile.read().encode('utf-8'))
