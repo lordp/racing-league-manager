@@ -392,7 +392,7 @@ class SeasonStatsAdmin(admin.ModelAdmin):
     )
 
     list_select_related = ['season', 'driver']
-    list_display = ['season', 'driver', 'best_finish', 'wins', 'podiums', 'points_finishes',
+    list_display = ['season', 'driver', 'best_result', 'wins', 'podiums', 'points_finishes',
                     'pole_positions', 'fastest_laps', 'laps_lead', 'laps_completed', 'winner']
     actions = ['update_stats']
 

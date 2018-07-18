@@ -128,8 +128,9 @@ class DriverStats(APIView):
                         continue
 
                     for key in driver_stats:
-                        if key == 'best_finish' and getattr(stat, key, 0) < driver_stats['best_finish']:
-                            driver_stats[key] = getattr(stat, key, 0)
+                        if key == 'best_finish':
+                            if stat.best_result is not None and stat.best_result.position < driver_stats[key]:
+                                driver_stats[key] = stat.best_result.position
                         elif key in addable_stats:
                             driver_stats[key] += getattr(stat, key, 0)
 
