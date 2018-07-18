@@ -23,6 +23,7 @@
                     <img src="{{ race.track.country.flag }}">
                 </div></th>
             {% endfor %}
+            <th>Best</th>
         </tr>
     </thead>
     <tbody>
@@ -43,6 +44,7 @@
             </td>
                 {% endwith %}
             {% endfor %}
+            <td class="ui center aligned {{ driver.best_result|get_css_classes:season }}">{{ driver.best_finish }}</td>
         </tr>
         {% endfor %}
     </tbody>
