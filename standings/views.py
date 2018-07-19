@@ -43,7 +43,12 @@ def team_view(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
     for res in team.result_set.all():
         season = res.race.season    
-        ps = season.point_system.to_dict()
+
+        if res.race.point_system:
+            ps = res.race.point_system.to_dict()
+        else:
+            ps = season.point_system.to_dict()
+
         if season.id not in team_drivers:
             team_drivers[season.id] = {
                 "season": season,
@@ -79,7 +84,12 @@ def driver_view(request, driver_id):
     driver = get_object_or_404(Driver, pk=driver_id)
     for res in driver.result_set.all():
         season = res.race.season
-        ps = season.point_system.to_dict()
+
+        if res.race.point_system:
+            ps = res.race.point_system.to_dict()
+        else:
+            ps = season.point_system.to_dict()
+
         if season.id not in seasons:
             seasons[season.id] = {
                 "season": season,
