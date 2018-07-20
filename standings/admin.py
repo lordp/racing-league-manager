@@ -306,6 +306,7 @@ class LogFileAdmin(admin.ModelAdmin):
         )
         return TemplateResponse(request, "admin/summary.html", context)
 
+
 @admin.register(Track)
 class TrackAdmin(admin.ModelAdmin):
     list_display = ('name', 'length', 'country', 'version', 'race_count')
@@ -380,8 +381,6 @@ class TeamAdmin(admin.ModelAdmin):
             }
             return TemplateResponse(request, "admin/merge_team_results.html", context)
     merge_results.short_description = 'Merge team results'
-
-
 
 
 @admin.register(SeasonStats)
