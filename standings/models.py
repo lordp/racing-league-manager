@@ -627,7 +627,7 @@ class LogFile(models.Model):
             {"url": "logfile", "object": self},
         ]
 
-    def process(self, request):
+    def process(self):
         with open(self.file.name) as infile:
             tree = etree.XML(infile.read().encode('utf-8'))
 

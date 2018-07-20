@@ -262,7 +262,7 @@ class LapAdmin(admin.ModelAdmin):
 class LogFileAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        obj.process(request)
+        obj.process()
 
     def delete_model(self, request, obj):
         with contextlib.suppress(FileNotFoundError):
