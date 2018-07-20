@@ -2,7 +2,7 @@
 {% load standings_extras %}
 
 {% block content %}
-<h1>{{ driver.name }}</h1>
+<h1>{{ driver.name }} <img src="{{ driver.country.flag }}" /></h1>
 {% for _, season in seasons.items %}
 {% include 'standings/breadcrumb.html' with object=season.season.breadcrumbs %}
 <table class="ui small selectable collapsing compact celled table">
