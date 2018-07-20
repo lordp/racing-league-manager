@@ -95,30 +95,22 @@ class DriverStats(APIView):
             stats = stats.filter(season__division__name__icontains=division)
 
         try:
+            driver_stats = {
+                "best_finish": 99, "fastest_laps": 0, "laps_completed": 0, "laps_lead": 0,
+                "podiums": 0, "points_finishes": 0, "pole_positions": 0, "wins": 0, "attendance": 0,
+                "penalty_points": 0, "race_penalty_time": 0, "race_penalty_positions": 0,
+                "qualifying_penalty_grid": 0, "qualifying_penalty_bog": 0, "qualifying_penalty_sfp": 0,
+                "race_penalty_dsq": 0, "qualifying_penalty_dsq": 0,
+            }
+
             if len(stats) > 0:
                 driver_id = 0
                 addable_stats = [
-                    "fastest_laps",
-                    "laps_completed",
-                    "laps_lead",
-                    "podiums",
-                    "points_finishes",
-                    "pole_positions",
-                    "wins",
-                    "attendance"
+                    "fastest_laps", "laps_completed", "laps_lead", "podiums", "points_finishes", "pole_positions",
+                    "wins", "attendance", 'penalty_points', 'race_penalty_time', 'race_penalty_positions',
+                    "qualifying_penalty_grid", "qualifying_penalty_bog", "qualifying_penalty_sfp", "race_penalty_dsq",
+                    "qualifying_penalty_dsq",
                 ]
-
-                driver_stats = {
-                    "best_finish": 99,
-                    "fastest_laps": 0,
-                    "laps_completed": 0,
-                    "laps_lead": 0,
-                    "podiums": 0,
-                    "points_finishes": 0,
-                    "pole_positions": 0,
-                    "wins": 0,
-                    "attendance": 0
-                }
 
                 for stat in stats:
                     if driver_id == 0:
@@ -134,7 +126,7 @@ class DriverStats(APIView):
                         elif key in addable_stats:
                             driver_stats[key] += getattr(stat, key, 0)
 
-                return Response(driver_stats)
+            return Response(driver_stats)
         except TypeError:
             return Response({}, status=404)
 

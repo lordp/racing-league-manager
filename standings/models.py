@@ -509,6 +509,14 @@ class SeasonStats(models.Model):
     laps_lead = models.IntegerField(default=0)
     laps_completed = models.IntegerField(default=0)
     winner = models.BooleanField(default=False)
+    penalty_points = models.IntegerField(default=0)
+    race_penalty_time = models.IntegerField(default=0)
+    race_penalty_positions = models.IntegerField(default=0)
+    qualifying_penalty_grid = models.IntegerField(default=0)
+    qualifying_penalty_bog = models.IntegerField(default=0)
+    qualifying_penalty_sfp = models.IntegerField(default=0)
+    race_penalty_dsq = models.IntegerField(default=0)
+    qualifying_penalty_dsq = models.IntegerField(default=0)
 
     class Meta:
         verbose_name_plural = 'Season stats'
@@ -523,6 +531,14 @@ class SeasonStats(models.Model):
         self.laps_completed = 0
         self.winner = False
         self.best_result = None
+        self.penalty_points = 0
+        self.race_penalty_time = 0
+        self.race_penalty_positions = 0
+        self.qualifying_penalty_grid = 0
+        self.qualifying_penalty_bog = 0
+        self.qualifying_penalty_sfp = 0
+        self.race_penalty_dsq = 0
+        self.qualifying_penalty_dsq = 0
 
         for result in Result.objects.filter(race__season=self.season, driver=self.driver):
             self.attendance += 1
@@ -549,6 +565,23 @@ class SeasonStats(models.Model):
 
             self.laps_lead += result.lap_set.filter(position=1, session='race').aggregate(Count('id'))['id__count']
             self.laps_completed += result.lap_set.filter(session='race').aggregate(Count('id'))['id__count']
+
+            self.penalty_points += result.penalty_points
+            self.race_penalty_time += result.race_penalty_time
+            self.race_penalty_positions += result.race_penalty_positions
+            self.qualifying_penalty_grid += result.qualifying_penalty_grid
+
+            if result.qualifying_penalty_bog:
+                self.qualifying_penalty_bog += 1
+
+            if result.qualifying_penalty_sfp:
+                self.qualifying_penalty_sfp += 1
+
+            if result.race_penalty_dsq:
+                self.race_penalty_dsq += 1
+
+            if result.qualifying_penalty_dsq:
+                self.qualifying_penalty_dsq += 1
 
         self.save()
 

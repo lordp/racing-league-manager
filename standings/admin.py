@@ -393,7 +393,10 @@ class SeasonStatsAdmin(admin.ModelAdmin):
 
     list_select_related = ['season', 'driver']
     list_display = ['season', 'driver', 'best_result', 'wins', 'podiums', 'points_finishes',
-                    'pole_positions', 'fastest_laps', 'laps_lead', 'laps_completed', 'winner']
+                    'pole_positions', 'fastest_laps', 'laps_lead', 'laps_completed', 'winner',
+                    'penalty_points', 'race_penalty_time', 'race_penalty_positions', 'qualifying_penalty_grid',
+                    'qualifying_penalty_bog', 'qualifying_penalty_sfp', 'race_penalty_dsq', 'qualifying_penalty_dsq',
+                    ]
     actions = ['update_stats']
 
     def update_stats(self, request, queryset):
