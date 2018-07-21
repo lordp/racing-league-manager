@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Count, Min
 from django_countries.fields import CountryField
+from django.contrib.postgres.fields import JSONField
 from datetime import date
 from lxml import etree
 import os
@@ -517,6 +518,8 @@ class SeasonStats(models.Model):
     qualifying_penalty_sfp = models.IntegerField(default=0)
     race_penalty_dsq = models.IntegerField(default=0)
     qualifying_penalty_dsq = models.IntegerField(default=0)
+    positions = JSONField(default={})
+    dnf_reasons = JSONField(default={})
 
     class Meta:
         verbose_name_plural = 'Season stats'
@@ -539,6 +542,8 @@ class SeasonStats(models.Model):
         self.qualifying_penalty_sfp = 0
         self.race_penalty_dsq = 0
         self.qualifying_penalty_dsq = 0
+        self.positions = {}
+        self.dnf_reasons = {}
 
         for result in Result.objects.filter(race__season=self.season, driver=self.driver):
             self.attendance += 1
@@ -582,6 +587,17 @@ class SeasonStats(models.Model):
 
             if result.qualifying_penalty_dsq:
                 self.qualifying_penalty_dsq += 1
+
+            if result.position not in self.positions:
+                self.positions[result.position] = 1
+            else:
+                self.positions[result.position] += 1
+
+            if result.dnf_reason != '':
+                if result.dnf_reason not in self.dnf_reasons:
+                    self.dnf_reasons[result.dnf_reason] = 1
+                else:
+                    self.dnf_reasons[result.dnf_reason] += 1
 
         self.save()
 

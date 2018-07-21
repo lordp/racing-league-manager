@@ -100,7 +100,7 @@ class DriverStats(APIView):
                 "podiums": 0, "points_finishes": 0, "pole_positions": 0, "wins": 0, "attendance": 0,
                 "penalty_points": 0, "race_penalty_time": 0, "race_penalty_positions": 0,
                 "qualifying_penalty_grid": 0, "qualifying_penalty_bog": 0, "qualifying_penalty_sfp": 0,
-                "race_penalty_dsq": 0, "qualifying_penalty_dsq": 0,
+                "race_penalty_dsq": 0, "qualifying_penalty_dsq": 0, "positions": {}, "dnf_reasons": {}
             }
 
             if len(stats) > 0:
@@ -125,6 +125,12 @@ class DriverStats(APIView):
                                 driver_stats[key] = stat.best_result.position
                         elif key in addable_stats:
                             driver_stats[key] += getattr(stat, key, 0)
+                        elif key in ['positions', 'dnf_reasons']:
+                            for k in getattr(stat, key):
+                                if k not in driver_stats[key]:
+                                    driver_stats[key][k] = getattr(stat, key, 0)[k]
+                                else:
+                                    driver_stats[key][k] += getattr(stat, key, 0)[k]
 
             return Response(driver_stats)
         except TypeError:
