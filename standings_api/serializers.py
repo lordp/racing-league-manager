@@ -1,5 +1,6 @@
 from standings.models import *
 from rest_framework import serializers
+from django_countries.serializer_fields import CountryField
 
 
 class LeagueSerializer(serializers.ModelSerializer):
@@ -25,15 +26,28 @@ class SeasonSerializer(serializers.ModelSerializer):
 
 
 class DriverSerializer(serializers.ModelSerializer):
+    country = CountryField(country_dict=True)
+
     class Meta:
         model = Driver
-        fields = ['name']
+        fields = ['name', 'country']
+
+
+class ParentTeamSerializer(serializers.ModelSerializer):
+    country = CountryField(country_dict=True)
+
+    class Meta:
+        model = Team
+        fields = ['id', 'name', 'country', 'url']
 
 
 class TeamSerializer(serializers.ModelSerializer):
+    country = CountryField(country_dict=True)
+    parent = ParentTeamSerializer()
+
     class Meta:
         model = Team
-        fields = ['name']
+        fields = ['name', 'country', 'url', 'parent']
 
 
 class RaceSerializer(serializers.ModelSerializer):

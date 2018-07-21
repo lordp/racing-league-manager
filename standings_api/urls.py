@@ -4,6 +4,7 @@ from standings_api import views
 
 urlpatterns = [
     url(r'^drivers$', views.DriverList.as_view()),
+    url(r'^teams$', views.TeamList.as_view()),
     url(r'^results$', views.ResultList.as_view()),
     url(r'^drivers/(?P<pk>[0-9]+)$', views.DriverDetail.as_view()),
     url(r'^teams/(?P<pk>[0-9]+)$', views.TeamDetail.as_view()),

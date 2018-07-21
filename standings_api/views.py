@@ -16,11 +16,19 @@ class DriverList(mixins.ListModelMixin, generics.GenericAPIView):
         return self.list(request, *args, **kwargs)
 
 
+class TeamList(mixins.ListModelMixin, generics.GenericAPIView):
+    queryset = Team.objects.all().order_by('name')
+    serializer_class = TeamSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
 class ResultList(generics.ListAPIView):
     serializer_class = ResultSerializer
 
     def get_queryset(self):
-        queryset = Result.objects.all()
+        queryset = Result.objects.order_by('race__round_number')
 
         driver_name = self.request.query_params.get('name', None)
         if driver_name is not None:
