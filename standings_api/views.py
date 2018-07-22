@@ -102,15 +102,21 @@ class DriverStats(APIView):
         if division:
             stats = stats.filter(season__division__name__icontains=division)
 
-        try:
-            driver_stats = {
-                "best_finish": 99, "fastest_laps": 0, "laps_completed": 0, "laps_lead": 0,
-                "podiums": 0, "points_finishes": 0, "pole_positions": 0, "wins": 0, "attendance": 0,
-                "penalty_points": 0, "race_penalty_time": 0, "race_penalty_positions": 0,
-                "qualifying_penalty_grid": 0, "qualifying_penalty_bog": 0, "qualifying_penalty_sfp": 0,
-                "race_penalty_dsq": 0, "qualifying_penalty_dsq": 0, "positions": {}, "dnf_reasons": {}
-            }
+        driver_stats = {
+            "best_finish": 99, "fastest_laps": 0, "laps_completed": 0, "laps_lead": 0,
+            "podiums": 0, "points_finishes": 0, "pole_positions": 0, "wins": 0, "attendance": 0,
+            "penalty_points": 0, "race_penalty_time": 0, "race_penalty_positions": 0,
+            "qualifying_penalty_grid": 0, "qualifying_penalty_bog": 0, "qualifying_penalty_sfp": 0,
+            "race_penalty_dsq": 0, "qualifying_penalty_dsq": 0, "race_positions": {}, "dnf_reasons": {},
+            "qualifying_positions": {}
+        }
 
+        key_map = {
+            "race_positions": "positions",
+            "qualifying_positions": "qualifying"
+        }
+
+        try:
             if len(stats) > 0:
                 driver_id = 0
                 addable_stats = [
@@ -133,12 +139,14 @@ class DriverStats(APIView):
                                 driver_stats[key] = stat.best_result.position
                         elif key in addable_stats:
                             driver_stats[key] += getattr(stat, key, 0)
-                        elif key in ['positions', 'dnf_reasons']:
-                            for k in getattr(stat, key):
+                        elif key in ['race_positions', 'dnf_reasons', 'qualifying_positions']:
+                            key_sub = key_map.get(key, key)
+                            for k in getattr(stat, key_sub):
+                                value = getattr(stat, key_sub, 0)[k]
                                 if k not in driver_stats[key]:
-                                    driver_stats[key][k] = getattr(stat, key, 0)[k]
+                                    driver_stats[key][k] = value
                                 else:
-                                    driver_stats[key][k] += getattr(stat, key, 0)[k]
+                                    driver_stats[key][k] += value
 
             return Response(driver_stats)
         except TypeError:

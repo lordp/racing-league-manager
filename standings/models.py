@@ -520,6 +520,7 @@ class SeasonStats(models.Model):
     qualifying_penalty_dsq = models.IntegerField(default=0)
     positions = JSONField(default={})
     dnf_reasons = JSONField(default={})
+    qualifying = JSONField(default={})
 
     class Meta:
         verbose_name_plural = 'Season stats'
@@ -544,6 +545,7 @@ class SeasonStats(models.Model):
         self.qualifying_penalty_dsq = 0
         self.positions = {}
         self.dnf_reasons = {}
+        self.qualifying = {}
 
         for result in Result.objects.filter(race__season=self.season, driver=self.driver):
             self.attendance += 1
@@ -598,6 +600,11 @@ class SeasonStats(models.Model):
                     self.dnf_reasons[result.dnf_reason] = 1
                 else:
                     self.dnf_reasons[result.dnf_reason] += 1
+
+            if result.qualifying not in self.qualifying:
+                self.qualifying[result.qualifying] = 1
+            else:
+                self.qualifying[result.qualifying] += 1
 
         self.save()
 
