@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'django_admin_listfilter_dropdown',
     'rest_framework',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
