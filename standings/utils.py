@@ -1,3 +1,7 @@
+from inflect import engine
+from collections import Counter, Iterable
+
+
 def format_time(seconds):
     m, s = divmod(seconds, 60)
     if m > 60:
@@ -36,3 +40,24 @@ def apply_positions(table, key='points'):
         previous_item = row
 
     return table
+
+
+def sort_counter(results, ordinal=True, convert_int=True):
+    p = engine()
+    if convert_int:
+        results = {int(k): int(v) for k, v in results.items()}
+    order = sorted(results)
+    if ordinal:
+        result = ["{} x {}".format(p.ordinal(place), results[place]) for place in order]
+    else:
+        result = ["{} x {}".format(place, results[place]) for place in order]
+
+    return result
+
+
+def flatten(l):
+    for el in l:
+        if isinstance(el, Iterable) and not isinstance(el, (str, bytes)):
+            yield from flatten(el)
+        else:
+            yield el

@@ -6,6 +6,7 @@ from rest_framework import mixins, generics
 from datetime import datetime, timezone
 from django.db.models import Q
 from django.forms.models import model_to_dict
+from collections import Counter
 
 
 class DriverList(mixins.ListModelMixin, generics.GenericAPIView):
@@ -102,52 +103,10 @@ class DriverStats(APIView):
         if division:
             stats = stats.filter(season__division__name__icontains=division)
 
-        driver_stats = {
-            "best_finish": 99, "fastest_laps": 0, "laps_completed": 0, "laps_lead": 0,
-            "podiums": 0, "points_finishes": 0, "pole_positions": 0, "wins": 0, "attendance": 0,
-            "penalty_points": 0, "race_penalty_time": 0, "race_penalty_positions": 0,
-            "qualifying_penalty_grid": 0, "qualifying_penalty_bog": 0, "qualifying_penalty_sfp": 0,
-            "race_penalty_dsq": 0, "qualifying_penalty_dsq": 0, "race_positions": {}, "dnf_reasons": {},
-            "qualifying_positions": {}
-        }
-
-        key_map = {
-            "race_positions": "positions",
-            "qualifying_positions": "qualifying"
-        }
-
         try:
-            if len(stats) > 0:
-                driver_id = 0
-                addable_stats = [
-                    "fastest_laps", "laps_completed", "laps_lead", "podiums", "points_finishes", "pole_positions",
-                    "wins", "attendance", 'penalty_points', 'race_penalty_time', 'race_penalty_positions',
-                    "qualifying_penalty_grid", "qualifying_penalty_bog", "qualifying_penalty_sfp", "race_penalty_dsq",
-                    "qualifying_penalty_dsq",
-                ]
-
-                for stat in stats:
-                    if driver_id == 0:
-                        driver_id = stat.driver.id
-                        driver_stats['name'] = stat.driver.name
-                    elif driver_id != stat.driver.id:
-                        continue
-
-                    for key in driver_stats:
-                        if key == 'best_finish':
-                            if stat.best_result is not None and stat.best_result.position < driver_stats[key]:
-                                driver_stats[key] = stat.best_result.position
-                        elif key in addable_stats:
-                            driver_stats[key] += getattr(stat, key, 0)
-                        elif key in ['race_positions', 'dnf_reasons', 'qualifying_positions']:
-                            key_sub = key_map.get(key, key)
-                            for k in getattr(stat, key_sub):
-                                value = getattr(stat, key_sub, 0)[k]
-                                if k not in driver_stats[key]:
-                                    driver_stats[key][k] = value
-                                else:
-                                    driver_stats[key][k] += value
-
+            driver_stats = SeasonStats.collate(stats)
+            driver_stats['race_positions'] = Counter(driver_stats['race_positions'])
+            driver_stats['qualifying_positions'] = Counter(driver_stats['qualifying_positions'])
             return Response(driver_stats)
         except TypeError:
             return Response({}, status=404)

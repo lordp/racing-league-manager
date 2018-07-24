@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404, render
-from .models import Season, Driver, Team, League, Division, Race, Track, Result
+from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats
+from standings.utils import sort_counter
+from collections import Counter
 
 
 def index_view(request):
@@ -82,6 +84,7 @@ def team_view(request, team_id):
 def driver_view(request, driver_id):
     seasons = {}
     driver = get_object_or_404(Driver, pk=driver_id)
+    stats = SeasonStats.objects.filter(driver=driver)
     for res in driver.result_set.all():
         season = res.race.season
 
@@ -107,9 +110,28 @@ def driver_view(request, driver_id):
                     [ps.get(x.position, 0) for x in seasons[season.id]['teams'][result.team.id]["results"]]
                 )
 
+    driver_stats = SeasonStats.collate(stats)
+    counter_keys = ['race_positions', 'dnf_reasons', 'qualifying_positions']
+
+    driver_stats['avg_qualifying'] = round(
+        sum(driver_stats['qualifying_positions']) / len(driver_stats['qualifying_positions']), 1
+    )
+    driver_stats['avg_race'] = round(
+        sum(driver_stats['race_positions']) / len(driver_stats['race_positions']), 1
+    )
+
+    for key in counter_keys:
+        if key == 'dnf_reasons':
+            driver_stats[key] = ', '.join(
+                sort_counter(Counter(driver_stats[key]), ordinal=False, convert_int=False)
+            )
+        else:
+            driver_stats[key] = ', '.join(sort_counter(Counter(driver_stats[key])))
+
     context = {
         'driver': driver,
         'seasons': seasons,
+        'stats': driver_stats,
     }
 
     return render(request, 'standings/driver.html', context)
