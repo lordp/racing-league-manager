@@ -24,6 +24,7 @@ class ResultAdmin(admin.ModelAdmin):
             reverse('season', args=[obj.race.season.id]),
             meta=request.META
         )
+        SeasonStats.objects.get(season=obj.race.season, driver=obj.driver).update_stats()
 
     @staticmethod
     def season(obj):
