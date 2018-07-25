@@ -21,13 +21,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-with open('/etc/secret_key.txt') as f:
+with open('/home/isrclubadmin/.config/gpcos_secret_key.txt') as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['results.formula-simracing.net']
 INTERNAL_IPS = ['127.0.0.1']
 
 
@@ -90,11 +90,8 @@ WSGI_APPLICATION = 'racing_league_manager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'rlm',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': 'gpcos',
+        'USER': 'isrclubadmin',
     }
 }
 
@@ -136,33 +133,29 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'standings/static'
+STATIC_ROOT = '/var/www/gpcos-static/'
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'console': {
+        'file': {
             'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'qinspect': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
+            'class': 'logging.FileHandler',
+            'filename': '/tmp/django.log',
         },
     },
 }
-
-QUERY_INSPECT_ENABLED = True
-QUERY_INSPECT_LOG_QUERIES = True
-QUERY_INSPECT_LOG_TRACEBACKS = True
-QUERY_INSPECT_TRACEBACK_ROOTS = ['C:\\Users\\darrylh\\PycharmProjects\\racing_league_manager']
 
 COUNTRIES_OVERRIDE = {
     'SQ': _('Scotland'),
     'EN': _('England'),
     'WA': _('Wales'),
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '{}/.cache'.format(BASE_DIR),
+    }
 }
