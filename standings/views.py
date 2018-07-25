@@ -1,3 +1,4 @@
+from django.views.decorators.cache import cache_page
 from django.shortcuts import get_object_or_404, render
 from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats
 from standings.utils import sort_counter
@@ -14,6 +15,7 @@ def index_view(request):
     return render(request, 'standings/index.html', context)
 
 
+@cache_page(60 * 15)
 def season_view(request, season_id):
     season = get_object_or_404(Season, pk=season_id)
 
