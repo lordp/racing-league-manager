@@ -61,3 +61,46 @@ def flatten(l):
             yield from flatten(el)
         else:
             yield el
+
+
+def expire_view_cache(path, meta, key_prefix=None):
+    """
+    This function allows you to invalidate any item from the per-view cache.
+    It probably won't work with things cached using the per-site cache
+    middleware (because that takes account of the Vary: Cookie header).
+    This assumes you're using the Sites framework.
+    Arguments:
+        * path: The URL of the view to invalidate, like `/blog/posts/1234/`.
+        * meta: Meta details of the request
+        * key_prefix: The same as that used for the cache_page()
+          function/decorator (if any).
+    """
+    from django.conf import settings
+    from django.core.cache import cache
+    from django.http import HttpRequest
+    from django.utils.cache import get_cache_key
+
+    # Create a fake request object
+    request = HttpRequest()
+    request.method = 'GET'
+    request.META = meta
+    request.path = path
+
+    request.META['QUERY_STRING'] = ''
+
+    if settings.USE_I18N:
+        request.LANGUAGE_CODE = settings.LANGUAGE_CODE
+
+    # If this key is in the cache, delete it:
+    try:
+        cache_key = get_cache_key(request, key_prefix=key_prefix)
+        if cache_key:
+            if cache.has_key(cache_key):
+                cache.delete(cache_key)
+                return (True, 'Successfully invalidated')
+            else:
+                return (False, 'Cache_key does not exist in cache')
+        else:
+            raise ValueError('Failed to create cache_key')
+    except (ValueError, Exception) as e:
+        return (False, e)
