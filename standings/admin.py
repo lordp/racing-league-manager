@@ -10,7 +10,7 @@ from django.db.models import Max, F
 from .models import *
 import os
 import contextlib
-from .utils import format_time
+from .utils import format_time, expire_view_cache
 
 admin.site.site_header = 'FSR Admin'
 admin.site.site_title = "FSR Admin"
@@ -18,6 +18,13 @@ admin.site.site_title = "FSR Admin"
 
 @admin.register(Result)
 class ResultAdmin(admin.ModelAdmin):
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        expire_view_cache(
+            reverse('season', args=[obj.race.season.id]),
+            meta=request.META
+        )
+
     @staticmethod
     def season(obj):
         return obj.race.season.name
@@ -170,7 +177,7 @@ class SeasonAdmin(admin.ModelAdmin):
         return obj.division.name
 
     list_display = ('name', 'league', 'division', 'race_count')
-    actions = ['generate_top10', 'update_stats']
+    actions = ['generate_top10', 'update_stats', 'clear_cache']
 
     def get_queryset(self, request):
         return Season.objects.annotate(race_count=Count('race'))
@@ -194,6 +201,17 @@ class SeasonAdmin(admin.ModelAdmin):
         messages.add_message(request, messages.INFO, "Season stats updated")
         return redirect(reverse("admin:standings_season_changelist"))
     update_stats.short_description = 'Update season based stats'
+
+    def clear_cache(self, request, queryset):
+        for obj in queryset:
+            expire_view_cache(
+                reverse('season', args=[obj.id]),
+                meta=request.META
+            )
+
+        messages.add_message(request, messages.INFO, "Cache cleared for selected seasons")
+        return redirect(reverse("admin:standings_season_changelist"))
+    clear_cache.short_description = 'Clear cache'
 
 
 @admin.register(Driver)
