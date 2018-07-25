@@ -15,7 +15,7 @@ def index_view(request):
     return render(request, 'standings/index.html', context)
 
 
-@cache_page(60 * 15)
+@cache_page(None)
 def season_view(request, season_id):
     season = get_object_or_404(Season, pk=season_id)
 
