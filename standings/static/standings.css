@@ -77,6 +77,10 @@ div [class*="right floated"] {
     margin-bottom: 0.25em;
 }
 
+.ui.structured.celled.table tr td {
+    border-right: none !important;
+}
+
 .team-ferrari {
     color: white;
     background-color: rgb(224, 8, 29);
