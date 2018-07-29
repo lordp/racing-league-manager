@@ -7,6 +7,7 @@
         $('thead th.number').data('sortBy', function (th, td, tablesort) {
             return parseInt(td.text());
         });
+        $('th div.tooltip').popup();
     });
 </script>
 
@@ -17,20 +18,32 @@
     <thead>
         <tr>
             <th class="ui">Driver</th>
+            <th class="ui center aligned number"><div class='tooltip' data-html="Attendance">Att</div></th>
             <th class="ui center aligned number sorted ascending">Wins</th>
-            <th class="ui center aligned number">Points Finishes</th>
+            <th class="ui center aligned number"><div class='tooltip' data-html="Points Finishes">Pts Fins</div></th>
             <th class="ui center aligned number">Podiums</th>
-            <th class="ui center aligned number">Pole Positions</th>
-            <th class="ui center aligned number">Fastest Laps</th>
+            <th class="ui center aligned number">Poles</th>
+            <th class="ui center aligned number">Fast Laps</th>
             <th class="ui center aligned number">Laps Led</th>
-            <th class="ui center aligned number">Laps Completed</th>
+            <th class="ui center aligned number"><div class='tooltip' data-html="Laps Completed">Completed</div></th>
+            <th class="ui center aligned number"><div class='tooltip' data-html="Best finish">Best</div></th>
+            <th class="ui center aligned number"><div class='tooltip' data-html="Penalty Points">PPoints</div></th>
+            <th class="ui center aligned number"><div class='tooltip' data-html="Race Time Penalties">RTime</div></th>
+            <th class="ui center aligned number"><div class='tooltip' data-html="Race Position Penalties">RPOS</div></th>
+            <th class="ui center aligned number"><div class='tooltip' data-html="Race Disqualifications">RDSQ</div></th>
+            <th class="ui center aligned number"><div class='tooltip' data-html="Qualifying Grid Penalties">QGrid</div></th>
+            <th class="ui center aligned number"><div class='tooltip' data-html="Back of Grid Penalties">BoG</div></th>
+            <th class="ui center aligned number"><div class='tooltip' data-html="Start from Pits Penalties">SfP</div></th>
+            <th class="ui center aligned number"><div class='tooltip' data-html="Qualifying Disqualifications">QDSQ</div></th>
             <th class="ui center aligned">Season Winner</th>
         </tr>
     </thead>
     <tbody>
         {% for stat in stats.all %}
+            {% with best_finish=stat.best_result.position %}
         <tr>
             <td><a href="{% url 'driver' stat.driver.id %}">{{ stat.driver.name }}</a></td>
+            <td class="ui center aligned collapsing">{{ stat.attendance }}</td>
             <td class="ui center aligned collapsing">{{ stat.wins }}</td>
             <td class="ui center aligned collapsing">{{ stat.points_finishes }}</td>
             <td class="ui center aligned collapsing">{{ stat.podiums }}</td>
@@ -38,8 +51,18 @@
             <td class="ui center aligned collapsing">{{ stat.fastest_laps }}</td>
             <td class="ui center aligned collapsing">{{ stat.laps_lead }}</td>
             <td class="ui center aligned collapsing">{{ stat.laps_completed }}</td>
+            <td class="ui center aligned collapsing">{{ best_finish }}</td>
+            <td class="ui center aligned collapsing">{{ stat.penalty_points }}</td>
+            <td class="ui center aligned collapsing">{{ stat.race_penalty_time }}</td>
+            <td class="ui center aligned collapsing">{{ stat.race_penalty_positions }}</td>
+            <td class="ui center aligned collapsing">{{ stat.race_penalty_dsq }}</td>
+            <td class="ui center aligned collapsing">{{ stat.qualifying_penalty_grid }}</td>
+            <td class="ui center aligned collapsing">{{ stat.qualifying_penalty_bog }}</td>
+            <td class="ui center aligned collapsing">{{ stat.qualifying_penalty_sfp }}</td>
+            <td class="ui center aligned collapsing">{{ stat.qualifying_penalty_dsq }}</td>
             <td class="ui center aligned collapsing">{{ stat.winner }}</td>
         </tr>
+            {% endwith %}
         {% endfor %}
     </tbody>
 </table>
