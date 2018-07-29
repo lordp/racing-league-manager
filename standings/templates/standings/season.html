@@ -8,14 +8,21 @@
     });
 </script>
 
+<div>
+    <div class="ui left floated">
 {% include 'standings/breadcrumb.html' with object=season.breadcrumbs %}
-<table class="ui small selectable collapsing compact celled unstackable table">
+    </div>
+    <div class="ui right floated">
+        <a href="{% url 'season_stats' season.id %}">Season Stats</a>
+    </div>
+</div>
+<table class="ui small selectable compact celled unstackable table">
     <thead>
         <tr>
-            <th>Pos</th>
+            <th class="ui center aligned">Pos</th>
             <th>Name</th>
             <th></th>
-            <th>Points</th>
+            <th class="ui center aligned">Points</th>
             {% for race in season.race_set.all %}
                 <th class="ui center aligned"><div class='tooltip' data-html="{{ race.tooltip }}">
                     {{ race.round_number }}<br/>
@@ -23,7 +30,7 @@
                     <img src="{{ race.track.country.flag }}">
                 </div></th>
             {% endfor %}
-            <th>Best</th>
+            <th class="ui center aligned">Best</th>
         </tr>
     </thead>
     <tbody>
