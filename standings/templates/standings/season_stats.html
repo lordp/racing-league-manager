@@ -3,7 +3,9 @@
 {% block content %}
 <script>
     $(document).ready(function() {
-        ts = $('table').tablesort();
+        ts = $('table').tablesort({
+            default_direction: 'desc'
+        });
         $('thead th.number').data('sortBy', function (th, td, tablesort) {
             return parseInt(td.text());
         });
