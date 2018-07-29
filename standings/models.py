@@ -526,6 +526,7 @@ class SeasonStats(models.Model):
         verbose_name_plural = 'Season stats'
 
     def update_stats(self):
+        self.attendance = 0
         self.wins = 0
         self.podiums = 0
         self.points_finishes = 0
