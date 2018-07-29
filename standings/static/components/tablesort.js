@@ -40,7 +40,7 @@
 
 			//click on a different column
 			if (this.index !== th.index()) {
-				this.direction = 'asc';
+				this.direction = this.settings['default_direction'];
 				this.index = th.index();
 			}
 			else if (direction !== 'asc' && direction !== 'desc')
@@ -106,6 +106,7 @@
 		debug: $.tablesort.DEBUG,
 		asc: 'sorted ascending',
 		desc: 'sorted descending',
+		default_direction: 'asc',
 		compare: function(a, b) {
 			if (a > b) {
 				return 1;
