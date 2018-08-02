@@ -6,7 +6,7 @@
 <table class="ui small selectable compact celled striped collapsing table">
     <tbody>
         <tr><td><strong>Length:</strong></td><td>{{ track.length }}</td></tr>
-        <tr><td><strong>Country:</strong></td><td><img src="{{ track.country.flag }}"> {{ track.country.name }}</td></tr>
+        <tr><td><strong>Country:</strong></td><td>{{ track.country|show_flag }} {{ track.country.name }}</td></tr>
         <tr><td><strong>Version:</strong></td><td>{{ track.version }}</td></tr>
     </tbody>
 </table>

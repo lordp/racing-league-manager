@@ -1,5 +1,7 @@
 from django import template
 import standings.utils
+from django.conf import settings
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -141,3 +143,11 @@ def collate_notes(result):
 @register.filter(name='admin_breadcrumb')
 def admin_breadcrumb(breadcrumb):
     return 'admin:standings_{}_changelist'.format(breadcrumb['url'])
+
+
+@register.filter(name='show_flag')
+def show_flag(country):
+    if country in settings.COUNTRIES_OVERRIDE:
+        return mark_safe('<img src="{}" title={}/>'.format(country.flag, country.name))
+    else:
+        return mark_safe('<i class="{}" title={}></i>'.format(country.flag_css, country.name))

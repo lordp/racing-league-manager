@@ -9,7 +9,7 @@
     });
 </script>
 
-<h1>{{ driver.name }} <img src="{{ driver.country.flag }}" /></h1>
+<h1>{{ driver.name }} {{ driver.country|show_flag }}</h1>
 <div class="ui top attached tabular menu">
     <a class="item active" data-tab="qualifying">Qualifying Stats</a>
     <a class="item" data-tab="race">Race Stats</a>
