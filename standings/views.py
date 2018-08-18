@@ -126,9 +126,15 @@ def driver_view(request, driver_id):
         else:
             driver_stats[key] = ', '.join(sort_counter(Counter(driver_stats[key])))
 
+    sorted_seasons = {}
+    seasons_sort = sorted(seasons, key=lambda item: seasons[item]['season'].start_date)
+    seasons_sort = sorted(seasons_sort, key=lambda item: seasons[item]['season'].division.order)
+    for season_id, season in enumerate(seasons_sort):
+        sorted_seasons[season_id] = seasons[season]
+
     context = {
         'driver': driver,
-        'seasons': seasons,
+        'seasons': sorted_seasons,
         'stats': driver_stats,
     }
 
