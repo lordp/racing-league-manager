@@ -64,10 +64,10 @@ class ResultAdmin(admin.ModelAdmin):
 
 @admin.register(Race)
 class RaceAdmin(admin.ModelAdmin):
-    list_filter = ['season']
-    list_display = ('name', 'season')
+    list_filter = [('season', RelatedDropdownFilter)]
+    list_display = ('name', 'round_number', 'start_time', 'season')
     list_select_related = ('season', 'season__division')
-    ordering = ['name']
+    ordering = ['start_time']
     actions = ['update_results', 'apply_penalties', 'unfinalise']
 
     def get_urls(self):
@@ -178,7 +178,9 @@ class SeasonAdmin(admin.ModelAdmin):
         return obj.division.name
 
     list_display = ('name', 'league', 'division', 'race_count')
+    list_filter = ('division', 'division__league')
     actions = ['generate_top10', 'update_stats', 'clear_cache']
+    ordering = ['start_date']
 
     def get_queryset(self, request):
         return Season.objects.annotate(race_count=Count('race'))
@@ -273,7 +275,7 @@ class DriverAdmin(admin.ModelAdmin):
 @admin.register(Lap)
 class LapAdmin(admin.ModelAdmin):
     list_display = ('result', 'lap_number', 'position', 'sector_1', 'sector_2', 'sector_3', 'lap_time', 'pitstop')
-    list_filter = ['result__race', 'result__driver']
+    list_filter = [('result__race', RelatedDropdownFilter), ('result__driver', RelatedDropdownFilter), 'session']
     ordering = ['lap_number']
 
 
