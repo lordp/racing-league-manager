@@ -367,6 +367,7 @@ class Race(models.Model):
             # check classification rules
             if self.season.allocate_points(total_lap_count, result.race_laps):
                 result.points = ps.to_dict().get(result.position, 0)
+                result.points += ps.to_dict(False).get(result.qualifying, 0)
                 if result.fastest_lap:
                     result.points += ps.fastest_lap
             else:
