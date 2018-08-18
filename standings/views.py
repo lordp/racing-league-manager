@@ -75,9 +75,15 @@ def team_view(request, team_id):
             sorted_drivers.append(team_drivers[td]['drivers'][driver])
         team_drivers[td]['drivers'] = sorted_drivers
 
+    sorted_seasons = {}
+    seasons_sort = sorted(team_drivers, key=lambda item: team_drivers[item]['season'].start_date)
+    seasons_sort = sorted(seasons_sort, key=lambda item: team_drivers[item]['season'].division.order)
+    for season_id, season in enumerate(seasons_sort):
+        sorted_seasons[season_id] = team_drivers[season]
+
     context = {
         'team': team,
-        'seasons': team_drivers,
+        'seasons': sorted_seasons,
     }
 
     return render(request, 'standings/team.html', context)
