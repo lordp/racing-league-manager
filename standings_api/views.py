@@ -1,5 +1,6 @@
 from standings.models import Driver, Result, Race, Team, SeasonStats, Season
 from standings_api.serializers import DriverSerializer, ResultSerializer, RaceSerializer, TeamSerializer
+from standings.utils import calculate_average
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import mixins, generics
@@ -107,6 +108,10 @@ class DriverStats(APIView):
             driver_stats = SeasonStats.collate(stats)
             driver_stats['race_positions'] = Counter(driver_stats['race_positions'])
             driver_stats['qualifying_positions'] = Counter(driver_stats['qualifying_positions'])
+
+            driver_stats['avg_qualifying'] = calculate_average(driver_stats, 'qualifying_positions')
+            driver_stats['avg_race'] = calculate_average(driver_stats, 'race_positions')
+
             return Response(driver_stats)
         except TypeError:
             return Response({}, status=404)
