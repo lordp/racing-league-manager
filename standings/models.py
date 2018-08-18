@@ -361,6 +361,9 @@ class Race(models.Model):
             else:
                 result.gap = standings.utils.format_time(result.race_time - total_race_time)
 
+            # make sure the fastest lap has been set
+            self.find_fastest_lap()
+
             # check classification rules
             if self.season.allocate_points(total_lap_count, result.race_laps):
                 result.points = ps.to_dict().get(result.position, 0)
@@ -408,6 +411,22 @@ class Race(models.Model):
     def laps_lead(self):
         return Result.objects.values('driver_id').filter(race=self, lap__position=1).annotate(
             first_place=Count('lap__position')).order_by('-first_place')
+
+    def find_fastest_lap(self):
+        result = None
+        try:
+            self.result_set.update(fastest_lap=False)
+            result = self.result_set.filter(race_fastest_lap__gt=0).order_by('race_fastest_lap').first()
+        except:
+            try:
+                result = Lap.objects.filter(result__race=self, session='race').order_by('lap_time').first().result
+            except AttributeError:
+                pass
+
+        if result:
+            result.fastest_lap = True
+            result.save()
+
 
 
 class Driver(models.Model):
