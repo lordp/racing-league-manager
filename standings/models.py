@@ -11,7 +11,7 @@ import json
 
 
 class PointSystem(models.Model):
-    name = models.CharField(max_length=25)
+    name = models.CharField(max_length=50)
     race_points = models.CharField(max_length=100)
     qualifying_points = models.CharField(max_length=100, blank=True)
     pole_position = models.FloatField(default=0)
@@ -459,8 +459,8 @@ class Result(models.Model):
     qualifying_laps = models.IntegerField('Lap count', default=0)
     qualifying_time = models.FloatField('Total time', default=0)
     finalized = models.BooleanField(default=False)
-    car = models.CharField(max_length=25, blank=True)
-    car_class = models.CharField(max_length=25, blank=True)
+    car = models.CharField(max_length=50, blank=True)
+    car_class = models.CharField(max_length=50, blank=True)
     points_multiplier = models.FloatField('Points Multiplier', default=1)
     points_multiplier_description = models.CharField('Multiplier Description', max_length=250, blank=True)
     race_penalty_time = models.IntegerField('Time', default=0)
