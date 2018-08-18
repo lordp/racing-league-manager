@@ -1,5 +1,5 @@
 from inflect import engine
-from collections import Counter, Iterable
+from collections import Iterable
 
 
 def format_time(seconds):
