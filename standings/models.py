@@ -371,7 +371,7 @@ class Race(models.Model):
                 result.points += ps.pole_position
 
             # most laps lead
-            if ml['driver_id'] == result.driver_id:
+            if ml is not None and ml['driver_id'] == result.driver_id:
                 result.points += ps.most_laps_lead
 
             # points per lap lead
