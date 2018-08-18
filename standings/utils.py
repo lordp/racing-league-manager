@@ -104,3 +104,12 @@ def expire_view_cache(path, meta, key_prefix=None):
             raise ValueError('Failed to create cache_key')
     except (ValueError, Exception) as e:
         return (False, e)
+
+
+def calculate_average(values, key):
+    try:
+        value = sum(values[key]) / len(values[key])
+    except (ZeroDivisionError, KeyError):
+        value = 0
+
+    return value

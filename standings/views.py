@@ -1,7 +1,7 @@
 from django.views.decorators.cache import cache_page
 from django.shortcuts import get_object_or_404, render
 from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats
-from standings.utils import sort_counter
+from standings.utils import sort_counter, calculate_average
 from collections import Counter
 
 
@@ -115,19 +115,8 @@ def driver_view(request, driver_id):
     driver_stats = SeasonStats.collate(stats)
     counter_keys = ['race_positions', 'dnf_reasons', 'qualifying_positions']
 
-    try:
-        driver_stats['avg_qualifying'] = round(
-            sum(driver_stats['qualifying_positions']) / len(driver_stats['qualifying_positions']), 1
-        )
-    except ZeroDivisionError:
-        driver_stats['avg_qualifying'] = 0
-
-    try:
-        driver_stats['avg_race'] = round(
-            sum(driver_stats['race_positions']) / len(driver_stats['race_positions']), 1
-        )
-    except ZeroDivisionError:
-        driver_stats['avg_race'] = 0
+    driver_stats['avg_qualifying'] = calculate_average(driver_stats, 'qualifying_positions')
+    driver_stats['avg_race'] = calculate_average(driver_stats, 'race_positions')
 
     for key in counter_keys:
         if key == 'dnf_reasons':
