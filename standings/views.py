@@ -1,6 +1,6 @@
 from django.views.decorators.cache import cache_page
 from django.shortcuts import get_object_or_404, render
-from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats
+from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty
 from standings.utils import sort_counter, calculate_average
 from collections import Counter
 
@@ -56,7 +56,8 @@ def team_view(request, team_id):
         if season.id not in team_drivers:
             team_drivers[season.id] = {
                 "season": season,
-                "drivers": {}
+                "drivers": {},
+                "penalties": SeasonPenalty.objects.filter(season=season, team=res.team)
             }
 
         if res.driver.id not in team_drivers[season.id]['drivers']:
@@ -66,6 +67,9 @@ def team_view(request, team_id):
                 "results": results,
                 "points": sum([ps.get(x.position, 0) for x in results])
             }
+
+            for penalty in team_drivers[season.id]['penalties'].filter(driver=res.driver):
+                team_drivers[season.id]['drivers'][res.driver.id]['points'] -= penalty.points
 
     for td in team_drivers:
         sorted_drivers = []
@@ -104,7 +108,8 @@ def driver_view(request, driver_id):
         if season.id not in seasons:
             seasons[season.id] = {
                 "season": season,
-                "teams": {}
+                "teams": {},
+                "penalties": SeasonPenalty.objects.filter(season=season, driver=driver)
             }
 
             for result in driver.result_set.filter(race__season__id=season.id):
@@ -117,6 +122,9 @@ def driver_view(request, driver_id):
                 seasons[season.id]['teams'][result.team.id]["points"] = sum(
                     [ps.get(x.position, 0) for x in seasons[season.id]['teams'][result.team.id]["results"]]
                 )
+
+                for penalty in seasons[season.id]['penalties'].filter(team=res.team):
+                    seasons[season.id]['teams'][res.team.id]['points'] -= penalty.points
 
     driver_stats = SeasonStats.collate(stats)
     counter_keys = ['race_positions', 'dnf_reasons', 'qualifying_positions']

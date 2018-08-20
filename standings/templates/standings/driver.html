@@ -145,6 +145,25 @@
         {% endfor %}
     </tbody>
 </table>
+{% if season.penalties %}
+<table class="ui small selectable collapsing compact celled table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Points</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for penalty in season.penalties %}
+        <tr>
+            <td>{% if penalty.team %}<a href="{% url 'team' penalty.team.id %}">{{ penalty.team.name }}</a>{% else %}Driver Penalty{% endif %}</td>
+            <td class="ui center aligned">{{ penalty.points|format_float }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+</div>
 {% endfor %}
 </div>
 {% endblock %}
