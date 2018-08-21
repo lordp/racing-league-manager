@@ -149,6 +149,6 @@ def admin_breadcrumb(breadcrumb):
 @register.filter(name='show_flag')
 def show_flag(country):
     if country in settings.COUNTRIES_OVERRIDE:
-        return mark_safe('<img src="{}" title={}/>'.format(country.flag, country.name))
+        return mark_safe('<img src="{}" title="{}"/>'.format(country.flag, country.name))
     else:
-        return mark_safe('<i class="{}" title={}></i>'.format(country.flag_css, country.name))
+        return mark_safe('<i class="{}" title="{}"></i>'.format(country.flag_css, country.name))
