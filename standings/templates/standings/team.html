@@ -32,6 +32,7 @@
         {% endfor %}
     </tbody>
 </table>
+{% if season.penalties %}
 <table class="ui small selectable collapsing compact celled table">
     <thead>
         <tr>
@@ -48,5 +49,6 @@
         {% endfor %}
     </tbody>
 </table>
+{% endif %}
 {% endfor %}
 {% endblock %}
