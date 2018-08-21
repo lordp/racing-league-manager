@@ -2,6 +2,7 @@ from django import template
 import standings.utils
 from django.conf import settings
 from django.utils.safestring import mark_safe
+import textwrap
 
 register = template.Library()
 
@@ -136,7 +137,7 @@ def collate_notes(result):
                 'WCC points allocated to {}'.format(result.allocate_points.name)
             )
 
-    note = '; '.join([n for n in notes if n is not None])
+    note = textwrap.shorten('; '.join([n for n in notes if n is not None]), width=100)
     return note
 
 
