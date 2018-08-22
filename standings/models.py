@@ -754,8 +754,12 @@ class LogFile(models.Model):
                 if driver_name not in duplicates:
                     duplicates.append(driver_obj.id)
 
-            team_name = driver.xpath('./CarType')[0].text
-            (team_obj, created) = Team.objects.get_or_create(name=team_name)
+            team_name = driver.xpath('./CarType')[0].text.strip()
+            try:
+                (team_obj, created) = Team.objects.get_or_create(name=team_name)
+            except Team.MultipleObjectsReturned:
+                team_obj = Team.objects.filter(name__unaccent=team_name).annotate(
+                    result_count=Count('result')).order_by('-result_count').first()
 
             (result, created) = Result.objects.get_or_create(
                 race=self.race, driver=driver_obj, team=team_obj
