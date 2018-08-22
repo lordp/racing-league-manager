@@ -25,9 +25,9 @@ class PointSystem(models.Model):
     def to_dict(self, race=True):
         try:
             if race:
-                return {int(k) + 1: int(v) for k, v in enumerate(self.race_points.split(','))}
+                return {int(k) + 1: float(v) for k, v in enumerate(self.race_points.split(','))}
             else:
-                return {int(k) + 1: int(v) for k, v in enumerate(self.qualifying_points.split(','))}
+                return {int(k) + 1: float(v) for k, v in enumerate(self.qualifying_points.split(','))}
         except ValueError:
             return {0: 0}
 
