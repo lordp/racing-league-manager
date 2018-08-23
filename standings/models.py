@@ -8,6 +8,7 @@ import os
 import standings.utils
 from .utils import apply_positions
 import json
+from enum import Enum
 
 
 class PointSystem(models.Model):
@@ -134,6 +135,12 @@ class Track(models.Model):
 
 
 class Season(models.Model):
+    classification_choice = (
+        ('', 'No classification'),
+        ('percent', 'Percentage'),
+        ('laps', 'Laps'),
+    )
+
     division = models.ForeignKey(Division, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=250, blank=True)
@@ -141,7 +148,11 @@ class Season(models.Model):
     end_date = models.DateField(default=date.today)
     finalized = models.BooleanField(default=False)
     point_system = models.ForeignKey(PointSystem, on_delete=models.SET_NULL, null=True, blank=True)
-    classification_type = models.CharField(max_length=10, blank=True)
+    classification_type = models.CharField(
+        max_length=10,
+        blank=True,
+        choices=[(choice[0], choice[1]) for choice in classification_choice]
+    )
     percent_classified = models.IntegerField(default=0)
     laps_classified = models.IntegerField(default=0)
     teams_disabled = models.BooleanField(default=False)
