@@ -17,7 +17,7 @@ def format_float(num):
     return format(num, '.15g')
 
 
-def apply_positions(table, key='points'):
+def apply_positions(table, key='points', use_position=False):
     position = 1
     position_diff = 1
 
@@ -35,7 +35,7 @@ def apply_positions(table, key='points'):
                 position_diff = 1
                 same_position = False
 
-            row['position'] = '-' if same_position else position
+            row['position'] = '-' if same_position and not use_position else position
 
         previous_item = row
 
