@@ -414,15 +414,13 @@ class Race(models.Model):
             first_place=Count('lap__position')).order_by('-first_place')
 
     def find_fastest_lap(self):
-        result = None
-        try:
-            self.result_set.update(fastest_lap=False)
-            result = self.result_set.filter(race_fastest_lap__gt=0).order_by('race_fastest_lap').first()
-        except:
+        self.result_set.update(fastest_lap=False)
+        result = self.result_set.filter(race_fastest_lap__gt=0).order_by('race_fastest_lap').first()
+        if result is None:
             try:
                 result = Lap.objects.filter(result__race=self, session='race').order_by('lap_time').first().result
             except AttributeError:
-                pass
+                result = None
 
         if result:
             result.fastest_lap = True
