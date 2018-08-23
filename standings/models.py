@@ -429,7 +429,6 @@ class Race(models.Model):
             result.save()
 
 
-
 class Driver(models.Model):
     name = models.CharField(max_length=50)
     country = CountryField(blank=True)
