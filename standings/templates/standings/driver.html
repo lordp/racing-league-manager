@@ -122,6 +122,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Position</th>
             <th>Points</th>
             {% for race in season.season.race_set.all %}
             <th>{{ race.short_name }}</th>
@@ -132,6 +133,7 @@
         {% for _, team in season.teams.items %}
         <tr>
             <td><a href="{% url 'team' team.team.id %}">{{ team.team.name }}</a></td>
+            <td class="ui center aligned">{{ season.position|ordinal }}</td>
             <td class="ui center aligned">{{ team.points|format_float }}</td>
             {% for race in season.season.race_set.all %}
                 {% with result=team.results|find_result:race %}

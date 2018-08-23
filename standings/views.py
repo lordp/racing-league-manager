@@ -145,6 +145,11 @@ def driver_view(request, driver_id):
     seasons_sort = sorted(seasons_sort, key=lambda item: seasons[item]['season'].division.order)
     for season_id, season in enumerate(seasons_sort):
         sorted_seasons[season_id] = seasons[season]
+        try:
+            stats = SeasonStats.objects.get(season_id=season, driver_id=driver_id)
+            sorted_seasons[season_id]['position'] = stats.season_position
+        except SeasonStats.DoesNotExist:
+            pass
 
     context = {
         'driver': driver,
