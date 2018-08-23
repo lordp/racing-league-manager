@@ -46,7 +46,7 @@ def team_view(request, team_id):
     team_drivers = {}
     team = get_object_or_404(Team, pk=team_id)
     for res in team.result_set.all():
-        season = res.race.season    
+        season = res.race.season
 
         if res.race.point_system:
             ps = res.race.point_system.to_dict()
