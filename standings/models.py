@@ -182,7 +182,7 @@ class Season(models.Model):
 
         return True
 
-    def get_standings(self):
+    def get_standings(self, use_position=False):
         season_penalty = self.seasonpenalty_set
 
         drivers = {}
@@ -254,7 +254,8 @@ class Season(models.Model):
         for pos, team in enumerate(team_sort):
             sorted_teams.append(teams[team])
 
-        return apply_positions(sorted_drivers), apply_positions(sorted_teams)
+        return apply_positions(sorted_drivers, use_position=use_position), \
+               apply_positions(sorted_teams, use_position=use_position)
 
     def generate_image(self, mode, data):
         from PIL import Image, ImageDraw, ImageFont
