@@ -8,7 +8,6 @@ import os
 import standings.utils
 from .utils import apply_positions
 import json
-from enum import Enum
 
 
 class PointSystem(models.Model):
