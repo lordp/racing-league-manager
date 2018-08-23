@@ -555,6 +555,7 @@ class SeasonStats(models.Model):
     positions = JSONField(default={})
     dnf_reasons = JSONField(default={})
     qualifying = JSONField(default={})
+    season_position = models.IntegerField(default=99)
 
     class Meta:
         verbose_name_plural = 'Season stats'
@@ -581,6 +582,9 @@ class SeasonStats(models.Model):
         self.positions = {}
         self.dnf_reasons = {}
         self.qualifying = {}
+
+        standings = self.season.get_standings(use_position=True)
+        self.season_position = [r for r in standings[0] if r['driver'] == self.driver][0]['position']
 
         for result in Result.objects.filter(race__season=self.season, driver=self.driver):
             self.attendance += 1
