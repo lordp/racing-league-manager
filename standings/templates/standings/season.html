@@ -86,9 +86,9 @@
                 {{ team.points|format_float }}
                 {% if team.season_penalty %}<div class="note"></div>{% endif %}
             </td>
-            <td class="team-driver-position">{{ driver.name }}</td>
+            <td class="team-driver-position">{{ driver.driver.name }}</td>
             {% for race in season.race_set.all %}
-                {% with result=team.results|find_results:race|find_driver:driver %}
+                {% with result=team.results|find_results:race|find_driver:driver.driver %}
             <td class="ui center aligned {{ result|get_css_classes:season }} team-driver-position">
                 {{ result|get_position }}
             </td>
@@ -97,9 +97,9 @@
         </tr>
                 {% else %}
         <tr>
-            <td class="team-driver-position">{{ driver.name }}</td>
+            <td class="team-driver-position">{{ driver.driver.name }}</td>
             {% for race in season.race_set.all %}
-                {% with result=team.results|find_results:race|find_driver:driver %}
+                {% with result=team.results|find_results:race|find_driver:driver.driver %}
             <td class="ui center aligned {{ result|get_css_classes:season }} team-driver-position">
                 {{ result|get_position }}
             </td>

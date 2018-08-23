@@ -232,13 +232,19 @@ class Season(models.Model):
                         'team': result.team,
                         'points': result.points,
                         'results': [result],
-                        'drivers': {result.driver},
+                        'drivers': {result.driver_id: {'driver': result.driver, 'points': result.points}},
                         'season_penalty': sp
                     }
                 else:
                     teams[result.team_id]['results'].append(result)
                     teams[result.team_id]['points'] += result.points
-                    teams[result.team_id]['drivers'].add(result.driver)
+                    if result.driver_id not in teams[result.team_id]['drivers']:
+                        teams[result.team_id]['drivers'][result.driver_id] = {
+                            'driver': result.driver,
+                            'points': result.points
+                        }
+                    else:
+                        teams[result.team_id]['drivers'][result.driver_id]['points'] += result.points
 
                 teams[result.team.id]['driver_count'] = len(teams[result.team.id]['drivers'])
 
@@ -253,6 +259,18 @@ class Season(models.Model):
         team_sort = sorted(team_sort, key=lambda item: teams[item]['points'], reverse=True)
         for pos, team in enumerate(team_sort):
             sorted_teams.append(teams[team])
+
+            teams[team]['sorted_drivers'] = []
+            driver_sort = sorted(
+                teams[team]['drivers'],
+                key=lambda item: teams[team]['drivers'][item]['points'],
+                reverse=True
+            )
+            for pos, driver in enumerate(driver_sort):
+                teams[team]['sorted_drivers'].append(teams[team]['drivers'][driver])
+
+            teams[team]['drivers'] = teams[team]['sorted_drivers']
+            del teams[team]['sorted_drivers']
 
         return apply_positions(sorted_drivers, use_position=use_position), \
                apply_positions(sorted_teams, use_position=use_position)
