@@ -67,7 +67,7 @@ class RaceAdmin(admin.ModelAdmin):
     list_filter = [('season', RelatedDropdownFilter)]
     list_display = ('name', 'round_number', 'start_time', 'season')
     list_select_related = ('season', 'season__division')
-    ordering = ['start_time']
+    ordering = ['start_time', 'round_number']
     actions = ['update_results', 'apply_penalties', 'unfinalise']
 
     def get_urls(self):
