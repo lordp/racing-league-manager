@@ -147,6 +147,12 @@ class RaceAdmin(admin.ModelAdmin):
             if dsq or pens:
                 race.fill_attributes()
 
+            if request.POST['clear-cache']:
+                expire_view_cache(
+                    reverse('season', args=[race.season_id]),
+                    meta=request.META
+                )
+
             messages.add_message(request, messages.INFO, "Results for '{}' updated".format(race.name))
             return redirect(
                 "{}?season__id__exact={}".format(
