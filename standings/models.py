@@ -604,16 +604,24 @@ class SeasonStats(models.Model):
         standings = self.season.get_standings(use_position=True)
         self.season_position = [r for r in standings[0] if r['driver'] == self.driver][0]['position']
 
+        try:
+            ps_season = self.season.point_system.to_dict()
+        except AttributeError:
+            ps_season = None
+
         for result in Result.objects.filter(race__season=self.season, driver=self.driver):
             self.attendance += 1
 
             if self.best_result is None or self.best_result.position > result.position:
                 self.best_result = result
 
-            if (result.race.point_system and result.position <= len(
-                    result.race.point_system.to_dict())) or result.position <= len(
-                    self.season.point_system.to_dict()):
-                self.points_finishes += 1
+            try:
+                ps_race = result.race.point_system.to_dict()
+                if ps_race and result.position <= len(ps_race) or \
+                    ps_season and result.position <= len(ps_season):
+                    self.points_finishes += 1
+            except AttributeError:
+                pass
 
             if result.position == 1:
                 self.wins += 1
