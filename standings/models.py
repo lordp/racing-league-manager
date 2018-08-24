@@ -600,6 +600,7 @@ class SeasonStats(models.Model):
         self.positions = {}
         self.dnf_reasons = {}
         self.qualifying = {}
+        self.winner = False
 
         standings = self.season.get_standings(use_position=True)
         self.season_position = [r for r in standings[0] if r['driver'] == self.driver][0]['position']
@@ -670,6 +671,9 @@ class SeasonStats(models.Model):
                 self.qualifying[result.qualifying] = 1
             else:
                 self.qualifying[result.qualifying] += 1
+
+        if self.season.finalized and self.season_position == 1:
+            self.winner = True
 
         self.save()
 
