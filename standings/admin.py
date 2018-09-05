@@ -147,7 +147,7 @@ class RaceAdmin(admin.ModelAdmin):
             if dsq or pens:
                 race.fill_attributes()
 
-            if request.POST['clear-cache']:
+            if 'clear-cache' in request.POST:
                 expire_view_cache(
                     reverse('season', args=[race.season_id]),
                     meta=request.META
