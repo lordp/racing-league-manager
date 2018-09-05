@@ -169,6 +169,9 @@ class RaceAdmin(admin.ModelAdmin):
                 results=results,
                 title="Apply penalties"
             )
+
+            messages.warning(request, 'WARNING - results will be finalized on submission. Finalized results are '
+                                      'ignored on subsequent submissions (unfinalize them beforehand if required).')
             return TemplateResponse(request, "admin/apply_penalties.html", context)
     apply_penalties.short_description = 'Apply penalties and adjust time/positions'
 
