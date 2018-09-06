@@ -75,17 +75,20 @@ class NextRaceDetail(APIView):
     def get(request):
         now = datetime.now(timezone.utc)
         queryset = Race.objects.filter(start_time__gte=now).order_by('start_time')
-        search = request.query_params.get('search', None)
-        if search is not None:
-            queryset = queryset.filter(Q(
-                season__division__league__name__iexact=search.lower()
-            ) | Q(
-                season__division__name__iexact=search.lower()
-            ))
+        division = request.query_params.get('division', None)
+        if division:
+            queryset = queryset.filter(season__division__name__icontains=division)
 
-        race = model_to_dict(queryset.first())
+        race = queryset.first()
 
-        return Response(race)
+        detail = {
+            "round_number": race.round_number,
+            "name": race.name,
+            "start_time": race.start_time,
+            "division": race.season.division.name
+        }
+
+        return Response(detail)
 
 
 class DriverStats(APIView):
