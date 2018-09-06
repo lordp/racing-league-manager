@@ -1,4 +1,4 @@
-from standings.models import Driver, Result, Race, Team, SeasonStats, Season
+from standings.models import Driver, Result, Race, Team, SeasonStats, Season, Division
 from standings_api.serializers import DriverSerializer, ResultSerializer, RaceSerializer, TeamSerializer
 from standings.utils import calculate_average
 from rest_framework.views import APIView
@@ -151,4 +151,22 @@ class Standings(APIView):
                     })
             return Response(data)
         else:
+            return Response({}, status=404)
+
+
+class DivisionInfo(APIView):
+    @staticmethod
+    def get(request, division_name):
+        try:
+            division = Division.objects.filter(
+                Q(name__icontains=division_name) | Q(league__name__icontains=division_name)
+            ).first()
+            season = division.season_set.order_by('-start_date').first()
+
+            return Response({
+                'name': division.name,
+                'league': division.league.name,
+                'season': model_to_dict(season)
+            })
+        except (IndexError, AttributeError):
             return Response({}, status=404)

@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^next-race$', views.NextRaceDetail.as_view()),
     url(r'^stats$', views.DriverStats.as_view()),
     url(r'^standings/(?P<season_id>[0-9]+)(/(?P<team>team))?$', views.Standings.as_view()),
+    url(r'^info/(?P<division_name>[A-Za-z ]+)$', views.DivisionInfo.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
