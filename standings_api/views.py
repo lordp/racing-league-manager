@@ -62,12 +62,46 @@ class TeamDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
         return self.retrieve(request, *args, **kwargs)
 
 
-class RaceDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
+class RaceDetail(APIView):
     queryset = Race.objects.all()
     serializer_class = RaceSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+    @staticmethod
+    def get(request, race_id):
+        race = Race.objects.get(pk=race_id)
+        if race:
+            results = []
+            for result in race.result_set.all():
+                results.append({
+                    'driver': {
+                        'id': result.driver_id,
+                        'name': result.driver.name,
+                        'country': result.driver.country.name
+                    },
+                    'team': {
+                        'id': result.team_id,
+                        'name': result.team.name,
+                        'country': result.team.country.name
+                    },
+                    'qualifying': result.qualifying,
+                    'position': result.position,
+                    'points': result.points,
+                    'dnf': result.dnf_reason,
+                    'fastest_lap': result.fastest_lap,
+                    'laps': result.race_laps,
+                    'penalty': result.race_penalty_description,
+                    'time': result.race_time
+                })
+            race_detail = {
+                'name': race.name,
+                'round_number': race.round_number,
+                'start_time': race.start_time,
+                'results': results
+            }
+
+            return Response(race_detail)
+        else:
+            return Response({}, status=404)
 
 
 class NextRaceDetail(APIView):
