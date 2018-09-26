@@ -160,7 +160,7 @@ class Standings(APIView):
         season = Season.objects.get(pk=season_id)
         if season:
             data = []
-            standings = season.get_standings()
+            standings = season.get_standings(use_position=True)
             if team:
                 standings = standings[1]
             else:
@@ -174,15 +174,21 @@ class Standings(APIView):
                         'points': row['points'],
                     })
                 else:
-                    data.append({
+                    tmp = {
                         'name': row['driver'].name,
                         'id': row['driver'].id,
-                        'team': row['team'].name,
-                        'team_id': row['team'].id,
                         'position': row['position'],
                         'points': row['points'],
                         'best_finish': row['best_finish']
-                    })
+                    }
+
+                    if not season.teams_disabled:
+                        tmp['team'] = {
+                            'name': row['team'].name,
+                            'id': row['team'].id,
+                        }
+
+                    data.append(tmp)
             return Response(data)
         else:
             return Response({}, status=404)
