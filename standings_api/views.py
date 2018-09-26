@@ -67,7 +67,7 @@ class RaceDetail(APIView):
     serializer_class = RaceSerializer
 
     @staticmethod
-    def get(request, race_id):
+    def get(request, race_id, format=None):
         race = Race.objects.get(pk=race_id)
         if race:
             results = []
@@ -106,7 +106,7 @@ class RaceDetail(APIView):
 
 class NextRaceDetail(APIView):
     @staticmethod
-    def get(request):
+    def get(request, format=None):
         now = datetime.now(timezone.utc)
         queryset = Race.objects.filter(start_time__gte=now).order_by('start_time')
         division = request.query_params.get('division', None)
@@ -127,7 +127,7 @@ class NextRaceDetail(APIView):
 
 class DriverStats(APIView):
     @staticmethod
-    def get(request):
+    def get(request, format=None):
         stats = SeasonStats.objects
         driver = request.query_params.get('driver', None)
         if driver:
@@ -156,7 +156,7 @@ class DriverStats(APIView):
 
 class Standings(APIView):
     @staticmethod
-    def get(request, season_id, team):
+    def get(request, season_id, team, format=None):
         season = Season.objects.get(pk=season_id)
         if season:
             data = []
