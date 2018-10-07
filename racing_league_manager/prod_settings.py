@@ -30,6 +30,8 @@ DEBUG = False
 ALLOWED_HOSTS = ['results.formula-simracing.net']
 INTERNAL_IPS = ['127.0.0.1']
 
+ADMINS = [('Darryl', 'darryl@addict.net.nz')]
+
 
 # Application definition
 
@@ -144,6 +146,10 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': '/tmp/django.log',
         },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
     },
 }
 
