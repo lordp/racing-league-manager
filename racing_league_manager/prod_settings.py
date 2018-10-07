@@ -32,6 +32,10 @@ INTERNAL_IPS = ['127.0.0.1']
 
 ADMINS = [('Darryl', 'darryl@addict.net.nz')]
 
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'admin@formula-simracing.net'
 
 # Application definition
 
