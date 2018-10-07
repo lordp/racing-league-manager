@@ -34,7 +34,7 @@ ADMINS = [('Darryl', 'darryl@addict.net.nz')]
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'admin@formula-simracing.net'
 
 # Application definition
