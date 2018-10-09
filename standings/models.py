@@ -618,11 +618,12 @@ class SeasonStats(models.Model):
 
             try:
                 ps_race = result.race.point_system.to_dict()
-                if ps_race and result.position <= len(ps_race) or \
-                    ps_season and result.position <= len(ps_season):
-                    self.points_finishes += 1
             except AttributeError:
-                pass
+                ps_race = None
+
+            if (ps_race and result.position <= len(ps_race)) or \
+                    (ps_season and result.position <= len(ps_season)):
+                self.points_finishes += 1
 
             if result.position == 1:
                 self.wins += 1
