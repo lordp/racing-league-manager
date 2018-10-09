@@ -257,7 +257,7 @@ class Season(models.Model):
         sorted_teams = []
         team_sort = sorted(teams, key=lambda item: teams[item]['season_penalty'] is None, reverse=True)
         team_sort = sorted(team_sort, key=lambda item: teams[item]['points'], reverse=True)
-        for pos, team in enumerate(team_sort):
+        for _, team in enumerate(team_sort):
             sorted_teams.append(teams[team])
 
             teams[team]['sorted_drivers'] = []
@@ -266,14 +266,14 @@ class Season(models.Model):
                 key=lambda item: teams[team]['drivers'][item]['points'],
                 reverse=True
             )
-            for pos, driver in enumerate(driver_sort):
+            for _, driver in enumerate(driver_sort):
                 teams[team]['sorted_drivers'].append(teams[team]['drivers'][driver])
 
             teams[team]['drivers'] = teams[team]['sorted_drivers']
             del teams[team]['sorted_drivers']
 
         return apply_positions(sorted_drivers, use_position=use_position), \
-               apply_positions(sorted_teams, use_position=use_position)
+            apply_positions(sorted_teams, use_position=use_position)
 
     def generate_image(self, mode, data):
         from PIL import Image, ImageDraw, ImageFont
