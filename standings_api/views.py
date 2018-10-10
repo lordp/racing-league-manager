@@ -127,7 +127,7 @@ class NextRaceDetail(APIView):
 
 class DriverStats(APIView):
     @staticmethod
-    def get(request, format=None):
+    def get(request):
         stats = SeasonStats.objects
         driver = request.query_params.get('driver', None)
         if driver:
