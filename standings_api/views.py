@@ -141,17 +141,17 @@ class DriverStats(APIView):
         if division:
             stats = stats.filter(season__division__name__icontains=division)
 
-        try:
-            driver_stats = SeasonStats.collate(stats)
-            driver_stats['race_positions'] = Counter(driver_stats['race_positions'])
-            driver_stats['qualifying_positions'] = Counter(driver_stats['qualifying_positions'])
-
-            driver_stats['avg_qualifying'] = calculate_average(driver_stats, 'qualifying_positions')
-            driver_stats['avg_race'] = calculate_average(driver_stats, 'race_positions')
-
+        driver_stats = SeasonStats.collate(stats)
+        if 'error' in driver_stats:
             return Response(driver_stats)
-        except TypeError:
-            return Response({}, status=404)
+
+        driver_stats['race_positions'] = Counter(driver_stats['race_positions'])
+        driver_stats['qualifying_positions'] = Counter(driver_stats['qualifying_positions'])
+
+        driver_stats['avg_qualifying'] = calculate_average(driver_stats, 'qualifying_positions')
+        driver_stats['avg_race'] = calculate_average(driver_stats, 'race_positions')
+
+        return Response(driver_stats)
 
 
 class Standings(APIView):

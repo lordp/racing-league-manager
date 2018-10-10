@@ -8,6 +8,7 @@ import os
 import standings.utils
 from .utils import apply_positions
 import json
+import random
 
 
 class PointSystem(models.Model):
@@ -696,7 +697,16 @@ class SeasonStats(models.Model):
 
         counter_keys = ['race_positions', 'dnf_reasons', 'qualifying_positions']
 
-        if len(stats) > 0:
+        drivers = list(set([x.driver.name for x in stats]))
+
+        if len(drivers) == 0:
+            return {'error': 'Driver not found'}
+        elif len(drivers) > 1:
+            example = random.choice(drivers)
+            error = f"Multiple drivers found, please adjust your query by including a season and/or division or " \
+                    f"being more precise with the name. For example:\n`stats \"{example}\"`"
+            return {'error': error}
+        else:
             driver_id = 0
             addable_stats = [
                 "fastest_laps", "laps_completed", "laps_lead", "podiums", "points_finishes", "pole_positions",
