@@ -15,13 +15,17 @@ def position_display(result):
         result.position = -2
     elif result.dnf_reason:
         result.position = -1
+        total_laps = result.race.result_set.get(position=1).race_laps
+        if result.race.season.allocate_points(total_laps, result.race_laps):
+            result.position = -4
 
     special_positions = {
         None: '-',
         0: '-',
         -1: 'DNF',
         -2: 'DSQ',
-        -3: 'DNS'
+        -3: 'DNS',
+        -4: 'DNF*'
     }
 
     return special_positions.get(result.position, result.position)
