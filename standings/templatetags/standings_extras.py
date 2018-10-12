@@ -11,10 +11,15 @@ def position_display(result):
     if result is None:
         return '-'
 
+    if result.race_penalty_dsq:
+        result.position = -2
+    elif result.dnf_reason:
+        result.position = -1
+
     special_positions = {
         None: '-',
         0: '-',
-        -1: 'Ret',
+        -1: 'DNF',
         -2: 'DSQ',
         -3: 'DNS'
     }
@@ -102,7 +107,13 @@ def get_css_classes(result, season):
     ret = []
 
     if result is not None:
-        ret.append(position_colour(result, season))
+        if result.race_penalty_dsq:
+            ret.append('pos-black')
+        elif result.dnf_reason:
+            ret.append('pos-retired')
+        else:
+            ret.append(position_colour(result, season))
+
         if result.qualifying == 1:
             ret.append("pole-position")
         if result.fastest_lap:
