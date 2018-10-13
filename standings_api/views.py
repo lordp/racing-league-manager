@@ -1,4 +1,4 @@
-from standings.models import Driver, Result, Race, Team, SeasonStats, Season, Division
+from standings.models import Driver, Result, Race, Team, SeasonStats, Season, Division, SeasonCarNumber
 from standings_api.serializers import DriverSerializer, ResultSerializer, RaceSerializer, TeamSerializer
 from standings.utils import calculate_average
 from rest_framework.views import APIView
@@ -46,12 +46,28 @@ class ResultList(generics.ListAPIView):
         return self.list(request, *args, **kwargs)
 
 
-class DriverDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
-    queryset = Driver.objects.all()
-    serializer_class = DriverSerializer
+class DriverDetail(APIView):
+    @staticmethod
+    def get(request, number, season_id):
+        try:
+            driver = SeasonCarNumber.objects.get(car_number=number, season_id=season_id).driver
+            standings = Season.objects.get(pk=season_id).get_standings(use_position=True)
+            standings = [x for x in standings[0] if x['driver'].id == driver.id][0]
+            detail = {
+                'id': driver.id,
+                'name': driver.name,
+                'team': {
+                    'id': standings['team'].id,
+                    'name': standings['team'].name,
+                },
+                'points': standings['points'],
+                'position': standings['position'],
+                'best_finish': standings['best_finish']
+            }
 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+            return Response(detail)
+        except (Driver.DoesNotExist, Season.DoesNotExist, IndexError):
+            return Response({'error': 'Driver or season not found'}, status=404)
 
 
 class TeamDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
