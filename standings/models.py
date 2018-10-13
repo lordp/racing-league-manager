@@ -922,3 +922,15 @@ class SeasonPenalty(models.Model):
             string = '{}, disqualified'.format(string)
 
         return string
+
+
+class SeasonCarNumber(models.Model):
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
+    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
+    car_number = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name_plural = 'Season Car Numbers'
+
+    def __str__(self):
+        return '{} ({}, {})'.format(self.driver, self.car_number, self.season)
