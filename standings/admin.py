@@ -105,10 +105,9 @@ class RaceAdmin(admin.ModelAdmin):
             pens = set()
             max_pos = race.result_set.aggregate(Max('position'))['position__max']
 
-            for result in race.result_set.filter(finalized=False):
+            for result in race.result_set.all():
                 result.position = request.POST.get('position-{}'.format(result.id))
                 result.race_time = request.POST.get('race-time-{}'.format(result.id))
-                result.race_penalty_time = request.POST.get('pen-time-{}'.format(result.id), 0)
                 result.race_penalty_positions = request.POST.get('pen-pos-{}'.format(result.id), 0)
                 result.race_penalty_description = request.POST.get('pen-desc-{}'.format(result.id), '')
                 result.qualifying_penalty_bog = True if 'qpen-bog-{}'.format(result.id) in request.POST else False
@@ -124,11 +123,13 @@ class RaceAdmin(admin.ModelAdmin):
                 else:
                     result.race_penalty_dsq = False
 
-                if int(request.POST.get('pen-time-{}'.format(result.id), 0)) > 0:
-                    result.race_time = float(result.race_time) + float(result.race_penalty_time)
+                posted_pen_time = int(request.POST.get('pen-time-{}'.format(result.id), 0))
+                if result.race_penalty_time != posted_pen_time:
+                    diff_pen_time = posted_pen_time - result.race_penalty_time
+                    result.race_penalty_time = posted_pen_time
+                    result.race_time = float(result.race_time) + diff_pen_time
                     pens.add(result.race_laps)
 
-                result.finalized = True
                 result.save()
 
             for result in dsq:
