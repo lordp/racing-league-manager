@@ -429,9 +429,6 @@ class Race(models.Model):
 
             result.save()
 
-        self.season.update_stats()
-        self.track.update_records()
-
     def tooltip(self):
         tooltip = "{name}<br/>{time}".format(
             time=self.start_time.strftime('%B %d %Y @ %H:%M'),
