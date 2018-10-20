@@ -10,7 +10,7 @@ function convert_seconds_to_lap(seconds, include_micro) {
     return (t1 > 0 ? t1 + ":" : '') + (t2.padStart(2, '0'));
 }
 
-const colors = [
+const colours = [
     [124, 181, 236],
     [67, 67, 72],
     [144, 237, 125],
@@ -23,15 +23,15 @@ const colors = [
     [145, 232, 225],
 ];
 
-const color_regex = /rgb\((\d+),(\d+),(\d+)\)/;
+const colour_regex = /rgb\((\d+),(\d+),(\d+)\)/;
 
-function dynamicColors(name) {
-    let pick = colors.pop();
+function dynamicColours(name) {
+    let pick = colours.pop();
     let r = pick[0];
     let g = pick[1];
     let b = pick[2];
 
-    if (colors.length === 0) {
+    if (colours.length === 0) {
         $('#' + name + '-chart .add-driver').attr('disabled', 'disabled').addClass('disabled');
     }
 
@@ -72,7 +72,7 @@ function add_driver(event) {
             "data": data,
             "fill": false,
             "driver": driver_id,
-            "borderColor": dynamicColors(event.data.name),
+            "borderColor": dynamicColours(event.data.name),
             "label": driver_list[0][driver_list[0].selectedIndex].text
         };
 
@@ -89,9 +89,9 @@ function remove_driver(event) {
 
     let found = event.data.chart.data.datasets.filter(dataset => dataset.driver === driver_id);
     if (found.length > 0) {
-        let found_color = found[0].borderColor.split(color_regex);
-        colors.push([found_color[1], found_color[2], found_color[3]]);
-        if (colors.length > 0) {
+        let found_colour = found[0].borderColor.split(colour_regex);
+        colours.push([found_colour[1], found_colour[2], found_colour[3]]);
+        if (colours.length > 0) {
             $('#' + event.data.name + '-chart .add-driver').attr('disabled', null).removeClass('disabled');
         }
 
