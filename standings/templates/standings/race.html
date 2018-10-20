@@ -107,6 +107,11 @@
             let winner_laps = {{ winner_laps }};
             let gap_times = calculate_gaps();
 
+            let colour_lists = {
+                'gap-colours': Array.from(colours),
+                'lap-colours': Array.from(colours)
+            };
+
             let lap_chart = new Chart(document.getElementById("lap_chart"), {
                 "type": "line",
                 "data": {

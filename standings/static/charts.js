@@ -25,19 +25,6 @@ const colours = [
 
 const colour_regex = /rgb\((\d+),(\d+),(\d+)\)/;
 
-function dynamicColours(name) {
-    let pick = colours.pop();
-    let r = pick[0];
-    let g = pick[1];
-    let b = pick[2];
-
-    if (colours.length === 0) {
-        $('#' + name + '-chart .add-driver').attr('disabled', 'disabled').addClass('disabled');
-    }
-
-    return "rgb(" + r + "," + g + "," + b + ")";
-}
-
 // Helper method to return a total time for an array or array slice
 function array_sum(array) {
     let race = 0;
@@ -53,6 +40,7 @@ function array_sum(array) {
 function add_driver(event) {
     let driver_list = $('#' + event.data.name + '-driver-list');
     let driver_id = driver_list[0][driver_list[0].selectedIndex].value;
+    let colours = colour_lists[event.data.name + '-colours'];
 
     let found = false;
     $.each(event.data.chart.data.datasets, function () {
@@ -68,11 +56,16 @@ function add_driver(event) {
             data = gap_times[driver_id];
         }
 
+        let pick = colours.pop();
+        if (colours.length === 0) {
+            $('#' + name + '-chart .add-driver').attr('disabled', 'disabled').addClass('disabled');
+        }
+
         let dataset = {
             "data": data,
             "fill": false,
             "driver": driver_id,
-            "borderColor": dynamicColours(event.data.name),
+            "borderColor": "rgb(" + pick[0] + "," + pick[1] + "," + pick[2] + ")",
             "label": driver_list[0][driver_list[0].selectedIndex].text
         };
 
@@ -86,6 +79,7 @@ function add_driver(event) {
 function remove_driver(event) {
     let driver_list = $('#' + event.data.name + '-driver-list');
     let driver_id = driver_list[0][driver_list[0].selectedIndex].value;
+    let colours = colour_lists[event.data.name + '-colours'];
 
     let found = event.data.chart.data.datasets.filter(dataset => dataset.driver === driver_id);
     if (found.length > 0) {
