@@ -750,6 +750,9 @@ class Lap(models.Model):
     lap_time = models.FloatField(default=0)
     race_time = models.FloatField(default=0)
 
+    class Meta:
+        ordering = ['lap_number']
+
 
 class LogFile(models.Model):
     file = models.FileField(upload_to='log_files/%Y/%m/%d')
