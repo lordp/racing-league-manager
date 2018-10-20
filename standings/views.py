@@ -183,8 +183,20 @@ def division_view(request, division_id):
 def race_view(request, race_id):
     race = get_object_or_404(Race, pk=race_id)
 
+    labels = [lap[0] for lap in race.result_set.get(position=1).lap_set.values_list('lap_number')]
+    winner_laps = [lap[0] for lap in race.result_set.get(position=1).lap_set.values_list('lap_time')]
+    lap_times = {}
+    drivers = {}
+    for result in race.result_set.all():
+        lap_times[result.driver_id] = [lap[0] for lap in result.lap_set.values_list('lap_time')]
+        drivers[result.driver_id] = result.driver.name
+
     context = {
         'race': race,
+        'drivers': drivers,
+        'labels': labels,
+        'lap_times': lap_times,
+        'winner_laps': winner_laps,
     }
 
     return render(request, 'standings/race.html', context)
