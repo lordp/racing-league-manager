@@ -7,7 +7,7 @@ function convert_seconds_to_lap(seconds, include_micro) {
     else {
         t2 = (seconds % 60).toFixed(0);
     }
-    return (t1 > 0 ? t1 + ":" : '') + (t2 < 10 ? "0" + t2 : t2);
+    return (t1 > 0 ? t1 + ":" : '') + (t2.padStart(2, '0'));
 }
 
 const colors = [
