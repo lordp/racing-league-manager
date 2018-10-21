@@ -50,7 +50,9 @@ function pick_colour(name) {
     }
 
     let pick = colours.filter(colour => colour.used === true && colour.name === name);
-    pick[0].used = false;
+    if (pick.length > 0) {
+        pick[0].used = false;
+    }
 }
 
 function add_driver(driver_id, driver_name, checkbox) {
@@ -90,7 +92,7 @@ function remove_driver(driver_id) {
 
         let found = chart.data.datasets.filter(dataset => dataset.driver === driver_id);
         if (found.length > 0) {
-            pick_colour(found.colour);
+            pick_colour(found[0].colour);
             $('.add-to-charts:not(:checked)').attr('disabled', null).attr('title', titles['add']);
 
             chart.data.datasets = chart.data.datasets.filter(dataset => dataset.driver !== driver_id);
