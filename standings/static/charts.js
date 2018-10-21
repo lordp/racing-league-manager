@@ -24,6 +24,11 @@ const colours = [
 ];
 
 const colour_regex = /rgb\((\d+),(\d+),(\d+)\)/;
+const titles = {
+    'add': 'Add driver to charts.',
+    'del': 'Remove driver from charts.',
+    'max': 'The maximum number of drivers (10) have been added.',
+};
 
 // Helper method to return a total time for an array or array slice
 function array_sum(array) {
@@ -37,62 +42,61 @@ function array_sum(array) {
     return race;
 }
 
-function add_driver(event) {
-    let driver_list = $('#' + event.data.name + '-driver-list');
-    let driver_id = driver_list[0][driver_list[0].selectedIndex].value;
-    let colours = colour_lists[event.data.name + '-colours'];
+function add_driver(driver_id, driver_name, checkbox) {
+    $('[data-chart=true]').each(function(i, element) {
+        let name = element.id.replace('-chart', '');
+        let chart = charts[name];
+        let colours = colour_lists[name];
 
-    let found = false;
-    $.each(event.data.chart.data.datasets, function () {
-        found = this.driver === driver_id;
+        let found = false;
+        $.each(chart.data.datasets, function () {
+            found = this.driver === driver_id;
+        });
+
+        if (!found) {
+            let data = times[name][driver_id];
+            let pick = colours.pop();
+            if (colours.length === 0) {
+                $('.add-to-charts:not(:checked)').attr('disabled', 'disabled').attr('title', titles['max'])
+            }
+
+            $(checkbox).attr('title', titles['del']);
+
+            let dataset = {
+                "data": data,
+                "fill": false,
+                "driver": driver_id,
+                "borderColor": "rgb(" + pick[0] + "," + pick[1] + "," + pick[2] + ")",
+                "label": driver_name
+            };
+
+            chart.data.datasets.push(dataset);
+            chart.update();
+        }
     });
-
-    if (!found) {
-        let data = [];
-        if (event.data.name === 'lap') {
-            data = lap_times[driver_id];
-        }
-        else {
-            data = gap_times[driver_id];
-        }
-
-        let pick = colours.pop();
-        if (colours.length === 0) {
-            $('#' + name + '-chart .add-driver').attr('disabled', 'disabled').addClass('disabled');
-        }
-
-        let dataset = {
-            "data": data,
-            "fill": false,
-            "driver": driver_id,
-            "borderColor": "rgb(" + pick[0] + "," + pick[1] + "," + pick[2] + ")",
-            "label": driver_list[0][driver_list[0].selectedIndex].text
-        };
-
-        event.data.chart.data.datasets.push(dataset);
-        event.data.chart.update();
-    }
 
     return false;
 }
 
-function remove_driver(event) {
-    let driver_list = $('#' + event.data.name + '-driver-list');
-    let driver_id = driver_list[0][driver_list[0].selectedIndex].value;
-    let colours = colour_lists[event.data.name + '-colours'];
+function remove_driver(driver_id, checkbox) {
+    $('[data-chart=true]').each(function(i, element) {
+        let name = element.id.replace('-chart', '');
+        let chart = charts[name];
+        let colours = colour_lists[name];
 
-    let found = event.data.chart.data.datasets.filter(dataset => dataset.driver === driver_id);
-    if (found.length > 0) {
-        let found_colour = found[0].borderColor.split(colour_regex);
-        colours.push([found_colour[1], found_colour[2], found_colour[3]]);
-        if (colours.length > 0) {
-            $('#' + event.data.name + '-chart .add-driver').attr('disabled', null).removeClass('disabled');
+        let found = chart.data.datasets.filter(dataset => dataset.driver === driver_id);
+        if (found.length > 0) {
+            let found_colour = found[0].borderColor.split(colour_regex);
+            colours.push([found_colour[1], found_colour[2], found_colour[3]]);
+            if (colours.length > 0) {
+                // $('#' + element + '-chart .add-driver').attr('disabled', null).removeClass('disabled');
+                $('.add-to-charts:not(:checked)').attr('disabled', null).attr('title', titles['add'])
+            }
+
+            chart.data.datasets = chart.data.datasets.filter(dataset => dataset.driver !== driver_id);
+            chart.update();
         }
-
-
-        event.data.chart.data.datasets = event.data.chart.data.datasets.filter(dataset => dataset.driver !== driver_id);
-        event.data.chart.update();
-    }
+    });
 
     return false;
 }
@@ -101,7 +105,7 @@ function calculate_gaps() {
     let gap_data = {};
     let winner_average = array_sum(winner_laps) / winner_laps.length;
 
-    $.each(lap_times, function (driver_id, laps) {
+    $.each(times['lap'], function (driver_id, laps) {
         let data = [];
         let average = [];
         $.each(laps, function (i, lap) {

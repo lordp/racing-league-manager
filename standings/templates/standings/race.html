@@ -21,6 +21,7 @@
         <table class="ui small selectable compact celled striped table">
             <thead>
             <tr>
+                <th><i class="chart line icon" title="Add driver to charts"></i></th>
                 <th class="ui center aligned">Pos</th>
                 <th class="ui center aligned">QPos</th>
                 <th>Name</th>
@@ -37,6 +38,7 @@
             <tbody>
             {% for result in race.race_order.all %}
                 <tr>
+                    <td class="center aligned collapsing"><input title="Add driver to charts" name="chart" type="checkbox" class="add-to-charts" value="{{ result.driver_id }}" data-name="{{ result.driver.name }}"/></td>
                     <td class="center aligned collapsing">{{ result.position }}</td>
                     <td class="center aligned collapsing">{{ result.qualifying }}</td>
                     <td><a href="{% url 'driver' result.driver.id %}">{{ result.driver.name }}</a></td>
@@ -81,38 +83,35 @@
         </table>
     </div>
     <div class="ui bottom attached tab segment" data-tab="lap-chart">
-        <form class="ui form">
-            <div id="lap-chart" class="three fields">
-                <div class="five wide field">
-                    <select title="Add/Remove driver to/from chart" id="lap-driver-list" class="ui selection dropdown">
-                        {% for id, driver in drivers.items %}
-                            <option value="{{ id }}">{{ driver }}</option>{% endfor %}
-                    </select>
-                </div>
-                <div class="one wide field">
-                    <button class="ui button add-driver">Add</button>
-                </div>
-                <div class="one wide field">
-                    <button class="ui button del-driver">Remove</button>
-                </div>
-            </div>
-        </form>
-
         <script src="{% static 'components/tab.js' %}"></script>
         <script src="{% static 'chartjs.min.js' %}"></script>
         <script src="{% static 'charts.js' %}"></script>
-        <canvas id="lap_chart"></canvas>
-        <script>
-            let lap_times = {{ lap_times }};
-            let winner_laps = {{ winner_laps }};
-            let gap_times = calculate_gaps();
 
-            let colour_lists = {
-                'gap-colours': Array.from(colours),
-                'lap-colours': Array.from(colours)
+        <canvas id="lap-chart" data-chart="true"></canvas>
+        <script>
+            let winner_laps = {{ winner_laps }};
+            let times = {
+                'lap': {{ lap_times }},
             };
 
-            let lap_chart = new Chart(document.getElementById("lap_chart"), {
+            times['gap'] = calculate_gaps();
+
+            let colour_lists = {
+                'gap': Array.from(colours),
+                'lap': Array.from(colours)
+            };
+
+            let charts = {
+                'gap': null,
+                'lap': null,
+            };
+
+            let drivers = {
+                'lap': [],
+                'gap': [],
+            };
+
+            charts['lap'] = new Chart(document.getElementById("lap-chart"), {
                 "type": "line",
                 "data": {
                     "labels": {{ labels }},
@@ -143,33 +142,12 @@
                     }
                 }
             });
-
-            $('#lap-chart .add-driver').on('click', { chart: lap_chart, name: 'lap' }, add_driver);
-            $('#lap-chart .del-driver').on('click', { chart: lap_chart, name: 'lap' }, remove_driver);
-
         </script>
     </div>
     <div class="ui bottom attached tab segment" data-tab="gap-chart">
-        <form class="ui form">
-            <div id="gap-chart" class="three fields">
-                <div class="five wide field">
-                    <select title="Add/Remove driver to/from chart" id="gap-driver-list" class="ui selection dropdown">
-                        {% for id, driver in drivers.items %}
-                            <option value="{{ id }}">{{ driver }}</option>{% endfor %}
-                    </select>
-                </div>
-                <div class="one wide field">
-                    <button class="ui button add-driver">Add</button>
-                </div>
-                <div class="one wide field">
-                    <button class="ui button del-driver">Remove</button>
-                </div>
-            </div>
-        </form>
-
-        <canvas id="gap_chart"></canvas>
+        <canvas id="gap-chart" data-chart="true"></canvas>
         <script>
-            let gap_chart = new Chart(document.getElementById("gap_chart"), {
+            charts['gap'] = new Chart(document.getElementById("gap-chart"), {
                 "type": "line",
                 "data": {
                     "labels": {{ labels }},
@@ -201,11 +179,16 @@
                 }
             });
 
-            $('#gap-chart .add-driver').on('click', { chart: gap_chart, name: 'gap' }, add_driver);
-            $('#gap-chart .del-driver').on('click', { chart: gap_chart, name: 'gap' }, remove_driver);
-
             $(document).ready(function() {
                 $('.menu .item').tab();
+                $('.add-to-charts').on('click', function() {
+                    if (this.checked) {
+                        add_driver(this.value, $(this).data('name'), this);
+                    }
+                    else {
+                        remove_driver(this.value, this);
+                    }
+                });
             });
         </script>
     </div>
