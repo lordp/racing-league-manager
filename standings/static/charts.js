@@ -11,19 +11,18 @@ function convert_seconds_to_lap(seconds, include_micro) {
 }
 
 const colours = [
-    [124, 181, 236],
-    [67, 67, 72],
-    [144, 237, 125],
-    [247, 163, 92],
-    [128, 133, 233],
-    [241, 92, 128],
-    [228, 211, 84],
-    [128, 133, 232],
-    [141, 70, 83],
-    [145, 232, 225],
+    { 'name': '#7cb5ec', 'used': false, 'rgb': [124, 181, 236] },
+    { 'name': '#434348', 'used': false, 'rgb': [67, 67, 72] },
+    { 'name': '#90ed7d', 'used': false, 'rgb': [144, 237, 125] },
+    { 'name': '#f7a35c', 'used': false, 'rgb': [247, 163, 92] },
+    { 'name': '#8085e9', 'used': false, 'rgb': [128, 133, 233] },
+    { 'name': '#f15c80', 'used': false, 'rgb': [241, 92, 128] },
+    { 'name': '#e4d354', 'used': false, 'rgb': [228, 211, 84] },
+    { 'name': '#2b908f', 'used': false, 'rgb': [43, 144, 143] },
+    { 'name': '#f45b5b', 'used': false, 'rgb': [141, 70, 83] },
+    { 'name': '#91e8e1', 'used': false, 'rgb': [145, 232, 225] },
 ];
 
-const colour_regex = /rgb\((\d+),(\d+),(\d+)\)/;
 const titles = {
     'add': 'Add driver to charts.',
     'del': 'Remove driver from charts.',
@@ -42,56 +41,57 @@ function array_sum(array) {
     return race;
 }
 
+function pick_colour(name) {
+    if (typeof name === 'undefined') {
+        let pick = colours.filter(colour => colour.used === false);
+        pick[0].used = true;
+
+        return pick[0];
+    }
+
+    let pick = colours.filter(colour => colour.used === true && colour.name === name);
+    pick[0].used = false;
+}
+
 function add_driver(driver_id, driver_name, checkbox) {
+    let colour = pick_colour();
+
     $('[data-chart=true]').each(function(i, element) {
         let name = element.id.replace('-chart', '');
         let chart = charts[name];
-        let colours = colour_lists[name];
 
-        let found = false;
-        $.each(chart.data.datasets, function () {
-            found = this.driver === driver_id;
-        });
+        let data = times[name][driver_id];
+        let dataset = {
+            "data": data,
+            "fill": false,
+            "driver": driver_id,
+            "borderColor": "rgb(" + colour['rgb'][0] + "," + colour['rgb'][1] + "," + colour['rgb'][2] + ")",
+            "colour": colour['name'],
+            "label": driver_name
+        };
 
-        if (!found) {
-            let data = times[name][driver_id];
-            let pick = colours.pop();
-            if (colours.length === 0) {
-                $('.add-to-charts:not(:checked)').attr('disabled', 'disabled').attr('title', titles['max'])
-            }
+        chart.data.datasets.push(dataset);
+        chart.update();
 
-            $(checkbox).attr('title', titles['del']);
-
-            let dataset = {
-                "data": data,
-                "fill": false,
-                "driver": driver_id,
-                "borderColor": "rgb(" + pick[0] + "," + pick[1] + "," + pick[2] + ")",
-                "label": driver_name
-            };
-
-            chart.data.datasets.push(dataset);
-            chart.update();
+        if (chart.data.datasets.length === 10) {
+            $('.add-to-charts:not(:checked)').attr('disabled', 'disabled').attr('title', titles['max'])
         }
+
+        $(checkbox).attr('title', titles['del']);
     });
 
     return false;
 }
 
-function remove_driver(driver_id, checkbox) {
+function remove_driver(driver_id) {
     $('[data-chart=true]').each(function(i, element) {
         let name = element.id.replace('-chart', '');
         let chart = charts[name];
-        let colours = colour_lists[name];
 
         let found = chart.data.datasets.filter(dataset => dataset.driver === driver_id);
         if (found.length > 0) {
-            let found_colour = found[0].borderColor.split(colour_regex);
-            colours.push([found_colour[1], found_colour[2], found_colour[3]]);
-            if (colours.length > 0) {
-                // $('#' + element + '-chart .add-driver').attr('disabled', null).removeClass('disabled');
-                $('.add-to-charts:not(:checked)').attr('disabled', null).attr('title', titles['add'])
-            }
+            pick_colour(found.colour);
+            $('.add-to-charts:not(:checked)').attr('disabled', null).attr('title', titles['add']);
 
             chart.data.datasets = chart.data.datasets.filter(dataset => dataset.driver !== driver_id);
             chart.update();
