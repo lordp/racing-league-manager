@@ -291,6 +291,7 @@ class LapAdmin(admin.ModelAdmin):
     list_display = ('result', 'lap_number', 'position', 'sector_1', 'sector_2', 'sector_3', 'lap_time', 'pitstop')
     list_filter = [('result__race', RelatedDropdownFilter), ('result__driver', RelatedDropdownFilter), 'session']
     ordering = ['lap_number']
+    readonly_fields = ['result']
 
 
 @admin.register(LogFile)
