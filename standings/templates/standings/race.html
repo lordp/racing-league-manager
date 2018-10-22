@@ -18,10 +18,15 @@
         <a class="item" data-tab="gap-chart">Gap Chart</a>
     </div>
     <div class="ui bottom attached active tab segment" data-tab="race">
+        {% if disable_charts == 'true' %}
+        <div class="ui inverted red segment">
+            <p>Lap data not found, charts disabled.</p>
+        </div>
+        {% endif %}
         <table class="ui small selectable compact celled striped table">
             <thead>
             <tr>
-                <th><i class="chart line icon" title="Add driver to charts"></i></th>
+                <th><i class="chart line icon" title="{% if disable_charts == 'true' %}Charts disabled{% else %}Add driver to charts{% endif %}"></i></th>
                 <th class="ui center aligned">Pos</th>
                 <th class="ui center aligned">QPos</th>
                 <th>Name</th>
@@ -38,13 +43,18 @@
             <tbody>
             {% for result in race.race_order.all %}
                 <tr>
-                    <td class="center aligned collapsing"><input title="Add driver to charts" name="chart" type="checkbox" class="add-to-charts" value="{{ result.driver_id }}" data-name="{{ result.driver.name }}"/></td>
+                    <td class="center aligned collapsing">
+                        {% if disable_charts == 'true' %}
+                        <input title="Charts disabled" name="chart" type="checkbox" class="add-to-charts" value="{{ result.driver_id }}" data-name="{{ result.driver.name }}" disabled="disabled" />
+                        {% else %}
+                        <input title="Add driver to charts" name="chart" type="checkbox" class="add-to-charts" value="{{ result.driver_id }}" data-name="{{ result.driver.name }}"/>
+                        {% endif %}
+                    </td>
                     <td class="center aligned collapsing">{{ result.position }}</td>
                     <td class="center aligned collapsing">{{ result.qualifying }}</td>
                     <td><a href="{% url 'driver' result.driver.id %}">{{ result.driver.name }}</a></td>
                     <td><a href="{% url 'team' result.team.id %}">{{ result.team.name }}</a></td>
-                    <td class="center aligned collapsing"><a
-                            href="{% url 'laps' result.id %}">{{ result.race_laps }}</a></td>
+                    <td class="center aligned collapsing"><a href="{% url 'laps' result.id %}">{{ result.race_laps }}</a></td>
                     <td class="right aligned collapsing">{{ result.race_time|format_time }}</td>
                     <td class="right aligned collapsing">{{ result.gap }}</td>
                     <td>{{ result.dnf_reason }}</td>

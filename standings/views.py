@@ -197,6 +197,7 @@ def race_view(request, race_id):
         'labels': labels,
         'lap_times': lap_times,
         'winner_laps': winner_laps,
+        'disable_charts': 'true' if len(labels) == 0 else 'false'
     }
 
     return render(request, 'standings/race.html', context)
