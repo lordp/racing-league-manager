@@ -861,7 +861,7 @@ class LogFile(models.Model):
 
                     lap_obj.save()
 
-                    if lap.text == '--.----':
+                    if lap.text.strip() == '--.----':
                         if driver_obj.id not in lap_errors:
                             lap_errors[driver_obj.id] = []
                         lap_errors[driver_obj.id].append({"number": lap_obj.lap_number, "id": lap_obj.id})
