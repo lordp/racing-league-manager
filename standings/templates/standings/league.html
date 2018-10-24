@@ -10,10 +10,10 @@
         </tr>
     </thead>
     <tbody>
-        {% for division in league.division_set.all %}
+        {% for division in divisions %}
         <tr>
             <td><a href="{% url 'division' division.id %}">{{ division.name }}</a></td>
-            <td class="ui center aligned">{{ division.season_set.count }}</td>
+            <td class="ui center aligned">{{ division.season_count }}</td>
         </tr>
         {% endfor %}
     </tbody>

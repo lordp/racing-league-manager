@@ -11,13 +11,11 @@
         </tr>
     </thead>
     <tbody>
-        {% for season in division.season_set.all %}
+        {% for season in seasons %}
         <tr>
             <td><a href="{% url 'season' season.id %}">{{ season.name }}</a></td>
-            {% with race_count=season.race_count %}
-            <td class="ui center aligned">{{ race_count.total }}</td>
-            <td class="ui center aligned">{{ race_count.incomplete }}</td>
-            {% endwith %}
+            <td class="ui center aligned">{{ season.race_count }}</td>
+            <td class="ui center aligned">{{ season.incomplete }}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -1,5 +1,5 @@
 from django.views.decorators.cache import cache_page
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, render
 from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty
 from standings.utils import sort_counter, calculate_average
@@ -8,7 +8,8 @@ from django_countries.fields import Country
 
 
 def index_view(request):
-    leagues = League.objects.all()
+    leagues = League.objects.annotate(div_count=Count('division')).\
+        values('id', 'name', 'div_count').order_by('-div_count', 'name')
 
     context = {
         'leagues': leagues,
@@ -164,9 +165,11 @@ def driver_view(request, driver_id):
 
 def league_view(request, league_id):
     league = get_object_or_404(League, pk=league_id)
+    divisions = league.division_set.annotate(season_count=Count('season')).values('id', 'name', 'season_count')
 
     context = {
         'league': league,
+        'divisions': divisions
     }
 
     return render(request, 'standings/league.html', context)
@@ -174,9 +177,13 @@ def league_view(request, league_id):
 
 def division_view(request, division_id):
     division = get_object_or_404(Division, pk=division_id)
+    seasons = division.season_set.annotate(race_count=Count('race', distinct=True)).\
+        annotate(incomplete=Count('race', filter=Q(race__result__isnull=True))).\
+        values('id', 'name', 'race_count', 'incomplete')
 
     context = {
         'division': division,
+        'seasons': seasons
     }
 
     return render(request, 'standings/division.html', context)

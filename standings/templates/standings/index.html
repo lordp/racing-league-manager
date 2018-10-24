@@ -19,7 +19,7 @@
         {% for league in leagues %}
         <tr>
             <td><a href="{% url 'league' league.id %}">{{ league.name }}</a></td>
-            <td class="ui center aligned">{{ league.division_set.count }}</td>
+            <td class="ui center aligned">{{ league.div_count }}</td>
         </tr>
         {% endfor %}
     </tbody>
