@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
@@ -13,4 +13,6 @@ urlpatterns = [
     path('race/<int:race_id>/', views.race_view, name='race'),
     path('track/<int:track_id>/', views.track_view, name='track'),
     path('laps/<int:result_id>', views.laps_view, name='laps'),
+    re_path(r'^countries/(?:(?P<division>\d+)/)?$', views.countries_view, name='countries'),
+    re_path(r'^country/(?P<country_id>[A-Z]+)/(?:(?P<division>\d+)/)?$', views.country_view, name='country'),
 ]

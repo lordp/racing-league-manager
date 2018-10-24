@@ -1,0 +1,52 @@
+{% extends 'standings/base.html' %}
+{% load standings_extras humanize static %}
+
+{% block content %}
+<script>
+    $(document).ready(function(){
+        $('#change_division').on('click', function() {
+            $('#division_list').transition('toggle');
+        });
+    });
+</script>
+
+<h1>{{ country.name }} {{ country|show_flag }}</h1>
+<div>
+    <button class="ui button" id="change_division">Change division</button>
+    <span><strong>{{ current_division.league.name }}:</strong> {{ current_division.name }}</span>
+    <div class="ui list transition hidden" id="division_list">
+    {% for league, info in divisions.items %}
+        <div class="item">
+            <strong>{{ info.name }}</strong>
+            <div class="ui list">
+            {% for division in info.divisions %}
+                <div class="item"><a href="/country/{{ country.code }}/{{ division.id }}">{{ division.name }}</a></div>
+            {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+<table class="ui small selectable collapsing compact celled striped table">
+    <thead>
+        <tr>
+            <th></th>
+        {% for pos in positions %}
+            <th class="ui center aligned">{{ pos|ordinal }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for driver_id, pos_stats in stats.items %}
+        <tr>
+            <td><a href="{% url 'driver' driver_id %}">{{ pos_stats.name }}</a></td>
+            {% for pos in positions %}
+                {% with count=pos_stats|find_position:pos %}
+            <td class="ui center aligned">{{ count }}</td>
+                {% endwith %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

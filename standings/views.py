@@ -1,8 +1,10 @@
 from django.views.decorators.cache import cache_page
+from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
 from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty
 from standings.utils import sort_counter, calculate_average
 from collections import Counter
+from django_countries.fields import Country
 
 
 def index_view(request):
@@ -225,3 +227,100 @@ def laps_view(request, result_id):
     }
 
     return render(request, 'standings/laps.html', context)
+
+
+def countries_view(request, division=None):
+    if division is None:
+        division = Division.objects.first().id
+
+    stats = {}
+    query = Result.objects.filter(position__range=[1,10], race__season__division_id=division).\
+        exclude(driver__country='').values('driver__country', 'position').\
+        annotate(Count('position')).order_by('position', '-position__count')
+
+    for row in query:
+        country = Country(row['driver__country'])
+        if country.code not in stats:
+            stats[country.code] = {i:0 for i in range(1,11)}
+            stats[country.code]['country'] = country
+        stats[country.code][row['position']] = row['position__count']
+
+    sorted_stats = {}
+    stats_sort = sorted(stats, key=lambda item: stats[item][10], reverse=True)
+    for pos in list(reversed([x for x in range(1, 10)])):
+        stats_sort = sorted(stats_sort, key=lambda item: stats[item][pos], reverse=True)
+
+    for country in stats_sort:
+        sorted_stats[country] = stats[country]
+
+    current_division = None
+    divisions = {}
+    for div in Division.objects.all():
+        if div.league_id not in divisions:
+            divisions[div.league_id] = {'name': div.league.name, 'divisions': []}
+        divisions[div.league_id]['divisions'].append({
+            'id': div.id, 'name': div.name, 'selected': div.id == int(division)
+        })
+
+        if div.id == int(division):
+            current_division = div
+
+    context = {
+        'stats': sorted_stats,
+        'positions': [x for x in range(1, 11)],
+        'divisions': divisions,
+        'current_division': current_division
+    }
+
+    return render(request, 'standings/countries.html', context)
+
+
+def country_view(request, country_id, division=None):
+    if division is None:
+        division = Division.objects.first().id
+
+    country = Country(country_id)
+    drivers = Driver.objects.filter(country=country_id).distinct()
+    teams = Team.objects.filter(country=country_id).distinct()
+
+    stats = {}
+    query = Result.objects.filter(position__range=[1,10], driver_id__in=drivers, race__season__division_id=division).\
+        values('driver_id', 'position').annotate(Count('position')).order_by('position', '-position__count')
+
+    for row in query:
+        if row['driver_id'] not in stats:
+            stats[row['driver_id']] = {i:0 for i in range(1,11)}
+            stats[row['driver_id']]['name'] = drivers.get(pk=row['driver_id']).name
+        stats[row['driver_id']][row['position']] = row['position__count']
+
+    sorted_stats = {}
+    stats_sort = sorted(stats, key=lambda item: stats[item][10], reverse=True)
+    for pos in list(reversed([x for x in range(1, 10)])):
+        stats_sort = sorted(stats_sort, key=lambda item: stats[item][pos], reverse=True)
+
+    for driver_id in stats_sort:
+        sorted_stats[driver_id] = stats[driver_id]
+
+    current_division = None
+    divisions = {}
+    for div in Division.objects.all():
+        if div.league_id not in divisions:
+            divisions[div.league_id] = {'name': div.league.name, 'divisions': []}
+        divisions[div.league_id]['divisions'].append({
+            'id': div.id, 'name': div.name, 'selected': div.id == int(division)
+        })
+
+        if div.id == int(division):
+            current_division = div
+
+    context = {
+        'country': country,
+        'drivers': drivers,
+        'teams': teams,
+        'stats': sorted_stats,
+        'positions': [x for x in range(1, 11)],
+        'divisions': divisions,
+        'current_division': current_division
+    }
+
+    return render(request, 'standings/country.html', context)

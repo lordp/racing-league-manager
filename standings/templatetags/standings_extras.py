@@ -167,3 +167,12 @@ def show_flag(country):
         return mark_safe('<img src="{}" title="{}"/>'.format(country.flag, country.name))
     else:
         return mark_safe('<i class="{}" title="{}"></i>'.format(country.flag_css, country.name))
+
+
+@register.filter(name='find_position')
+def find_position(stats, pos):
+    try:
+        count = stats[pos]
+    except KeyError:
+        count = 0
+    return count
