@@ -234,14 +234,14 @@ def countries_view(request, division=None):
         division = Division.objects.first().id
 
     stats = {}
-    query = Result.objects.filter(position__range=[1,10], race__season__division_id=division).\
+    query = Result.objects.filter(position__range=[1, 10], race__season__division_id=division).\
         exclude(driver__country='').values('driver__country', 'position').\
         annotate(Count('position')).order_by('position', '-position__count')
 
     for row in query:
         country = Country(row['driver__country'])
         if country.code not in stats:
-            stats[country.code] = {i:0 for i in range(1,11)}
+            stats[country.code] = {i: 0 for i in range(1, 11)}
             stats[country.code]['country'] = country
         stats[country.code][row['position']] = row['position__count']
 
@@ -284,12 +284,12 @@ def country_view(request, country_id, division=None):
     teams = Team.objects.filter(country=country_id).distinct()
 
     stats = {}
-    query = Result.objects.filter(position__range=[1,10], driver_id__in=drivers, race__season__division_id=division).\
+    query = Result.objects.filter(position__range=[1, 10], driver_id__in=drivers, race__season__division_id=division).\
         values('driver_id', 'position').annotate(Count('position')).order_by('position', '-position__count')
 
     for row in query:
         if row['driver_id'] not in stats:
-            stats[row['driver_id']] = {i:0 for i in range(1,11)}
+            stats[row['driver_id']] = {i: 0 for i in range(1, 11)}
             stats[row['driver_id']]['name'] = drivers.get(pk=row['driver_id']).name
         stats[row['driver_id']][row['position']] = row['position__count']
 
