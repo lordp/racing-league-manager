@@ -262,7 +262,7 @@ def countries_view(request, division=None):
 
     current_division = None
     divisions = {}
-    for div in Division.objects.all():
+    for div in Division.objects.prefetch_related('league'):
         if div.league_id not in divisions:
             divisions[div.league_id] = {'name': div.league.name, 'divisions': []}
         divisions[div.league_id]['divisions'].append({
@@ -310,7 +310,7 @@ def country_view(request, country_id, division=None):
 
     current_division = None
     divisions = {}
-    for div in Division.objects.all():
+    for div in Division.objects.prefetch_related('league'):
         if div.league_id not in divisions:
             divisions[div.league_id] = {'name': div.league.name, 'divisions': []}
         divisions[div.league_id]['divisions'].append({
