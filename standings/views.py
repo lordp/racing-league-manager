@@ -22,7 +22,7 @@ def index_view(request):
 def season_view(request, season_id):
     season = get_object_or_404(Season, pk=season_id)
 
-    upto = request.GET.get('round', None)
+    upto = request.GET.get('upto', None)
     standings_driver, standings_team = season.get_standings(upto=upto)
 
     context = {
