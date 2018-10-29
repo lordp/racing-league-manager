@@ -16,21 +16,21 @@
         <a href="{% url 'season_stats' season.id %}">Season Stats</a>
     </div>
 </div>
-<table class="ui small compact celled unstackable single line table">
+<table class="ui small compact celled unstackable single line collapsing table">
     <thead>
         <tr>
-            <th class="ui center aligned collapsing">Pos</th>
+            <th class="ui center aligned">Pos</th>
             <th>Name</th>
-            <th class="ui center aligned collapsing"></th>
-            <th class="ui center aligned collapsing">Points</th>
+            <th class="ui center aligned"></th>
+            <th class="ui center aligned">Points</th>
             {% for race in season.race_set.all %}
-                <th class="ui center aligned collapsing"><div class='tooltip' data-html="{{ race.tooltip }}">
+                <th class="ui center aligned"><div class='tooltip' data-html="{{ race.tooltip }}">
                     {{ race.round_number }}<br/>
                     <a href="{% url 'race' race.id %}">{{ race.short_name }}</a><br/>
                     {{ race.track.country|show_flag }}
                 </div></th>
             {% endfor %}
-            <th class="ui center aligned collapsing">Best</th>
+            <th class="ui center aligned best-column">Best</th>
         </tr>
     </thead>
     <tbody>
@@ -57,7 +57,7 @@
     </tbody>
 </table>
 {% if not season.teams_disabled %}
-<table class="ui small compact celled structured table">
+<table class="ui small compact celled structured single line collapsing table">
     <thead>
         <tr>
             <th class="ui center aligned">Pos</th>
