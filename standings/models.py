@@ -183,7 +183,7 @@ class Season(models.Model):
 
         return True
 
-    def get_standings(self, use_position=False):
+    def get_standings(self, use_position=False, upto=None):
         season_penalty = self.seasonpenalty_set
 
         drivers = {}
@@ -191,6 +191,9 @@ class Season(models.Model):
 
         results = Result.objects.filter(race__season=self).prefetch_related('race').prefetch_related(
             'driver').prefetch_related('team').prefetch_related('race__track')
+
+        if upto:
+            results = results.filter(race__round_number__lte=upto)
 
         for result in results:
             if result.driver_id not in drivers:
