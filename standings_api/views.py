@@ -122,7 +122,7 @@ class RaceDetail(APIView):
 
 class NextRaceDetail(APIView):
     @staticmethod
-    def get(request, format=None):
+    def get(request):
         now = datetime.now(timezone.utc)
         queryset = Race.objects.filter(start_time__gte=now).order_by('start_time')
         division = request.query_params.get('division', None)
@@ -172,7 +172,7 @@ class DriverStats(APIView):
 
 class Standings(APIView):
     @staticmethod
-    def get(request, season_id, team, format=None):
+    def get(request, season_id, team):
         season = Season.objects.get(pk=season_id)
         if season:
             data = []
