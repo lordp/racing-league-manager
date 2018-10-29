@@ -222,14 +222,14 @@ class Season(models.Model):
                 drivers[result.driver_id]['points'] += result.points
 
             if not self.teams_disabled:
-                if result.team.id not in teams:
+                if result.team_id not in teams:
                     try:
                         sp = season_penalty.get(team=result.team)
                         result.points -= sp.points
                     except SeasonPenalty.DoesNotExist:
                         sp = None
 
-                    teams[result.team.id] = {
+                    teams[result.team_id] = {
                         'team': result.team,
                         'points': result.points,
                         'results': [result],
@@ -247,7 +247,7 @@ class Season(models.Model):
                     else:
                         teams[result.team_id]['drivers'][result.driver_id]['points'] += result.points
 
-                teams[result.team.id]['driver_count'] = len(teams[result.team.id]['drivers'])
+                teams[result.team_id]['driver_count'] = len(teams[result.team_id]['drivers'])
 
         sorted_drivers = []
         driver_sort = sorted(drivers, key=lambda item: drivers[item]['best_finish'])
