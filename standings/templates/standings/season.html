@@ -5,16 +5,38 @@
 <script>
     $(document).ready(function() {
         $('th div.tooltip').popup();
+
+        $('#toggle_points_positions').on('click', function() {
+            $('.toggle-pts-pos').each(function(){
+                var old = $.trim($(this).text());
+                $(this).text($(this).data('toggle-pts-pos').toString().replace(/\.0/, ''));
+                $(this).data('toggle-pts-pos', old);
+            });
+
+            $(this).text($(this).text() === 'Show Points' ? 'Show Positions' : 'Show Points');
+            return false;
+        });
+
+        $('#season_options').on('click', function() {
+            $('#options_list').transition('toggle');
+            return false;
+        });
     });
 </script>
 
+<div style="display: inline-block;">
 <div>
     <div class="ui left floated">
 {% include 'standings/breadcrumb.html' with object=season.breadcrumbs %}
     </div>
-    <div class="ui right floated">
-        <a href="{% url 'season_stats' season.id %}">Season Stats</a>
+    <div class="ui right floated" style="text-align: right">
+        <a href="#" id="season_options">Options</a>
     </div>
+</div>
+<div class="ui list transition hidden" id="options_list" style="text-align: right; clear: both">
+    <div class="item"><a href="">Season Stats</a></div>
+    <div class="item"><a href="" id="toggle_points_positions">Show Points</a></div>
+    <div class="item">Show Up To Round: {% for r in season.race_set.all %}<a href="?upto={{ r.round_number }}">{{ r.round_number }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
 </div>
 <table class="ui small compact celled unstackable single line collapsing table">
     <thead>
@@ -39,23 +61,24 @@
             <td class="ui center aligned">{{ driver.position }}</td>
             <td><a href="{% url 'driver' driver.driver.id %}">{{ driver.driver.name }}</a></td>
             <td class="ui center aligned">{{ driver.driver.country|show_flag }}</td>
-            <td class="ui center aligned"{% if driver.season_penalty %} data-tooltip="{{ driver.season_penalty }}"{% endif %}>
+            <td class="driver-points ui center aligned"{% if driver.season_penalty %} data-tooltip="{{ driver.season_penalty }}"{% endif %}>
                 {{ driver.points|format_float }}
                 {% if driver.season_penalty %}<div class="note"></div>{% endif %}
             </td>
             {% for race in season.race_set.all %}
                 {% with result=driver.results|find_result:race %}
             <td class="ui center aligned {{ result|get_css_classes:season }}"{% if result.has_notes %} data-tooltip="{{ result|collate_notes }}"{% endif %}>
-                {{ result|get_position }}
+                <span class="toggle-pts-pos" data-toggle-pts-pos="{{ result.points|munge_points }}">{{ result|get_position }}</span>
                 {% if result.has_notes %}<div class="note"></div>{% endif %}
             </td>
                 {% endwith %}
             {% endfor %}
-            <td class="ui center aligned {{ driver.best_result|get_css_classes:season }}">{{ driver.best_finish }}</td>
+            <td class="ui center aligned best-column {{ driver.best_result|get_css_classes:season }}">{{ driver.best_finish }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% if not season.teams_disabled %}
 <table class="ui small compact celled structured single line collapsing table">
     <thead>

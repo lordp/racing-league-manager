@@ -22,9 +22,11 @@ def index_view(request):
 def season_view(request, season_id):
     season = get_object_or_404(Season, pk=season_id)
 
-    standings_driver, standings_team = season.get_standings()
+    upto = request.GET.get('round', None)
+    standings_driver, standings_team = season.get_standings(upto=upto)
 
     context = {
+        "upto": int(upto or season.race_set.count()),
         "season": season,
         "drivers": standings_driver,
         "teams": standings_team
