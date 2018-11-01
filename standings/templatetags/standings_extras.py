@@ -169,6 +169,11 @@ def show_flag(country):
         return mark_safe('<i class="{}" title="{}"></i>'.format(country.flag_css, country.name))
 
 
+@register.filter(name='munge_points')
+def munge_points(points):
+    return '0' if points == '' else points
+
+
 @register.filter(name='find_position')
 def find_position(stats, pos):
     try:
