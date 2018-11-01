@@ -46,6 +46,34 @@ class ResultList(generics.ListAPIView):
         return self.list(request, *args, **kwargs)
 
 
+class RaceList(generics.ListAPIView):
+    serializer_class = RaceSerializer
+
+    def get_queryset(self):
+        queryset = Race.objects.order_by('start_time', 'round_number')
+
+        start_date = self.request.query_params.get('start_date', None)
+        if start_date is not None:
+            queryset = queryset.filter(start_time__gte=start_date)
+
+        end_date = self.request.query_params.get('end_date', None)
+        if end_date is not None:
+            queryset = queryset.filter(start_time__lt=end_date)
+
+        season = self.request.query_params.get('season', None)
+        if season is not None:
+            queryset = queryset.filter(season__id=season)
+
+        division = self.request.query_params.get('division', None)
+        if division is not None:
+            queryset = queryset.filter(season__division_id=division)
+
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
 class DriverDetail(APIView):
     @staticmethod
     def get(request, number, season_id):
