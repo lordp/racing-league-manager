@@ -405,6 +405,7 @@ class Race(models.Model):
                     result.points += ps.fastest_lap
             else:
                 result.points = 0
+                result.classified = False
 
             # pole position
             if result.qualifying == 1:
@@ -531,6 +532,7 @@ class Result(models.Model):
     penalty_points = models.IntegerField(default=0)
     race_penalty_dsq = models.BooleanField(default=False)
     qualifying_penalty_dsq = models.BooleanField(default=False)
+    classified = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['position']

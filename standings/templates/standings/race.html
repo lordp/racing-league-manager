@@ -50,7 +50,7 @@
                         <input title="Add driver to charts" name="chart" type="checkbox" class="add-to-charts" value="{{ result.driver_id }}" data-name="{{ result.driver.name }}"/>
                         {% endif %}
                     </td>
-                    <td class="center aligned collapsing">{{ result.position }}</td>
+                    <td class="center aligned collapsing">{% if result.classified %}{{ result.position }}{% else %}NC{% endif %}</td>
                     <td class="center aligned collapsing">{{ result.qualifying }}</td>
                     <td><a href="{% url 'driver' result.driver.id %}">{{ result.driver.name }}</a></td>
                     <td><a href="{% url 'team' result.team.id %}">{{ result.team.name }}</a></td>

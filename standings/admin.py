@@ -32,7 +32,7 @@ class ResultAdmin(admin.ModelAdmin):
     def season(obj):
         return obj.race.season.name
 
-    list_display = ('race', 'season', 'driver', 'team', 'position')
+    list_display = ('race', 'season', 'driver', 'team', 'position', 'classified')
     list_select_related = ['race', 'race__season', 'race__season__division', 'race__season__division__league']
     list_filter = (
         ('race__season__division__league', RelatedDropdownFilter),
@@ -45,7 +45,7 @@ class ResultAdmin(admin.ModelAdmin):
 
     fieldsets = [
         (None, {'fields': [
-            'race', 'driver', 'team', 'finalized', 'car', 'car_class',
+            'race', 'driver', 'team', 'finalized', 'car', 'car_class', 'classified',
             'points', 'points_multiplier', 'points_multiplier_description',
         ]}),
         ('Qualifying', {'fields': ['qualifying', 'qualifying_laps', 'qualifying_time']}),
