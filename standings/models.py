@@ -544,6 +544,9 @@ class Result(models.Model):
                or (self.race_penalty_description != '' and self.race_penalty_description is not None) \
                or (self.qualifying_penalty_description != '' and self.qualifying_penalty_description is not None)
 
+    def race_lap_set(self):
+        return self.lap_set.filter(session='race')
+
     def __str__(self):
         return "{race} ({driver}, {position})".format(
             race=self.race.name,
