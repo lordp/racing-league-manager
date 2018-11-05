@@ -194,8 +194,13 @@ def division_view(request, division_id):
 def race_view(request, race_id):
     race = get_object_or_404(Race, pk=race_id)
 
-    labels = [lap[0] for lap in race.result_set.get(position=1).race_lap_set().values_list('lap_number')]
-    winner_laps = [lap[0] for lap in race.result_set.get(position=1).race_lap_set().values_list('lap_time')]
+    try:
+        labels = [lap[0] for lap in race.result_set.get(position=1).race_lap_set().values_list('lap_number')]
+        winner_laps = [lap[0] for lap in race.result_set.get(position=1).race_lap_set().values_list('lap_time')]
+    except (Result.DoesNotExist, Lap.DoesNotExist):
+        labels = []
+        winner_laps = []
+
     lap_times = {}
     drivers = {}
     for result in race.result_set.all():
