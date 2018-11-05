@@ -86,7 +86,8 @@ def expire_view_cache(path, meta, key_prefix=None):
     request.META = meta
     request.path = path
 
-    request.META['QUERY_STRING'] = ''
+    if 'admin' in path:
+        request.META['QUERY_STRING'] = ''
 
     if settings.USE_I18N:
         request.LANGUAGE_CODE = settings.LANGUAGE_CODE
