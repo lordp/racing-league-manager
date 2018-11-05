@@ -34,7 +34,7 @@
     </div>
 </div>
 <div class="ui list transition hidden" id="options_list" style="text-align: right; clear: both">
-    <div class="item"><a href="">Season Stats</a></div>
+    <div class="item"><a href="{% url 'season_stats' season.id %}">Season Stats</a></div>
     <div class="item"><a href="" id="toggle_points_positions">Show Points</a></div>
     <div class="item">Show Up To Round: {% for r in season.race_set.all %}<a href="?upto={{ r.round_number }}">{{ r.round_number }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
 </div>
