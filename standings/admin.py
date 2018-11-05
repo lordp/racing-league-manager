@@ -228,6 +228,13 @@ class SeasonAdmin(admin.ModelAdmin):
                 meta=request.META
             )
 
+            for race in obj.race_set.all():
+                request.META['QUERY_STRING'] = f'upto={race.round_number}'
+                expire_view_cache(
+                    reverse('season', args=[obj.id]),
+                    meta=request.META
+                )
+
         messages.add_message(request, messages.INFO, "Cache cleared for selected seasons")
         return redirect(reverse("admin:standings_season_changelist"))
     clear_cache.short_description = 'Clear cache'
