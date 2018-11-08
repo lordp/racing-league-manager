@@ -1,7 +1,7 @@
 from django.views.decorators.cache import cache_page
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, render
-from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty
+from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty, Lap
 from standings.utils import sort_counter, calculate_average
 from collections import Counter
 from django_countries.fields import Country
