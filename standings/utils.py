@@ -1,5 +1,6 @@
 from inflect import engine
 from collections import Iterable
+import re
 
 
 def format_time(seconds):
@@ -114,3 +115,7 @@ def calculate_average(values, key):
         value = 0
 
     return value
+
+
+def despacify(text):
+    return re.sub(r' {2,}', ' ', text).strip()

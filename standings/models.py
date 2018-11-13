@@ -6,7 +6,7 @@ from datetime import date
 from lxml import etree
 import os
 import standings.utils
-from .utils import apply_positions
+from .utils import apply_positions, despacify
 import json
 import random
 
@@ -804,7 +804,7 @@ class LogFile(models.Model):
         lap_errors = {}
         drivers = tree.xpath('//Driver')
         for driver in drivers:
-            driver_name = driver.xpath('./Name')[0].text.strip()
+            driver_name = despacify(driver.xpath('./Name')[0].text)
             try:
                 driver_obj = Driver.objects.get(name__unaccent=driver_name)
             except Driver.DoesNotExist:
@@ -815,7 +815,7 @@ class LogFile(models.Model):
                 if driver_name not in duplicates:
                     duplicates.append(driver_obj.id)
 
-            team_name = driver.xpath('./CarType')[0].text.strip()
+            team_name = despacify(driver.xpath('./CarType')[0].text)
             try:
                 (team_obj, created) = Team.objects.get_or_create(name=team_name)
             except Team.MultipleObjectsReturned:
