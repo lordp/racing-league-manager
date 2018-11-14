@@ -131,19 +131,32 @@ def driver_view(request, driver_id):
                 for penalty in seasons[season.id]['penalties'].filter(team=res.team):
                     seasons[season.id]['teams'][res.team.id]['points'] -= penalty.points
 
-    driver_stats = SeasonStats.collate(stats)
+    driver_stats = {}
     counter_keys = ['race_positions', 'dnf_reasons', 'qualifying_positions']
 
-    driver_stats['avg_qualifying'] = calculate_average(driver_stats, 'qualifying_positions')
-    driver_stats['avg_race'] = calculate_average(driver_stats, 'race_positions')
+    divisions = Division.objects.filter(season__race__result__driver_id=driver_id)
+    for division in divisions:
+        driver_stats[division.id] = {
+            'name': division.name,
+            'stats': SeasonStats.collate(stats.filter(season__division_id=division.id))
+        }
+        driver_stats[division.id]['stats']['avg_qualifying'] = calculate_average(
+            driver_stats[division.id]['stats'],
+            'qualifying_positions'
+        )
+        driver_stats[division.id]['stats']['avg_race'] = calculate_average(
+            driver_stats[division.id]['stats'],
+            'race_positions'
+        )
 
-    for key in counter_keys:
-        if key == 'dnf_reasons':
-            driver_stats[key] = ', '.join(
-                sort_counter(Counter(driver_stats[key]), ordinal=False, convert_int=False)
-            )
-        else:
-            driver_stats[key] = ', '.join(sort_counter(Counter(driver_stats[key])))
+        for key in counter_keys:
+            if key == 'dnf_reasons':
+                driver_stats[division.id]['stats'][key] = ', '.join(
+                    sort_counter(Counter(driver_stats[division.id]['stats'][key]), ordinal=False, convert_int=False)
+                )
+            else:
+                driver_stats[division.id]['stats'][key] = ', '.join(
+                    sort_counter(Counter(driver_stats[division.id]['stats'][key])))
 
     sorted_seasons = {}
     seasons_sort = sorted(seasons, key=lambda item: seasons[item]['season'].start_date)

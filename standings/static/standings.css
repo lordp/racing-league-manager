@@ -85,6 +85,15 @@ div [class*="right floated"] {
     border-right: none !important;
 }
 
+.flex-column {
+    flex-direction: column;
+    display: flex;
+}
+
+.flex-column-table {
+    flex-grow: 1;
+}
+
 .team-ferrari {
     color: white;
     background-color: rgb(224, 8, 29);
