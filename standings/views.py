@@ -48,42 +48,48 @@ def season_stats_view(request, season_id):
 
 
 def team_view(request, team_id):
-    team_drivers = {}
+    seasons = {}
     team = get_object_or_404(Team, pk=team_id)
-    for res in team.result_set.all().prefetch_related(
-            'race__season', 'race__season__point_system', 'race__point_system', 'driver'):
-        season = res.race.season
 
-        if res.race.point_system:
-            ps = res.race.point_system.to_dict()
-        else:
-            ps = season.point_system.to_dict()
+    season_list = Season.objects.filter(race__result__team_id=team_id).distinct()
+    for season in season_list:
+        ps = season.point_system.to_dict()
 
-        if season.id not in team_drivers:
-            team_drivers[season.id] = {
+        seasons[season.id] = {
+            "season": season,
+            "drivers": {},
+            "penalties": SeasonPenalty.objects.filter(season=season, team=team)
+        }
+
+        for result in team.result_set.filter(race__season_id=season.id).prefetch_related(
+                'race__point_system', 'driver'):
+            if result.race.point_system:
+                ps = result.race.point_system.to_dict()
+
+            seasons[season.id] = {
                 "season": season,
                 "drivers": {},
-                "penalties": SeasonPenalty.objects.filter(season=season, team=res.team)
+                "penalties": SeasonPenalty.objects.filter(season=season, team=result.team)
             }
 
-        if res.driver.id not in team_drivers[season.id]['drivers']:
-            results = res.driver.result_set.filter(race__season__id=season.id, team__id=team.id).all()
-            team_drivers[season.id]['drivers'][res.driver.id] = {
-                "driver": res.driver,
-                "results": results,
-                "points": sum([ps.get(x.position, 0) for x in results])
-            }
+            if result.driver.id not in seasons[season.id]['drivers']:
+                results = result.driver.result_set.filter(race__season__id=season.id, team__id=team.id).all()
+                seasons[season.id]['drivers'][result.driver.id] = {
+                    "driver": result.driver,
+                    "results": results,
+                    "points": sum([ps.get(x.position, 0) for x in results])
+                }
 
-            for penalty in team_drivers[season.id]['penalties'].filter(driver=res.driver):
-                team_drivers[season.id]['drivers'][res.driver.id]['points'] -= penalty.points
+                for penalty in seasons[season.id]['penalties'].filter(driver=result.driver):
+                    seasons[season.id]['drivers'][result.driver.id]['points'] -= penalty.points
 
-    for td in team_drivers:
+    for td in seasons:
         sorted_drivers = []
-        for driver in sorted(team_drivers[td]['drivers'],
-                             key=lambda item: team_drivers[td]['drivers'][item]['points'],
+        for driver in sorted(seasons[td]['drivers'],
+                             key=lambda item: seasons[td]['drivers'][item]['points'],
                              reverse=True):
-            sorted_drivers.append(team_drivers[td]['drivers'][driver])
-        team_drivers[td]['drivers'] = sorted_drivers
+            sorted_drivers.append(seasons[td]['drivers'][driver])
+        seasons[td]['drivers'] = sorted_drivers
 
     team_stats = {}
     counter_keys = ['race_positions', 'dnf_reasons', 'qualifying_positions']
@@ -116,10 +122,10 @@ def team_view(request, team_id):
 
 
     sorted_seasons = {}
-    seasons_sort = sorted(team_drivers, key=lambda item: team_drivers[item]['season'].start_date)
-    seasons_sort = sorted(seasons_sort, key=lambda item: team_drivers[item]['season'].division.order)
+    seasons_sort = sorted(seasons, key=lambda item: seasons[item]['season'].start_date)
+    seasons_sort = sorted(seasons_sort, key=lambda item: seasons[item]['season'].division.order)
     for season_id, season in enumerate(seasons_sort):
-        sorted_seasons[season_id] = team_drivers[season]
+        sorted_seasons[season_id] = seasons[season]
 
     context = {
         'team': team,
@@ -133,40 +139,40 @@ def team_view(request, team_id):
 def driver_view(request, driver_id):
     seasons = {}
     driver = get_object_or_404(Driver, pk=driver_id)
-    stats = SeasonStats.objects.filter(driver=driver)
-    for res in driver.result_set.all():
-        season = res.race.season
+    stats = SeasonStats.objects.filter(driver=driver).prefetch_related('season__division')
 
-        if res.race.point_system:
-            ps = res.race.point_system.to_dict()
-        else:
-            ps = season.point_system.to_dict()
+    season_list = Season.objects.filter(race__result__driver_id=driver_id).distinct()
+    for season in season_list:
+        ps = season.point_system.to_dict()
 
-        if season.id not in seasons:
-            seasons[season.id] = {
-                "season": season,
-                "teams": {},
-                "penalties": SeasonPenalty.objects.filter(season=season, driver=driver)
-            }
+        seasons[season.id] = {
+            "season": season,
+            "teams": {},
+            "penalties": SeasonPenalty.objects.filter(season=season, driver=driver)
+        }
 
-            for result in driver.result_set.filter(race__season__id=season.id):
-                if result.team.id not in seasons[season.id]['teams']:
-                    seasons[season.id]['teams'][result.team.id] = {
-                        "team": result.team,
-                        "results": driver.result_set.filter(race__season__id=season.id, team__id=result.team.id)
-                    }
+        for result in driver.result_set.filter(race__season__id=season.id).prefetch_related(
+                'team', 'race__point_system'):
+            if result.race.point_system:
+                ps = result.race.point_system.to_dict()
 
-                seasons[season.id]['teams'][result.team.id]["points"] = sum(
-                    [ps.get(x.position, 0) for x in seasons[season.id]['teams'][result.team.id]["results"]]
-                )
+            if result.team.id not in seasons[season.id]['teams']:
+                seasons[season.id]['teams'][result.team.id] = {
+                    "team": result.team,
+                    "results": driver.result_set.filter(race__season__id=season.id, team__id=result.team.id)
+                }
 
-                for penalty in seasons[season.id]['penalties'].filter(team=res.team):
-                    seasons[season.id]['teams'][res.team.id]['points'] -= penalty.points
+            seasons[season.id]['teams'][result.team.id]["points"] = sum(
+                [ps.get(x.position, 0) for x in seasons[season.id]['teams'][result.team.id]["results"]]
+            )
+
+            for penalty in seasons[season.id]['penalties'].filter(team=result.team):
+                seasons[season.id]['teams'][result.team.id]['points'] -= penalty.points
 
     driver_stats = {}
     counter_keys = ['race_positions', 'dnf_reasons', 'qualifying_positions']
 
-    divisions = Division.objects.filter(season__race__result__driver_id=driver_id)
+    divisions = Division.objects.filter(season__race__result__driver_id=driver_id).distinct()
     for division in divisions:
         driver_stats[division.id] = {
             'name': division.name,
