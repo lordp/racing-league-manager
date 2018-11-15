@@ -50,7 +50,8 @@ def season_stats_view(request, season_id):
 def team_view(request, team_id):
     team_drivers = {}
     team = get_object_or_404(Team, pk=team_id)
-    for res in team.result_set.all():
+    for res in team.result_set.all().prefetch_related(
+            'race__season', 'race__season__point_system', 'race__point_system', 'driver'):
         season = res.race.season
 
         if res.race.point_system:
@@ -88,8 +89,8 @@ def team_view(request, team_id):
     counter_keys = ['race_positions', 'dnf_reasons', 'qualifying_positions']
     td = list(set([x[0] for x in Result.objects.filter(team_id=team_id).values_list('driver_id')]))
 
-    stats = SeasonStats.objects.filter(driver_id__in=td)
-    divisions = Division.objects.filter(season__race__result__team_id=team_id)
+    stats = SeasonStats.objects.filter(driver_id__in=td).prefetch_related('season__division')
+    divisions = Division.objects.filter(season__race__result__team_id=team_id).distinct()
     for division in divisions:
         team_stats[division.id] = {
             'name': division.name,
