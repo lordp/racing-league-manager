@@ -84,6 +84,36 @@ def team_view(request, team_id):
             sorted_drivers.append(team_drivers[td]['drivers'][driver])
         team_drivers[td]['drivers'] = sorted_drivers
 
+    team_stats = {}
+    counter_keys = ['race_positions', 'dnf_reasons', 'qualifying_positions']
+    td = list(set([x[0] for x in Result.objects.filter(team_id=team_id).values_list('driver_id')]))
+
+    stats = SeasonStats.objects.filter(driver_id__in=td)
+    divisions = Division.objects.filter(season__race__result__team_id=team_id)
+    for division in divisions:
+        team_stats[division.id] = {
+            'name': division.name,
+            'stats': SeasonStats.collate(stats.filter(season__division_id=division.id), focus='team')
+        }
+        team_stats[division.id]['stats']['avg_qualifying'] = calculate_average(
+            team_stats[division.id]['stats'],
+            'qualifying_positions'
+        )
+        team_stats[division.id]['stats']['avg_race'] = calculate_average(
+            team_stats[division.id]['stats'],
+            'race_positions'
+        )
+
+        for key in counter_keys:
+            if key == 'dnf_reasons':
+                team_stats[division.id]['stats'][key] = ', '.join(
+                    sort_counter(Counter(team_stats[division.id]['stats'][key]), ordinal=False, convert_int=False)
+                )
+            else:
+                team_stats[division.id]['stats'][key] = ', '.join(
+                    sort_counter(Counter(team_stats[division.id]['stats'][key])))
+
+
     sorted_seasons = {}
     seasons_sort = sorted(team_drivers, key=lambda item: team_drivers[item]['season'].start_date)
     seasons_sort = sorted(seasons_sort, key=lambda item: team_drivers[item]['season'].division.order)
@@ -93,6 +123,7 @@ def team_view(request, team_id):
     context = {
         'team': team,
         'seasons': sorted_seasons,
+        'stats': team_stats
     }
 
     return render(request, 'standings/team.html', context)
