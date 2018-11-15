@@ -1,8 +1,152 @@
 {% extends 'standings/base.html' %}
-{% load standings_extras %}
+{% load standings_extras static %}
 
 {% block content %}
+<script src="{% static 'components/tab.min.js' %}"></script>
+<script>
+    function set_height() {
+        $('div[data-table=adjust] table').each(function(i, e) {
+            $(e).height($(e.parentElement).height() - 2);
+        });
+    }
+
+    $(document).ready(function() {
+        set_height();
+        $('.menu .item').tab({
+            onVisible: set_height
+        });
+    });
+</script>
+
 <h1>{{ team.name }} {{ team.country|show_flag }}</h1>
+<div class="ui top attached tabular menu">
+    <a class="item active" data-tab="qualifying">Qualifying Stats</a>
+    <a class="item" data-tab="race">Race Stats</a>
+    <a class="item" data-tab="seasons">Seasons</a>
+</div>
+<div class="ui bottom attached tab segment active" data-tab="qualifying">
+    <div class="ui cards">
+        {% for divison, division_stats in stats.items %}
+        <div class="ui card flex-column">
+            <div class="ui top attached segment">
+                <h4 class="ui center aligned orange header">{{ division_stats.name }}</h4>
+            </div>
+            <div data-table="adjust" class="flex-column-table">
+                <table class="ui bottom attached small celled striped table">
+                    <tbody>
+                    <tr>
+                        <td class="ui right aligned"><strong>Positions</strong></td>
+                        <td>{{ division_stats.stats.qualifying_positions }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Average</strong></td>
+                        <td>{{ division_stats.stats.avg_qualifying|ordinal }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Grid Penalties</strong></td>
+                        <td>{{ division_stats.stats.qualifying_penalty_grid }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Back of Grid penalties</strong></td>
+                        <td>{{ division_stats.stats.qualifying_penalty_bog }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Start From Pit penalties</strong></td>
+                        <td>{{ division_stats.stats.qualifying_penalty_sfp }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Disqualifications</strong></td>
+                        <td>{{ division_stats.stats.qualifying_penalty_dsq }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Pole Positions</strong></td>
+                        <td>{{ division_stats.stats.pole_positions }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="ui bottom attached tab segment" data-tab="race">
+    <div class="ui cards">
+        {% for divison, division_stats in stats.items %}
+        <div class="ui card flex-column">
+            <div class="ui top attached segment">
+                <h4 class="ui center aligned orange header">{{ division_stats.name }}</h4>
+            </div>
+            <div data-table="adjust" class="flex-column-table">
+                <table class="ui bottom attached small celled striped table">
+                    <tbody>
+                    <tr>
+                        <td class="ui right aligned"><strong>Positions:</strong></td>
+                        <td>{{ division_stats.stats.race_positions }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Average:</strong></td>
+                        <td>{{ division_stats.stats.avg_race|ordinal }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Best Finish:</strong></td>
+                        <td>{{ division_stats.stats.best_finish|ordinal }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Fastest Laps:</strong></td>
+                        <td>{{ division_stats.stats.fastest_laps }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Laps Completed:</strong></td>
+                        <td>{{ division_stats.stats.laps_completed }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Laps Lead:</strong></td>
+                        <td>{{ division_stats.stats.laps_lead }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Podiums:</strong></td>
+                        <td>{{ division_stats.stats.podiums }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Points Finishes:</strong></td>
+                        <td>{{ division_stats.stats.points_finishes }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Wins:</strong></td>
+                        <td>{{ division_stats.stats.wins }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Attendance:</strong></td>
+                        <td>{{ division_stats.stats.attendance }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Penalty Points:</strong></td>
+                        <td>{{ division_stats.stats.penalty_points }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Time Penalties:</strong></td>
+                        <td>{{ division_stats.stats.race_penalty_time }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Position Penalties:</strong></td>
+                        <td>{{ division_stats.stats.race_penalty_positions }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>Disqualifications:</strong></td>
+                        <td>{{ division_stats.stats.race_penalty_dsq }}</td>
+                    </tr>
+                    <tr>
+                        <td class="ui right aligned"><strong>DNF Reasons:</strong></td>
+                        <td>{{ division_stats.stats.dnf_reasons }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="ui bottom attached tab segment" data-tab="seasons">
 {% for _, season in seasons.items %}
 {% include 'standings/breadcrumb.html' with object=season.season.breadcrumbs %}
 <table class="ui small selectable collapsing compact celled table">
@@ -51,4 +195,5 @@
 </table>
 {% endif %}
 {% endfor %}
+</div>
 {% endblock %}
