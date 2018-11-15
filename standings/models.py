@@ -685,8 +685,8 @@ class SeasonStats(models.Model):
         self.save()
 
     @staticmethod
-    def collate(stats):
-        driver_stats = {
+    def collate(stats, focus='driver'):
+        collated_stats = {
             "best_finish": 99, "fastest_laps": 0, "laps_completed": 0, "laps_lead": 0,
             "podiums": 0, "points_finishes": 0, "pole_positions": 0, "wins": 0, "attendance": 0,
             "penalty_points": 0, "race_penalty_time": 0, "race_penalty_positions": 0,
@@ -694,6 +694,13 @@ class SeasonStats(models.Model):
             "race_penalty_dsq": 0, "qualifying_penalty_dsq": 0, "race_positions": [], "dnf_reasons": [],
             "qualifying_positions": []
         }
+
+        addable_stats = [
+            "fastest_laps", "laps_completed", "laps_lead", "podiums", "points_finishes", "pole_positions",
+            "wins", "attendance", 'penalty_points', 'race_penalty_time', 'race_penalty_positions',
+            "qualifying_penalty_grid", "qualifying_penalty_bog", "qualifying_penalty_sfp", "race_penalty_dsq",
+            "qualifying_penalty_dsq",
+        ]
 
         key_map = {
             "race_positions": "positions",
@@ -706,44 +713,38 @@ class SeasonStats(models.Model):
 
         if len(drivers) == 0:
             return {'error': 'Driver not found'}
-        elif len(drivers) > 1:
+        elif len(drivers) > 1 and focus == 'driver':
             example = random.choice(drivers)
             error = f"Multiple drivers found, please adjust your query by including a season and/or division or " \
                     f"being more precise with the name. For example:\n`stats \"{example}\"`"
             return {'error': error}
         else:
             driver_id = 0
-            addable_stats = [
-                "fastest_laps", "laps_completed", "laps_lead", "podiums", "points_finishes", "pole_positions",
-                "wins", "attendance", 'penalty_points', 'race_penalty_time', 'race_penalty_positions',
-                "qualifying_penalty_grid", "qualifying_penalty_bog", "qualifying_penalty_sfp", "race_penalty_dsq",
-                "qualifying_penalty_dsq",
-            ]
-
             for stat in stats:
-                if driver_id == 0:
-                    driver_id = stat.driver.id
-                    driver_stats['name'] = stat.driver.name
-                elif driver_id != stat.driver.id:
-                    continue
+                if focus == 'driver':
+                    if driver_id == 0:
+                        driver_id = stat.driver.id
+                        collated_stats['name'] = stat.driver.name
+                    elif driver_id != stat.driver.id:
+                        continue
 
-                for key in driver_stats:
+                for key in collated_stats:
                     if key == 'best_finish':
-                        if stat.best_result is not None and stat.best_result.position < driver_stats[key]:
-                            driver_stats[key] = stat.best_result.position
+                        if stat.best_result is not None and stat.best_result.position < collated_stats[key]:
+                            collated_stats[key] = stat.best_result.position
                     elif key in addable_stats:
-                        driver_stats[key] += getattr(stat, key, 0)
+                        collated_stats[key] += getattr(stat, key, 0)
                     elif key in counter_keys:
                         key_sub = key_map.get(key, key)
                         for k in getattr(stat, key_sub):
                             value = getattr(stat, key_sub, 0)[k]
-                            driver_stats[key].append([k] * value)
+                            collated_stats[key].append([k] * value)
                         if key != 'dnf_reasons':
-                            driver_stats[key] = list(map(int, standings.utils.flatten(driver_stats[key])))
+                            collated_stats[key] = list(map(int, standings.utils.flatten(collated_stats[key])))
                         else:
-                            driver_stats[key] = list(standings.utils.flatten(driver_stats[key]))
+                            collated_stats[key] = list(standings.utils.flatten(collated_stats[key]))
 
-        return driver_stats
+        return collated_stats
 
 
 class Lap(models.Model):
