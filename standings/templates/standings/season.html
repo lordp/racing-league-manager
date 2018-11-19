@@ -38,6 +38,22 @@
     <div class="item"><a href="" id="toggle_points_positions">Show Points</a></div>
     <div class="item">Show Up To Round: {% for r in season.race_set.all %}<a href="?upto={{ r.round_number }}">{{ r.round_number }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
 </div>
+<table class="ui small compact celled unstackable collapsing table">
+    <tbody>
+        <tr>
+            <td><strong>Position</strong></td>
+            {% for pos, points in point_system.items %}
+            <td class="ui center aligned {{ pos|pos_colour:season }}">{{ pos }}{% if forloop.last and truncated_points %}+{% endif %}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td><strong>Points</strong></td>
+            {% for pos, points in point_system.items %}
+            <td class="ui center aligned {{ pos|pos_colour:season }}">{{ points|format_float }}</td>
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>
 <table class="ui small compact celled unstackable single line collapsing table">
     <thead>
         <tr>

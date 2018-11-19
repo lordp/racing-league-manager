@@ -25,11 +25,24 @@ def season_view(request, season_id):
     upto = request.GET.get('upto', None)
     standings_driver, standings_team = season.get_standings(upto=upto)
 
+    truncated_points = False
+    last_points = 0
+    point_system = {}
+    for pos, points in season.point_system.to_dict().items():
+        if last_points != points:
+            point_system[pos] = points
+        else:
+            truncated_points = True
+
+        last_points = points
+
     context = {
         "upto": int(upto or season.race_set.count()),
         "season": season,
         "drivers": standings_driver,
-        "teams": standings_team
+        "teams": standings_team,
+        "point_system": point_system,
+        "truncated_points": truncated_points
     }
 
     return render(request, 'standings/season.html', context)

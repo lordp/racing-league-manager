@@ -32,6 +32,24 @@ def position_display(result):
 
 
 def position_colour(result, season):
+    if result.race.point_system:
+        ps = result.race.point_system.to_dict()
+    else:
+        ps = season.point_system.to_dict()
+
+    colours = get_colours(len(ps) + 1)
+
+    return "pos-{}".format(str(colours.get(result.position, 'blue')))
+
+
+@register.filter(name='pos_colour')
+def pos_colour(position, season):
+    colours = get_colours(len(season.point_system.to_dict()) + 1)
+
+    return "pos-{}".format(str(colours.get(position, 'blue')))
+
+
+def get_colours(place_count):
     colours = {
         '-': 'default',
         0: 'default',
@@ -43,14 +61,9 @@ def position_colour(result, season):
         'DNS': 'default'
     }
 
-    if result.race.point_system:
-        ps = result.race.point_system.to_dict()
-    else:
-        ps = season.point_system.to_dict()
+    colours.update({x: 'green' for x in range(4, place_count)})
 
-    colours.update({x: 'green' for x in range(4, len(ps) + 1)})
-
-    return "pos-{}".format(str(colours.get(result.position, 'blue')))
+    return colours
 
 
 @register.filter(name='find_result')
