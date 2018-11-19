@@ -13,7 +13,7 @@ def position_display(result):
 
     if result.race_penalty_dsq:
         result.position = -2
-    elif result.dnf_reason:
+    elif result.dnf_reason and result.race.season.classification_type != '':
         result.position = -1
         total_laps = result.race.result_set.get(position=1).race_laps
         if result.race.season.allocate_points(total_laps, result.race_laps):
