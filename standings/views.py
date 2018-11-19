@@ -2,7 +2,7 @@ from django.views.decorators.cache import cache_page
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, render
 from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty, Lap
-from standings.utils import sort_counter, calculate_average
+from standings.utils import sort_counter, calculate_average, truncate_point_system
 from collections import Counter
 from django_countries.fields import Country
 
@@ -25,24 +25,22 @@ def season_view(request, season_id):
     upto = request.GET.get('upto', None)
     standings_driver, standings_team = season.get_standings(upto=upto)
 
-    truncated_points = False
-    last_points = 0
-    point_system = {}
-    for pos, points in season.point_system.to_dict().items():
-        if last_points != points:
-            point_system[pos] = points
-        else:
-            truncated_points = True
-
-        last_points = points
+    ps = season.point_system
+    point_system = {
+        'race': truncate_point_system(ps.to_dict()),
+        'qualifying': truncate_point_system(ps.to_dict(False)),
+        'pole': ps.pole_position,
+        'lead_lap': ps.lead_lap,
+        'fastest_lap': ps.fastest_lap,
+        'most_laps_lead': ps.most_laps_lead,
+    }
 
     context = {
         "upto": int(upto or season.race_set.count()),
         "season": season,
         "drivers": standings_driver,
         "teams": standings_team,
-        "point_system": point_system,
-        "truncated_points": truncated_points
+        "point_system": point_system
     }
 
     return render(request, 'standings/season.html', context)

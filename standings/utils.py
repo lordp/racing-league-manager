@@ -119,3 +119,18 @@ def calculate_average(values, key):
 
 def despacify(text):
     return re.sub(r' {2,}', ' ', text).strip()
+
+
+def truncate_point_system(ps_dict):
+    truncated_points = False
+    last_points = 0
+    point_system = {}
+    for pos, points in ps_dict.items():
+        if last_points != points:
+            point_system[pos] = points
+        else:
+            truncated_points = True
+
+        last_points = points
+
+    return {'points': point_system, 'truncated': truncated_points}
