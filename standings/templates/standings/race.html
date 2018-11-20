@@ -30,7 +30,9 @@
                 <th class="ui center aligned">Pos</th>
                 <th class="ui center aligned">QPos</th>
                 <th>Name</th>
+                {% if not season.teams_disabled %}
                 <th>Team</th>
+                {% endif %}
                 <th class="ui center aligned">Laps</th>
                 <th class="ui center aligned">Time</th>
                 <th class="ui center aligned">Gap</th>
@@ -53,7 +55,9 @@
                     <td class="center aligned collapsing">{% if result.classified %}{{ result.position }}{% else %}NC{% endif %}</td>
                     <td class="center aligned collapsing">{{ result.qualifying }}</td>
                     <td><a href="{% url 'driver' result.driver.id %}">{{ result.driver.name }}</a></td>
+                    {% if not season.teams_disabled %}
                     <td><a href="{% url 'team' result.team.id %}">{{ result.team.name }}</a></td>
+                    {% endif %}
                     <td class="center aligned collapsing">
                         {% if disable_charts == 'true' %}
                         {{ result.race_laps }}
