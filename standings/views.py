@@ -1,5 +1,5 @@
 from django.views.decorators.cache import cache_page
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Sum
 from django.shortcuts import get_object_or_404, render
 from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty, Lap
 from standings.utils import sort_counter, calculate_average, truncate_point_system
@@ -64,19 +64,13 @@ def team_view(request, team_id):
 
     season_list = Season.objects.filter(race__result__team_id=team_id).distinct()
     for season in season_list:
-        ps = season.point_system.to_dict()
-
         seasons[season.id] = {
             "season": season,
             "drivers": {},
             "penalties": SeasonPenalty.objects.filter(season=season, team=team)
         }
 
-        for result in team.result_set.filter(race__season_id=season.id).prefetch_related(
-                'race__point_system', 'driver'):
-            if result.race.point_system:
-                ps = result.race.point_system.to_dict()
-
+        for result in team.result_set.filter(race__season_id=season.id).prefetch_related('driver'):
             seasons[season.id] = {
                 "season": season,
                 "drivers": {},
@@ -88,7 +82,7 @@ def team_view(request, team_id):
                 seasons[season.id]['drivers'][result.driver.id] = {
                     "driver": result.driver,
                     "results": results,
-                    "points": sum([ps.get(x.position, 0) for x in results])
+                    "points": results.aggregate(sum=Sum('points'))['sum']
                 }
 
                 for penalty in seasons[season.id]['penalties'].filter(driver=result.driver):
@@ -154,28 +148,21 @@ def driver_view(request, driver_id):
 
     season_list = Season.objects.filter(race__result__driver_id=driver_id).distinct()
     for season in season_list:
-        ps = season.point_system.to_dict()
-
         seasons[season.id] = {
             "season": season,
             "teams": {},
             "penalties": SeasonPenalty.objects.filter(season=season, driver=driver)
         }
 
-        for result in driver.result_set.filter(race__season__id=season.id).prefetch_related(
-                'team', 'race__point_system'):
-            if result.race.point_system:
-                ps = result.race.point_system.to_dict()
-
+        results = driver.result_set.filter(race__season__id=season.id).prefetch_related('team')
+        for result in results:
+            team_results = results.filter(team=result.team)
             if result.team.id not in seasons[season.id]['teams']:
                 seasons[season.id]['teams'][result.team.id] = {
                     "team": result.team,
-                    "results": driver.result_set.filter(race__season__id=season.id, team__id=result.team.id)
+                    "results": team_results,
+                    "points": team_results.aggregate(sum=Sum('points'))['sum']
                 }
-
-            seasons[season.id]['teams'][result.team.id]["points"] = sum(
-                [ps.get(x.position, 0) for x in seasons[season.id]['teams'][result.team.id]["results"]]
-            )
 
             for penalty in seasons[season.id]['penalties'].filter(team=result.team):
                 seasons[season.id]['teams'][result.team.id]['points'] -= penalty.points
