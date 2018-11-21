@@ -428,7 +428,7 @@ class Race(models.Model):
             except SeasonPenalty.DoesNotExist:
                 sp = None
 
-            if sp and sp.disqualified:
+            if (sp and sp.disqualified) or result.race_penalty_dsq:
                 result.points = 0
 
             result.save()
