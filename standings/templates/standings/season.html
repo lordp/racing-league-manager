@@ -8,7 +8,7 @@
 
         $('#toggle_points_positions').on('click', function() {
             $('.toggle-pts-pos').each(function(){
-                var old = $.trim($(this).text());
+                let old = $.trim($(this).text());
                 $(this).text($(this).data('toggle-pts-pos').toString().replace(/\.0/, ''));
                 $(this).data('toggle-pts-pos', old);
             });
