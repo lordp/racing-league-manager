@@ -383,6 +383,9 @@ class Race(models.Model):
         ml = ll.first()
         season_penalty = SeasonPenalty.objects.filter(season=self.season)
 
+        # make sure the fastest lap has been set
+        self.find_fastest_lap()
+
         for result in self.result_set.all():
             if result.position == 1:
                 result.gap = '-'
