@@ -406,6 +406,7 @@ class Race(models.Model):
                 result.points += ps.to_dict(False).get(result.qualifying, 0)
                 if result.fastest_lap:
                     result.points += ps.fastest_lap
+                result.classified = True
             else:
                 result.points = 0
                 result.classified = False
