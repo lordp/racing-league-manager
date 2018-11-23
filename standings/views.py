@@ -117,14 +117,14 @@ def team_view(request, team_id):
         )
 
         for key in counter_keys:
-            if key == 'dnf_reasons':
-                team_stats[division.id]['stats'][key] = ', '.join(
-                    sort_counter(Counter(team_stats[division.id]['stats'][key]), ordinal=False, convert_int=False)
-                )
-            else:
-                team_stats[division.id]['stats'][key] = ', '.join(
-                    sort_counter(Counter(team_stats[division.id]['stats'][key])))
-
+            if key in team_stats[division.id]['stats']:
+                if key == 'dnf_reasons':
+                    team_stats[division.id]['stats'][key] = ', '.join(
+                        sort_counter(Counter(team_stats[division.id]['stats'][key]), ordinal=False, convert_int=False)
+                    )
+                else:
+                    team_stats[division.id]['stats'][key] = ', '.join(
+                        sort_counter(Counter(team_stats[division.id]['stats'][key])))
 
     sorted_seasons = {}
     seasons_sort = sorted(seasons, key=lambda item: seasons[item]['season'].start_date)
@@ -186,13 +186,14 @@ def driver_view(request, driver_id):
         )
 
         for key in counter_keys:
-            if key == 'dnf_reasons':
-                driver_stats[division.id]['stats'][key] = ', '.join(
-                    sort_counter(Counter(driver_stats[division.id]['stats'][key]), ordinal=False, convert_int=False)
-                )
-            else:
-                driver_stats[division.id]['stats'][key] = ', '.join(
-                    sort_counter(Counter(driver_stats[division.id]['stats'][key])))
+            if key in driver_stats[division.id]['stats']:
+                if key == 'dnf_reasons':
+                    driver_stats[division.id]['stats'][key] = ', '.join(
+                        sort_counter(Counter(driver_stats[division.id]['stats'][key]), ordinal=False, convert_int=False)
+                    )
+                else:
+                    driver_stats[division.id]['stats'][key] = ', '.join(
+                        sort_counter(Counter(driver_stats[division.id]['stats'][key])))
 
     sorted_seasons = {}
     seasons_sort = sorted(seasons, key=lambda item: seasons[item]['season'].start_date)
