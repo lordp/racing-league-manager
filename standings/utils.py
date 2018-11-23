@@ -49,7 +49,7 @@ def sort_counter(results, ordinal=True, convert_int=True):
         results = {int(k): int(v) for k, v in results.items()}
     order = sorted(results)
     if ordinal:
-        result = ["{} x {}".format(p.ordinal(place), results[place]) for place in order]
+        result = ["{} x {}".format(p.ordinal(str(place)), results[place]) for place in order]
     else:
         result = ["{} x {}".format(place, results[place]) for place in order]
 
