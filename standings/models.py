@@ -537,6 +537,7 @@ class Result(models.Model):
     race_penalty_dsq = models.BooleanField(default=False)
     qualifying_penalty_dsq = models.BooleanField(default=False)
     classified = models.BooleanField(default=True)
+    point_deduction = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['position']
