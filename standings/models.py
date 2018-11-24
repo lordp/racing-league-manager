@@ -427,6 +427,9 @@ class Race(models.Model):
                 if driver['driver_id'] == result.driver_id:
                     result.points += ps.lead_lap
 
+            # point deduction
+            result.points -= result.point_deduction
+
             # multiplier
             result.points *= result.points_multiplier
 
