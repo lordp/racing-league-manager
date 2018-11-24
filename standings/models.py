@@ -183,6 +183,9 @@ class Season(models.Model):
 
         return True
 
+    class Meta:
+        ordering = ['start_date']
+
     def get_standings(self, use_position=False, upto=None):
         season_penalty = self.seasonpenalty_set
 
