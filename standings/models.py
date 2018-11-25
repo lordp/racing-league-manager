@@ -207,12 +207,6 @@ class Season(models.Model):
                     best_result = None
                     best_finish = 99
 
-                try:
-                    sp = season_penalty.get(driver=result.driver)
-                    result.points -= sp.points
-                except SeasonPenalty.DoesNotExist:
-                    sp = None
-
                 drivers[result.driver_id] = {
                     'driver': result.driver,
                     'team': result.team,
@@ -221,27 +215,37 @@ class Season(models.Model):
                     'position': 0,
                     'best_finish': best_finish,
                     'best_result': best_result,
-                    'season_penalty': sp
+                    'season_penalty': None
                 }
+
+                try:
+                    sp = season_penalty.get(driver=result.driver)
+                    drivers[result.driver_id]['season_penalty'] = sp
+                    drivers[result.driver_id]['points'] -= sp.points
+                except SeasonPenalty.DoesNotExist:
+                    pass
+
             else:
                 drivers[result.driver_id]['results'].append(result)
                 drivers[result.driver_id]['points'] += result.points
 
             if not self.teams_disabled:
                 if result.team_id not in teams:
-                    try:
-                        sp = season_penalty.get(team=result.team)
-                        result.points -= sp.points
-                    except SeasonPenalty.DoesNotExist:
-                        sp = None
-
                     teams[result.team_id] = {
                         'team': result.team,
                         'points': result.points,
                         'results': [result],
                         'drivers': {result.driver_id: {'driver': result.driver, 'points': result.points}},
-                        'season_penalty': sp
+                        'season_penalty': None
                     }
+
+                    try:
+                        sp = season_penalty.get(team=result.team)
+                        teams[result.team_id]['season_penalty'] = sp
+                        teams[result.team_id]['points'] -= sp.points
+                    except SeasonPenalty.DoesNotExist:
+                        pass
+
                 else:
                     teams[result.team_id]['results'].append(result)
                     teams[result.team_id]['points'] += result.points
