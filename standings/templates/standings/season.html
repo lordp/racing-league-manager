@@ -102,7 +102,7 @@
             </td>
             {% for race in season.race_set.all %}
                 {% with result=driver.results|find_result:race %}
-            <td class="ui center aligned {{ result|get_css_classes:season }}"{% if result.has_notes %} data-tooltip="{{ result|collate_notes }}"{% endif %}>
+            <td class="ui center aligned {{ result|get_css_classes:season }}"{% if result.has_notes %} data-tooltip="{{ result|collate_notes }}"{% endif %} title="{{ race.name }}">
                 <span class="toggle-pts-pos" data-toggle-pts-pos="{{ result.points|munge_points }}">{{ result|get_position }}</span>
                 {% if result.has_notes %}<div class="note"></div>{% endif %}
             </td>
