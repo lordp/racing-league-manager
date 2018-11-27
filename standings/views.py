@@ -33,6 +33,7 @@ def season_view(request, season_id):
         'lead_lap': ps.lead_lap,
         'fastest_lap': ps.fastest_lap,
         'most_laps_lead': ps.most_laps_lead,
+        'extras_present': ps.extras_present()
     }
 
     context = {

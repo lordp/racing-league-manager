@@ -52,6 +52,7 @@
             <td class="ui center aligned {{ pos|pos_colour:season }}">{{ points|format_float }}</td>
             {% endfor %}
         </tr>
+        {% if point_system.extras_present %}
         <tr>
             <td><strong>Extras</strong></td>
             <td colspan="50">
@@ -61,6 +62,7 @@
                 <strong>Most Laps Led:</strong> {{ point_system.most_laps_lead|format_float }}
             </td>
         </tr>
+        {% endif %}
         <tr>
             <td><strong>Legend</strong></td>
             <td colspan="50">

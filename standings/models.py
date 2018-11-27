@@ -32,6 +32,9 @@ class PointSystem(models.Model):
         except ValueError:
             return {0: 0}
 
+    def extras_present(self):
+        return self.pole_position > 0 or self.fastest_lap > 0 or self.lead_lap > 0 or self.most_laps_lead > 0
+
 
 class League(models.Model):
     name = models.CharField(max_length=50)
