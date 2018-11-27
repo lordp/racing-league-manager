@@ -349,9 +349,6 @@ class Season(models.Model):
             (stat, _) = SeasonStats.objects.get_or_create(season=self, driver=driver)
             stat.update_stats()
 
-    class Meta:
-        ordering = ['start_date']
-
 
 class Race(models.Model):
     season = models.ForeignKey(Season, on_delete=models.CASCADE)
