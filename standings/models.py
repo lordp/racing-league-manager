@@ -818,6 +818,7 @@ class LogFile(models.Model):
 
         duplicates = []
         lap_errors = {}
+        lap_ets = {}
         drivers = tree.xpath('//Driver')
         for driver in drivers:
             driver_name = despacify(driver.xpath('./Name')[0].text)
@@ -884,6 +885,10 @@ class LogFile(models.Model):
                     lap_obj.lap_time = self.get_float(lap.text)
 
                     lap_obj.save()
+                    if self.session == 'race':
+                        if driver_obj.id not in lap_ets:
+                            lap_ets[driver_obj.id] = []
+                        lap_ets[driver_obj.id].append(self.get_float(lap.get('et')))
 
                     if lap.text.strip() == '--.----':
                         if driver_obj.id not in lap_errors:
@@ -907,10 +912,24 @@ class LogFile(models.Model):
 
             result.save()
 
+        if len(lap_errors) > 0 and self.session == 'race':
+            self.fix_laps(lap_errors, lap_ets)
+
         self.summary = json.dumps({'duplicates': duplicates, 'lap_errors': lap_errors})
         self.save()
 
         self.race.fill_attributes()
+
+    @staticmethod
+    def fix_laps(errors, ets):
+        for driver_id, laps in errors.items():
+            for lap in laps:
+                try:
+                    lap_obj = Lap.objects.get(pk=lap['id'])
+                    lap_obj.lap_time = ets[driver_id][lap['number']] - ets[driver_id][lap['number'] - 1]
+                    lap_obj.save()
+                except IndexError:
+                    pass
 
 
 class SeasonPenalty(models.Model):
