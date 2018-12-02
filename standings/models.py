@@ -446,7 +446,8 @@ class Race(models.Model):
             if (sp and sp.disqualified) or result.race_penalty_dsq:
                 result.points = 0
 
-            result.save()
+            if not result.finalized:
+                result.save()
 
     def tooltip(self):
         tooltip = "{name}<br/>{time}".format(
