@@ -1,30 +1,34 @@
 {% extends 'standings/base.html' %}
-{% load standings_extras %}
+{% load standings_extras static %}
 
 {% block content %}
 <h3><a href="{% url 'race' result.race.id %}">{{ result.race.name }}</a> / <a href="{% url 'driver' result.driver.id %}">{{ result.driver.name }}</a></h3>
 <table class="ui small selectable compact celled striped table">
     <thead>
         <tr>
-            <th>#</th>
-            <th>Pos</th>
-            <th>S1</th>
-            <th>S2</th>
-            <th>S3</th>
-            <th>Time</th>
-            <th>Pitstop?</th>
+            <th class="ui center aligned">#</th>
+            <th class="ui center aligned">Pos</th>
+            <th class="ui center aligned">S1</th>
+            <th class="ui center aligned">S2</th>
+            <th class="ui center aligned">S3</th>
+            <th class="ui center aligned">Time</th>
+            <th class="ui center aligned">Pitstop?</th>
+            <th class="ui center aligned">Tyre</th>
         </tr>
     </thead>
     <tbody>
     {% for lap in laps %}
         <tr>
-            <td>{{ lap.lap_number }}</td>
-            <td>{{ lap.position }}</td>
-            <td>{{ lap.sector_1|format_time }}</td>
-            <td>{{ lap.sector_2|format_time }}</td>
-            <td>{{ lap.sector_3|format_time }}</td>
-            <td>{{ lap.lap_time|format_time }}</td>
-            <td>{% if lap.pitstop %}<strong>Yes</strong>{% else %}No{% endif %}</td>
+            <td class="ui center aligned">{{ lap.lap_number }}</td>
+            <td class="ui center aligned">{{ lap.position }}</td>
+            <td class="ui center aligned">{{ lap.sector_1|format_time }}</td>
+            <td class="ui center aligned">{{ lap.sector_2|format_time }}</td>
+            <td class="ui center aligned">{{ lap.sector_3|format_time }}</td>
+            <td class="ui center aligned">{{ lap.lap_time|format_time }}</td>
+            <td class="ui center aligned">{% if lap.pitstop %}<strong>Yes</strong>{% else %}No{% endif %}</td>
+            <td class="ui center aligned">
+                <img src="{% static lap.compound|compound %}" width="25" title="{{ lap.compound|compound_title }}" />
+            </td>
         </tr>
     {% endfor %}
     </tbody>

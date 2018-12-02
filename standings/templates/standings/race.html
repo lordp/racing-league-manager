@@ -39,6 +39,7 @@
                 <th class="ui center aligned">DNF</th>
                 <th class="ui center aligned">Fastest Lap</th>
                 <th class="ui center aligned">Points</th>
+                <th class="ui center aligned">Tyres</th>
                 <th>Penalty</th>
             </tr>
             </thead>
@@ -70,6 +71,7 @@
                     <td>{{ result.dnf_reason }}</td>
                     <td class="{% if result.fastest_lap %}fastest-lap-race{% endif %} collapsing">{{ result.race_fastest_lap|format_time }}</td>
                     <td class="center aligned collapsing">{{ result.points|format_float }}</td>
+                    <td class="ui center aligned">{{ compounds|find_driver_compound:result.driver_id }}</td>
                     <td>{{ result.race_penalty_description }}</td>
                 </tr>
             {% endfor %}

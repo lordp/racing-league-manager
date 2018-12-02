@@ -194,3 +194,24 @@ def find_position(stats, pos):
     except KeyError:
         count = 0
     return count
+
+
+@register.filter(name='compound')
+def compound(name):
+    return f'tyre_{name}.png'
+
+
+@register.filter(name='compound_title')
+def compound_title(name):
+    return name.replace('_', ' ').title()
+
+
+@register.filter(name='find_driver_compound')
+def find_driver_compound(results, driver_id):
+    img = '<img src="{static}{src}" width="25" title="{title}" />'
+
+    images = []
+    for entry in results[driver_id]:
+        images.append(img.format(static=settings.STATIC_URL, src=compound(entry), title=compound_title(entry)))
+
+    return mark_safe(''.join(images))

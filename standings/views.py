@@ -258,13 +258,24 @@ def race_view(request, race_id):
         lap_times[result.driver_id] = [lap[0] for lap in result.race_lap_set().values_list('lap_time')]
         drivers[result.driver_id] = result.driver.name
 
+    compounds = {}
+    compound_list = Lap.objects.filter(result__race_id=race_id).values('result__driver_id', 'compound').\
+        annotate(cnt=Count('result__driver_id'))
+    for result in compound_list:
+        if result['result__driver_id'] not in compounds:
+            compounds[result['result__driver_id']] = set()
+
+        if result['compound'] != '':
+            compounds[result['result__driver_id']].add(result['compound'])
+
     context = {
         'race': race,
         'drivers': drivers,
         'labels': labels,
         'lap_times': lap_times,
         'winner_laps': winner_laps,
-        'disable_charts': 'true' if len(labels) == 0 else 'false'
+        'disable_charts': 'true' if len(labels) == 0 else 'false',
+        'compounds': compounds
     }
 
     return render(request, 'standings/race.html', context)

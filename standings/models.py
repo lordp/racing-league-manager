@@ -9,6 +9,7 @@ import standings.utils
 from .utils import apply_positions, despacify
 import json
 import random
+import re
 
 
 class PointSystem(models.Model):
@@ -773,6 +774,7 @@ class Lap(models.Model):
     sector_3 = models.FloatField(default=0)
     lap_time = models.FloatField(default=0)
     race_time = models.FloatField(default=0)
+    compound = models.CharField(max_length=10, verbose_name="Tyre Compound", blank=True)
 
     class Meta:
         ordering = ['lap_number']
@@ -883,6 +885,7 @@ class LogFile(models.Model):
                     lap_obj.sector_3 = self.get_float(lap.get('s3'))
                     lap_obj.pitstop = lap.get('pit') == '1'
                     lap_obj.lap_time = self.get_float(lap.text)
+                    lap_obj.compound = re.sub(r'\d+,', '', lap.get('fcompound')).replace(' ', '_').lower()
 
                     lap_obj.save()
                     if self.session == 'race':
