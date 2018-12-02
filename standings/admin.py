@@ -51,14 +51,14 @@ class ResultAdmin(admin.ModelAdmin):
         ('Qualifying', {'fields': ['qualifying', 'qualifying_laps', 'qualifying_time']}),
         ('Qualifying Penalties', {'fields': [
             'qualifying_penalty_grid', 'qualifying_penalty_bog',
-            'qualifying_penalty_sfp', 'qualifying_penalty_description', 'qualifying_fastest_lap'
+            'qualifying_penalty_sfp', 'qualifying_penalty_description'
         ]}),
         ('Race', {'fields': [
             'position', 'race_laps', 'race_time', 'gap', 'dnf_reason',
             'fastest_lap', 'race_fastest_lap'
         ]}),
         ('Race Penalties', {'fields': [
-            'race_penalty_time', 'race_penalty_positions', 'race_penalty_description'
+            'race_penalty_time', 'race_penalty_positions', 'race_penalty_description', 'point_deduction'
         ]}),
         ('Advanced', {'fields': ['subbed_by', 'allocate_points', 'note'], 'classes': ['collapse']}),
     ]
