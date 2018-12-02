@@ -208,6 +208,9 @@ def compound_title(name):
 
 @register.filter(name='find_driver_compound')
 def find_driver_compound(results, driver_id):
+    if driver_id not in results:
+        return ''
+
     img = '<img src="{static}{src}" width="25" title="{title}" />'
 
     images = []
