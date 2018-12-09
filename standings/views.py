@@ -259,8 +259,8 @@ def race_view(request, race_id):
         drivers[result.driver_id] = result.driver.name
 
     compounds = {}
-    compound_list = Lap.objects.filter(result__race_id=race_id).values('result__driver_id', 'compound').\
-        annotate(cnt=Count('result__driver_id'))
+    compound_list = Lap.objects.filter(result__race_id=race_id).values('result__driver_id', 'compound', 'lap_number').\
+        order_by('lap_number')
     for result in compound_list:
         if result['result__driver_id'] not in compounds:
             compounds[result['result__driver_id']] = set()
