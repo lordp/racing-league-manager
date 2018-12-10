@@ -259,14 +259,16 @@ def race_view(request, race_id):
         drivers[result.driver_id] = result.driver.name
 
     compounds = {}
-    compound_list = Lap.objects.filter(result__race_id=race_id).values('result__driver_id', 'compound', 'lap_number').\
-        order_by('lap_number')
+    compound_list = Lap.objects.filter(result__race_id=race_id, session='race').\
+        values('result__driver_id', 'compound', 'lap_number', 'pitstop').order_by('lap_number')
     for result in compound_list:
         if result['result__driver_id'] not in compounds:
-            compounds[result['result__driver_id']] = set()
+            compounds[result['result__driver_id']] = [{'lap_count': 0}]
 
-        if result['compound'] != '':
-            compounds[result['result__driver_id']].add(result['compound'])
+        compounds[result['result__driver_id']][-1]['lap_count'] += 1
+        compounds[result['result__driver_id']][-1]['compound'] = result['compound']
+        if result['pitstop'] == 1:
+            compounds[result['result__driver_id']].append({'lap_count': 0})
 
     context = {
         'race': race,

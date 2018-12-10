@@ -202,8 +202,11 @@ def compound(name):
 
 
 @register.filter(name='compound_title')
-def compound_title(name):
-    return name.replace('_', ' ').title()
+def compound_title(name, length=0):
+    if length > 0:
+        return f"{name.replace('_', ' ').title()} ({length})"
+    else:
+        return f"{name.replace('_', ' ').title()}"
 
 
 @register.filter(name='find_driver_compound')
@@ -215,6 +218,11 @@ def find_driver_compound(results, driver_id):
 
     images = []
     for entry in results[driver_id]:
-        images.append(img.format(static=settings.STATIC_URL, src=compound(entry), title=compound_title(entry)))
+        if 'compound' in entry and 'lap_count' in entry:
+            images.append(img.format(
+                static=settings.STATIC_URL,
+                src=compound(entry['compound']),
+                title=compound_title(entry['compound'], entry['lap_count']))
+            )
 
     return mark_safe(''.join(images))
