@@ -1,6 +1,7 @@
 from inflect import engine
 from collections import Iterable
 import re
+from itertools import zip_longest
 
 
 def format_time(seconds):
@@ -134,3 +135,8 @@ def truncate_point_system(ps_dict):
         last_points = points
 
     return {'points': point_system, 'truncated': truncated_points}
+
+
+def grouper(iterable, n, fillvalue=None):
+    args = [iter(iterable)] * n
+    return zip_longest(*args, fillvalue=fillvalue)

@@ -2,7 +2,7 @@ from django.views.decorators.cache import cache_page
 from django.db.models import Count, Q, Sum
 from django.shortcuts import get_object_or_404, render
 from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty, Lap
-from standings.utils import sort_counter, calculate_average, truncate_point_system
+from standings.utils import sort_counter, calculate_average, truncate_point_system, grouper
 from collections import Counter
 from django_countries.fields import Country
 
@@ -193,8 +193,8 @@ def driver_view(request, driver_id):
                         sort_counter(Counter(driver_stats[division.id]['stats'][key]), ordinal=False, convert_int=False)
                     )
                 else:
-                    driver_stats[division.id]['stats'][key] = ', '.join(
-                        sort_counter(Counter(driver_stats[division.id]['stats'][key])))
+                    positions = list(grouper(sort_counter(Counter(driver_stats[division.id]['stats'][key])), 3, ''))
+                    driver_stats[division.id]['stats'][key] = positions
 
     sorted_seasons = {}
     seasons_sort = sorted(seasons, key=lambda item: seasons[item]['season'].start_date)

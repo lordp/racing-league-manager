@@ -4,17 +4,13 @@
 {% block content %}
 <script src="{% static 'components/tab.min.js' %}"></script>
 <script>
-    function set_height() {
-        $('div[data-table=adjust] table').each(function(i, e) {
-            $(e).height($(e.parentElement).height() - 2);
-        });
-    }
-
     $(document).ready(function() {
-        set_height();
-        $('.menu .item').tab({
-            onVisible: set_height
-        });
+        $('.menu .item').tab();
+
+       $('.positions-popup').popup({
+           on: 'click',
+           inline: true,
+       })
     });
 </script>
 
@@ -32,11 +28,26 @@
                 <h4 class="ui center aligned orange header">{{ division_stats.name }}</h4>
             </div>
             <div data-table="adjust" class="flex-column-table">
-                <table class="ui bottom attached small celled striped table">
+                <table class="ui bottom attached small celled striped fixed table">
                     <tbody>
                     <tr>
                         <td class="ui right aligned"><strong>Positions</strong></td>
-                        <td>{{ division_stats.stats.qualifying_positions }}</td>
+                        <td>
+                            <button class="ui mini button positions-popup">Show</button>
+                            <div class="ui popup">
+                                <table class="ui small compact celled fixed table subtable">
+                                    <tbody>
+                                    {% for row in division_stats.stats.qualifying_positions %}
+                                        <tr>
+                                        {% for col in row %}
+                                            <td class="ui center aligned">{{ col }}</td>
+                                        {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td class="ui right aligned"><strong>Average</strong></td>
@@ -81,7 +92,22 @@
                     <tbody>
                     <tr>
                         <td class="ui right aligned"><strong>Positions:</strong></td>
-                        <td>{{ division_stats.stats.race_positions }}</td>
+                        <td>
+                            <button class="ui mini button positions-popup">Show</button>
+                            <div class="ui popup">
+                                <table class="ui small compact celled fixed table subtable">
+                                    <tbody>
+                                    {% for row in division_stats.stats.race_positions %}
+                                        <tr>
+                                        {% for col in row %}
+                                            <td class="ui center aligned">{{ col }}</td>
+                                        {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td class="ui right aligned"><strong>Average:</strong></td>
