@@ -87,6 +87,7 @@
                 <th>Team</th>
                 <th class="ui center aligned">Laps</th>
                 <th class="ui center aligned">Time</th>
+                <th class="ui center aligned">Diff</th>
                 <th>Penalty</th>
             </tr>
             </thead>
@@ -97,7 +98,8 @@
                     <td><a href="{% url 'driver' result.driver.id %}">{{ result.driver.name }}</a></td>
                     <td><a href="{% url 'team' result.team.id %}">{{ result.team.name }}</a></td>
                     <td class="center aligned">{{ result.qualifying_laps }}</td>
-                    <td class="right aligned">{{ result.qualifying_fastest_lap|format_time }}</td>
+                    <td class="center aligned">{{ result.qualifying_fastest_lap|format_time }}</td>
+                    <td class="center aligned">{{ qualifying_gaps|find_diff:result.driver_id }}</td>
                     <td>{{ result.qualifying_penalty_description }}</td>
                 </tr>
             {% endfor %}

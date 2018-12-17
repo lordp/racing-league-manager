@@ -226,3 +226,8 @@ def find_driver_compound(results, driver_id):
             )
 
     return mark_safe(''.join(images))
+
+
+@register.filter(name='find_diff')
+def find_diff(laps, driver_id):
+    return round(laps[driver_id]['diff'], 3) if driver_id in laps else 0

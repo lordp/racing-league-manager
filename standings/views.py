@@ -252,6 +252,13 @@ def race_view(request, race_id):
         labels = []
         winner_laps = []
 
+    q_last = 0
+    q_laps = {x.driver_id: {'time': x.qualifying_fastest_lap, 'diff': 0} for x in Result.objects.filter(
+        race_id=race_id, qualifying_fastest_lap__gt=0).order_by('qualifying')}
+    for driver_id, lap in q_laps.items():
+        lap['diff'] = lap['time'] - q_last if q_last > 0 else 0
+        q_last = lap['time']
+
     lap_times = {}
     drivers = {}
     for result in race.result_set.all():
@@ -277,7 +284,8 @@ def race_view(request, race_id):
         'lap_times': lap_times,
         'winner_laps': winner_laps,
         'disable_charts': 'true' if len(labels) == 0 else 'false',
-        'compounds': compounds
+        'compounds': compounds,
+        'qualifying_gaps': q_laps
     }
 
     return render(request, 'standings/race.html', context)
