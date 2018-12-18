@@ -184,6 +184,10 @@ class CarNumberInline(admin.StackedInline):
 
 @admin.register(Season)
 class SeasonAdmin(admin.ModelAdmin):
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        Result.objects.filter(race__season_id=obj.id).update(finalized=obj.finalized)
+
     @staticmethod
     def league(obj):
         return obj.division.league.name
