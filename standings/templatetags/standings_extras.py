@@ -218,7 +218,7 @@ def find_driver_compound(results, driver_id):
 
     images = []
     for entry in results[driver_id]:
-        if 'compound' in entry and 'lap_count' in entry:
+        if 'compound' in entry and 'lap_count' in entry and entry['compound'] != '':
             images.append(img.format(
                 static=settings.STATIC_URL,
                 src=compound(entry['compound']),
