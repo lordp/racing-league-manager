@@ -24,6 +24,12 @@
     });
 </script>
 
+{% if season.division.url %}
+<div class="ui basic center aligned segment" style="padding: 0; margin: 0;">
+    <a class="ui mini green button" href="{{ season.division.url }}">Go To Forum</a>
+</div>
+{% endif %}
+
 <div style="display: inline-block;">
 <div>
     <div class="ui left floated">
