@@ -124,8 +124,8 @@ def team_view(request, team_id):
                         sort_counter(Counter(team_stats[division.id]['stats'][key]), ordinal=False, convert_int=False)
                     )
                 else:
-                    team_stats[division.id]['stats'][key] = ', '.join(
-                        sort_counter(Counter(team_stats[division.id]['stats'][key])))
+                    positions = list(grouper(sort_counter(Counter(team_stats[division.id]['stats'][key])), 3, ''))
+                    team_stats[division.id]['stats'][key] = positions
 
     sorted_seasons = {}
     seasons_sort = sorted(seasons, key=lambda item: seasons[item]['season'].start_date)
