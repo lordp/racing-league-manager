@@ -228,6 +228,22 @@ def find_driver_compound(results, driver_id):
     return mark_safe(''.join(images))
 
 
+@register.filter(name='find_driver_qcompound')
+def find_driver_qcompound(results, driver_id):
+    if driver_id not in results:
+        return ''
+
+    img = '<img src="{static}{src}" width="25" title="{title}" />'
+
+    image = img.format(
+        static=settings.STATIC_URL,
+        src=compound(results[driver_id]['compound']),
+        title=compound_title(results[driver_id]['compound'])
+    )
+
+    return mark_safe(image)
+
+
 @register.filter(name='find_diff')
 def find_diff(laps, driver_id):
     return round(laps[driver_id]['diff'], 3) if driver_id in laps else 0

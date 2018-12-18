@@ -277,6 +277,17 @@ def race_view(request, race_id):
         if result['pitstop'] == 1:
             compounds[result['result__driver_id']].append({'lap_count': 0})
 
+    q_compounds = {}
+    compound_list = Lap.objects.filter(result__race_id=race_id, session='qualify', lap_time__gt=0).\
+        values('result__driver_id', 'compound', 'lap_time').order_by('result__driver_id', 'lap_time')
+    for result in compound_list:
+        if result['result__driver_id'] not in q_compounds or \
+                result['lap_time'] < q_compounds[result['result__driver_id']]['lap_time']:
+            q_compounds[result['result__driver_id']] = {
+                'compound': result['compound'],
+                'lap_time': result['lap_time']
+            }
+
     context = {
         'race': race,
         'drivers': drivers,
@@ -285,6 +296,7 @@ def race_view(request, race_id):
         'winner_laps': winner_laps,
         'disable_charts': 'true' if len(labels) == 0 else 'false',
         'compounds': compounds,
+        'q_compounds': q_compounds,
         'qualifying_gaps': q_laps
     }
 

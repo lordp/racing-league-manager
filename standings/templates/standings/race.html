@@ -88,6 +88,7 @@
                 <th class="ui center aligned">Laps</th>
                 <th class="ui center aligned">Time</th>
                 <th class="ui center aligned">Diff</th>
+                <th class="ui center aligned">Tyre</th>
                 <th>Penalty</th>
             </tr>
             </thead>
@@ -100,6 +101,7 @@
                     <td class="center aligned">{{ result.qualifying_laps }}</td>
                     <td class="center aligned">{{ result.qualifying_fastest_lap|format_time }}</td>
                     <td class="center aligned">{{ qualifying_gaps|find_diff:result.driver_id }}</td>
+                    <td class="ui center aligned">{{ q_compounds|find_driver_qcompound:result.driver_id }}</td>
                     <td>{{ result.qualifying_penalty_description }}</td>
                 </tr>
             {% endfor %}
