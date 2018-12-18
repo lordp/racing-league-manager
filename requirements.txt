@@ -8,4 +8,4 @@ lxml==4.2.5
 Pillow==5.3.0
 psycopg2==2.7.6.1
 pytz==2018.7
-inflect=2.1.0
+inflect==2.1.0
