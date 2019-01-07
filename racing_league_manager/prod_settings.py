@@ -27,7 +27,7 @@ with open('/home/isrclubadmin/.config/gpcos_secret_key.txt') as f:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['results.formula-simracing.net']
+ALLOWED_HOSTS = ['results.formula-simracing.net', '154.49.213.140']
 INTERNAL_IPS = ['127.0.0.1']
 
 ADMINS = [('Darryl', 'darryl@addict.net.nz')]
