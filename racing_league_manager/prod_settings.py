@@ -161,6 +161,7 @@ COUNTRIES_OVERRIDE = {
     'SQ': _('Scotland'),
     'EN': _('England'),
     'WA': _('Wales'),
+    'XI': _('Northern Ireland'),
 }
 
 CACHES = {
