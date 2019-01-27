@@ -98,6 +98,20 @@ div [class*="right floated"] {
     border-top: 1px solid rgba(34,36,38,.1) !important;
 }
 
+.tyre-container {
+    display:inline-block;
+    position: relative;
+}
+
+.tyre-text {
+    font-size: 0.9em;
+    position: absolute;
+    top: 2px;
+    color: white;
+    width: 100%;
+    text-align: center;
+}
+
 .team-ferrari {
     color: white;
     background-color: rgb(224, 8, 29);

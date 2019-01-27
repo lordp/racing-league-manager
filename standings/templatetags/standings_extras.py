@@ -214,7 +214,9 @@ def find_driver_compound(results, driver_id):
     if driver_id not in results:
         return ''
 
-    img = '<img src="{static}{src}" width="25" title="{title}" />'
+    img = '<div class="tyre-container">' \
+          '<img src="{static}{src}" width="25" title="{title}">' \
+          '<div class="tyre-text">{stint}</div></div>'
 
     images = []
     for entry in results[driver_id]:
@@ -222,7 +224,8 @@ def find_driver_compound(results, driver_id):
             images.append(img.format(
                 static=settings.STATIC_URL,
                 src=compound(entry['compound']),
-                title=compound_title(entry['compound'], entry['lap_count']))
+                title=compound_title(entry['compound'], entry['lap_count']),
+                stint=entry['lap_count'])
             )
 
     return mark_safe(''.join(images))
