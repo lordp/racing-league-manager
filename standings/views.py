@@ -71,23 +71,30 @@ def team_view(request, team_id):
             "penalties": SeasonPenalty.objects.filter(season=season, team=team)
         }
 
-        for result in team.result_set.filter(race__season_id=season.id).prefetch_related('driver'):
-            seasons[season.id] = {
-                "season": season,
-                "drivers": {},
-                "penalties": SeasonPenalty.objects.filter(season=season, team=result.team)
-            }
+        for result in team.result_set.filter(race__season_id=season.id).distinct().order_by('driver_id').\
+                values('driver_id'):
+            if season.id not in seasons:
+                seasons[season.id] = {
+                    "season": season,
+                    "drivers": {},
+                    "penalties": SeasonPenalty.objects.filter(season=season, team=team)
+                }
 
-            if result.driver.id not in seasons[season.id]['drivers']:
-                results = result.driver.result_set.filter(race__season__id=season.id, team__id=team.id).all()
-                seasons[season.id]['drivers'][result.driver.id] = {
-                    "driver": result.driver,
+            if result['driver_id'] not in seasons[season.id]['drivers']:
+                results = Result.objects.filter(
+                    race__season_id=season.id,
+                    team_id=team.id,
+                    driver_id=result['driver_id']).all()
+
+                driver = Driver.objects.get(pk=result['driver_id'])
+                seasons[season.id]['drivers'][result['driver_id']] = {
+                    "driver": driver,
                     "results": results,
                     "points": results.aggregate(sum=Sum('points'))['sum']
                 }
 
-                for penalty in seasons[season.id]['penalties'].filter(driver=result.driver):
-                    seasons[season.id]['drivers'][result.driver.id]['points'] -= penalty.points
+                for penalty in seasons[season.id]['penalties'].filter(driver=driver):
+                    seasons[season.id]['drivers'][result['driver_id']]['points'] -= penalty.points
 
     for td in seasons:
         sorted_drivers = []
