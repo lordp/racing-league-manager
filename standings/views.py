@@ -1,5 +1,5 @@
 from django.views.decorators.cache import cache_page
-from django.db.models import Count, Q, Sum
+from django.db.models import Count, Q, Sum, F
 from django.shortcuts import get_object_or_404, render
 from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty, Lap
 from standings.utils import sort_counter, calculate_average, truncate_point_system, grouper
@@ -237,9 +237,12 @@ def league_view(request, league_id):
 
 def division_view(request, division_id):
     division = get_object_or_404(Division, pk=division_id)
-    seasons = division.season_set.annotate(race_count=Count('race', distinct=True)).\
+    seasons = division.season_set.distinct().filter(seasonstats__winner=True). \
+        annotate(winner=F('seasonstats__driver__name')).\
+        annotate(winner_id=F('seasonstats__driver')).\
+        annotate(race_count=Count('race', distinct=True)).\
         annotate(incomplete=Count('race', filter=Q(race__result__isnull=True))).\
-        values('id', 'name', 'race_count', 'incomplete')
+        values('id', 'name', 'race_count', 'incomplete', 'winner', 'winner_id')
 
     context = {
         'division': division,

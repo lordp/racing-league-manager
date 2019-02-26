@@ -8,6 +8,7 @@
             <th>Name</th>
             <th class="ui center aligned">Races</th>
             <th class="ui center aligned">Incomplete</th>
+            <th class="ui center aligned">Winner</th>
         </tr>
     </thead>
     <tbody>
@@ -16,6 +17,7 @@
             <td><a href="{% url 'season' season.id %}">{{ season.name }}</a></td>
             <td class="ui center aligned">{{ season.race_count }}</td>
             <td class="ui center aligned">{{ season.incomplete }}</td>
+            <td class="ui center aligned"><a href="{% url 'driver' season.winner_id %}">{{ season.winner }}</a></td>
         </tr>
         {% endfor %}
     </tbody>
