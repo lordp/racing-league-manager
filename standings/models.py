@@ -160,6 +160,8 @@ class Season(models.Model):
     percent_classified = models.IntegerField(default=0)
     laps_classified = models.IntegerField(default=0)
     teams_disabled = models.BooleanField(default=False)
+    constructor_max = models.IntegerField(default=0, help_text="The maximum number of drivers that can score points "
+                                                               "for their team (0 = disabled)")
 
     def __str__(self):
         return "{} ({})".format(self.name, self.division.name)
@@ -195,9 +197,10 @@ class Season(models.Model):
 
         drivers = {}
         teams = {}
+        constructor_max = {}
 
-        results = Result.objects.filter(race__season=self).prefetch_related('race').prefetch_related(
-            'driver').prefetch_related('team').prefetch_related('race__track')
+        results = Result.objects.filter(race__season=self).order_by("race_id", "position").\
+            prefetch_related('race').prefetch_related('driver').prefetch_related('team').prefetch_related('race__track')
 
         if upto:
             results = results.filter(race__round_number__lte=upto)
@@ -234,6 +237,14 @@ class Season(models.Model):
                 drivers[result.driver_id]['points'] += result.points
 
             if not self.teams_disabled:
+                if result.race_id not in constructor_max:
+                    constructor_max[result.race_id] = {
+                        result.team_id: 0
+                    }
+
+                if result.team_id not in constructor_max[result.race_id]:
+                    constructor_max[result.race_id][result.team_id] = 0
+
                 if result.team_id not in teams:
                     teams[result.team_id] = {
                         'team': result.team,
@@ -250,9 +261,15 @@ class Season(models.Model):
                     except SeasonPenalty.DoesNotExist:
                         pass
 
+                    constructor_max[result.race_id][result.team_id] += 1
+
                 else:
                     teams[result.team_id]['results'].append(result)
-                    teams[result.team_id]['points'] += result.points
+                    if self.constructor_max == 0 or \
+                            constructor_max[result.race_id][result.team_id] < self.constructor_max:
+                        teams[result.team_id]['points'] += result.points
+                        constructor_max[result.race_id][result.team_id] += 1
+
                     if result.driver_id not in teams[result.team_id]['drivers']:
                         teams[result.team_id]['drivers'][result.driver_id] = {
                             'driver': result.driver,

@@ -46,7 +46,7 @@ class ResultAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': [
             'race', 'driver', 'team', 'finalized', 'car', 'car_class', 'classified',
-            'points', 'points_multiplier', 'points_multiplier_description',
+            'points', 'points_multiplier', 'points_multiplier_description', 'constructor_max'
         ]}),
         ('Qualifying', {'fields': ['qualifying', 'qualifying_laps', 'qualifying_time']}),
         ('Qualifying Penalties', {'fields': [
