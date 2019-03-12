@@ -42,6 +42,24 @@ def position_colour(result, season):
     return "pos-{}".format(str(colours.get(result.position, 'blue')))
 
 
+@register.filter(name='show_bullet')
+def show_bullet(result, season):
+    content = ""
+    if result is not None:
+        if result.race.point_system:
+            ps = result.race.point_system.to_dict()
+        else:
+            ps = season.point_system.to_dict()
+
+        try:
+            if result.team_points_allocated and result.position in ps:
+                content = mark_safe('&bull;')
+        except AttributeError:
+            pass
+
+    return content
+
+
 @register.filter(name='pos_colour')
 def pos_colour(position, season):
     colours = get_colours(len(season.point_system.to_dict()) + 1)

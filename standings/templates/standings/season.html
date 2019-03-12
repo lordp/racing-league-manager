@@ -155,7 +155,7 @@
             {% for race in season.race_set.all %}
                 {% with result=team.results|find_results:race|find_driver:driver.driver %}
             <td class="ui center aligned {{ result|get_css_classes:season }} team-driver-position">
-                {{ result|get_position }}
+                {{ result|get_position }} {{ result|show_bullet:season }}
             </td>
                 {% endwith %}
             {% endfor %}

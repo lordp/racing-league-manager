@@ -162,6 +162,7 @@ class Season(models.Model):
     teams_disabled = models.BooleanField(default=False)
     constructor_max = models.IntegerField(default=0, help_text="The maximum number of drivers that can score points "
                                                                "for their team (0 = disabled)")
+    team_points_allocated = True
 
     def __str__(self):
         return "{} ({})".format(self.name, self.division.name)
@@ -237,6 +238,7 @@ class Season(models.Model):
                 drivers[result.driver_id]['points'] += result.points
 
             if not self.teams_disabled:
+                result.team_points_allocated = False
                 if result.race_id not in constructor_max:
                     constructor_max[result.race_id] = {
                         result.team_id: 0
@@ -246,6 +248,7 @@ class Season(models.Model):
                     constructor_max[result.race_id][result.team_id] = 0
 
                 if result.team_id not in teams:
+                    result.team_points_allocated = True
                     teams[result.team_id] = {
                         'team': result.team,
                         'points': result.points,
@@ -264,11 +267,13 @@ class Season(models.Model):
                     constructor_max[result.race_id][result.team_id] += 1
 
                 else:
-                    teams[result.team_id]['results'].append(result)
                     if self.constructor_max == 0 or \
                             constructor_max[result.race_id][result.team_id] < self.constructor_max:
                         teams[result.team_id]['points'] += result.points
                         constructor_max[result.race_id][result.team_id] += 1
+                        result.team_points_allocated = True
+
+                    teams[result.team_id]['results'].append(result)
 
                     if result.driver_id not in teams[result.team_id]['drivers']:
                         teams[result.team_id]['drivers'][result.driver_id] = {
