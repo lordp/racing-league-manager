@@ -141,8 +141,8 @@
     <tbody>
         {% for team in teams %}
             {% for driver in team.drivers %}
-                {% if forloop.first %}
         <tr>
+                {% if forloop.first %}
             <td class="ui center aligned" rowspan="{{ team.driver_count }}">{{ team.position }}</td>
             <td class="team-{{ team.team.css_class }}" rowspan="{{ team.driver_count }}"><a href="{% url 'team' team.team.id %}">{{ team.team.name }}</a></td>
             <td class="ui center aligned" rowspan="{{ team.driver_count }}">{{ team.team.country|show_flag }}</td>
@@ -150,28 +150,17 @@
                 {{ team.points|format_float }}
                 {% if team.season_penalty %}<div class="note"></div>{% endif %}
             </td>
-            <td class="team-driver-position">{{ driver.driver.name }}</td>
-            {% for race in season.race_set.all %}
-                {% with result=team.results|find_results:race|find_driver:driver.driver %}
-            <td class="ui center aligned {{ result|get_css_classes:season }} team-driver-position">
-                {{ result|get_position }}
-            </td>
-                {% endwith %}
-            {% endfor %}
-        </tr>
-                {% else %}
-        <tr>
-            <td class="team-driver-position">{{ driver.driver.name }}</td>
-            {% for race in season.race_set.all %}
-                {% with result=team.results|find_results:race|find_driver:driver.driver %}
-            <td class="ui center aligned {{ result|get_css_classes:season }} team-driver-position">
-                {{ result|get_position }}
-            </td>
-                {% endwith %}
-            {% endfor %}
-        </tr>
                 {% endif %}
+            <td class="team-driver-position">{{ driver.driver.name }}</td>
+            {% for race in season.race_set.all %}
+                {% with result=team.results|find_results:race|find_driver:driver.driver %}
+            <td class="ui center aligned {{ result|get_css_classes:season }} team-driver-position">
+                {{ result|get_position }}
+            </td>
+                {% endwith %}
             {% endfor %}
+        </tr>
+                {% endfor %}
         {% endfor %}
     </tbody>
 </table>
