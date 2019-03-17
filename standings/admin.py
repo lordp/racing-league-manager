@@ -177,9 +177,15 @@ class RaceAdmin(admin.ModelAdmin):
     apply_penalties.short_description = 'Apply penalties and adjust time/positions'
 
 
-class CarNumberInline(admin.StackedInline):
+class CarNumberInline(admin.TabularInline):
     model = SeasonCarNumber
     extra = 3
+
+
+class RaceInline(admin.TabularInline):
+    model = Race
+    extra = 3
+    exclude = ('point_system',)
 
 
 @admin.register(Season)
@@ -200,7 +206,7 @@ class SeasonAdmin(admin.ModelAdmin):
     list_filter = ('division', 'division__league')
     actions = ['generate_top10', 'update_stats', 'clear_cache']
     ordering = ['start_date']
-    inlines = [CarNumberInline]
+    inlines = [RaceInline, CarNumberInline]
 
     def get_queryset(self, request):
         return Season.objects.annotate(race_count=Count('race'))
