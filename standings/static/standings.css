@@ -59,7 +59,6 @@
 }
 
 .fsr-header {
-    margin: 0 0 10px 0;
     padding: 10px;
     background-color: #242728 !important;
 }
@@ -110,6 +109,18 @@ div [class*="right floated"] {
     color: white;
     width: 100%;
     text-align: center;
+}
+
+.forums {
+    text-align:center;
+    background-color: lightgrey;
+    padding: 4px;
+    margin: 0 0 10px 0;
+}
+
+.forums a {
+    font-weight: bold;
+    font-size: larger;
 }
 
 .team-ferrari {
