@@ -617,9 +617,9 @@ class SeasonStats(models.Model):
     qualifying_penalty_sfp = models.IntegerField(default=0)
     race_penalty_dsq = models.IntegerField(default=0)
     qualifying_penalty_dsq = models.IntegerField(default=0)
-    positions = JSONField(default={})
-    dnf_reasons = JSONField(default={})
-    qualifying = JSONField(default={})
+    positions = JSONField(default=dict)
+    dnf_reasons = JSONField(default=dict)
+    qualifying = JSONField(default=dict)
     season_position = models.IntegerField(default=99)
 
     class Meta:
