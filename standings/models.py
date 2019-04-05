@@ -381,7 +381,7 @@ class Race(models.Model):
     round_number = models.IntegerField(default=1)
     name = models.CharField(max_length=100)
     short_name = models.CharField(max_length=3, null=True)
-    start_time = models.DateTimeField()
+    start_time = models.DateTimeField(db_index=True)
     track = models.ForeignKey(Track, on_delete=models.SET_NULL, null=True)
 
     class Meta:
