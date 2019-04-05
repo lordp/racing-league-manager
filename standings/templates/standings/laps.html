@@ -2,6 +2,7 @@
 {% load standings_extras static %}
 
 {% block content %}
+<script src="{% static 'tyre_wear.js' %}"></script>
 <h3><a href="{% url 'race' result.race.id %}">{{ result.race.name }}</a> / <a href="{% url 'driver' result.driver.id %}">{{ result.driver.name }}</a></h3>
 <table class="ui small selectable compact celled striped table">
     <thead>
@@ -12,6 +13,7 @@
             <th class="ui center aligned">S2</th>
             <th class="ui center aligned">S3</th>
             <th class="ui center aligned">Time</th>
+            <th class="ui center aligned">Wear</th>
             <th class="ui center aligned">Pitstop?</th>
             <th class="ui center aligned">Tyre</th>
         </tr>
@@ -25,6 +27,10 @@
             <td class="ui center aligned">{{ lap.sector_2|format_time }}</td>
             <td class="ui center aligned">{{ lap.sector_3|format_time }}</td>
             <td class="ui center aligned">{{ lap.lap_time|format_time }}</td>
+            <td class="ui center aligned collapsing" data-lap="{{ lap.lap_number }}" data-twfl="{{ lap.wear_fl }}" data-twfr="{{ lap.wear_fr }}" data-twrl="{{ lap.wear_rl }}" data-twrr="{{ lap.wear_rr }}">
+                <canvas class="tyre-wear-line" width="60" height="20"></canvas>
+                <canvas class="tyre-wear-box" width="60" height="20"></canvas>
+            </td>
             <td class="ui center aligned">{% if lap.pitstop %}<strong>Yes</strong>{% else %}No{% endif %}</td>
             <td class="ui center aligned">
                 <img src="{% static lap.compound|compound %}" width="25" title="{{ lap.compound|compound_title }}" />
@@ -33,4 +39,14 @@
     {% endfor %}
     </tbody>
 </table>
+
+<script>
+    $('.tyre-wear-line').each(function() {
+        tyre_wear_line(this);
+    });
+
+    $('.tyre-wear-box').each(function() {
+        tyre_wear_box(this);
+    });
+</script>
 {% endblock %}
