@@ -800,6 +800,10 @@ class Lap(models.Model):
     lap_time = models.FloatField(default=0)
     race_time = models.FloatField(default=0)
     compound = models.CharField(max_length=10, verbose_name="Tyre Compound", blank=True)
+    wear_fl = models.FloatField(default=0, verbose_name="Wear (Front Left)")
+    wear_fr = models.FloatField(default=0, verbose_name="Wear (Front Right)")
+    wear_rl = models.FloatField(default=0, verbose_name="Wear (Rear Left)")
+    wear_rr = models.FloatField(default=0, verbose_name="Wear (Rear Right)")
 
     class Meta:
         ordering = ['lap_number']
@@ -911,6 +915,10 @@ class LogFile(models.Model):
                     lap_obj.pitstop = lap.get('pit') == '1'
                     lap_obj.lap_time = self.get_float(lap.text)
                     lap_obj.compound = re.sub(r'\d+,', '', lap.get('fcompound')).replace(' ', '_').lower()
+                    lap_obj.wear_fl = self.get_float(lap.get('twfl'))
+                    lap_obj.wear_fr = self.get_float(lap.get('twfr'))
+                    lap_obj.wear_rl = self.get_float(lap.get('twrl'))
+                    lap_obj.wear_rr = self.get_float(lap.get('twrr'))
 
                     lap_obj.save()
                     if self.session == 'race':
