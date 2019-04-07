@@ -31,41 +31,44 @@ class Command(BaseCommand):
         start = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=pytz.utc)
         end = date.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=pytz.utc)
 
+        now = datetime.utcnow().replace(tzinfo=pytz.utc)
+
         races = Race.objects.filter(start_time__gte=start, start_time__lte=end)
         for race in races:
-            print(f"Found {race.name}")
-            files = [
-                qualifying_filename.format(
-                    year=race.start_time.strftime('%y'),
-                    division=division_map.get(race.season.division.name),
-                    round_number=race.round_number
-                ),
-                race_filename.format(
-                    year=race.start_time.strftime('%y'),
-                    division=division_map.get(race.season.division.name),
-                    round_number=race.round_number
-                )
-            ]
-
-            for file in files:
-                if (file,) not in race.logfile_set.values_list("file"):
-                    print(f"{file} unprocessed, checking...")
-                    url = base_url.format(
-                        season=race.season.name,
+            if race.start_time < now:
+                print(f"Found {race.name}")
+                files = [
+                    qualifying_filename.format(
+                        year=race.start_time.strftime('%y'),
                         division=division_map.get(race.season.division.name),
-                        round_number=race.round_number,
-                        race=race.short_name,
-                        filename=file
+                        round_number=race.round_number
+                    ),
+                    race_filename.format(
+                        year=race.start_time.strftime('%y'),
+                        division=division_map.get(race.season.division.name),
+                        round_number=race.round_number
                     )
+                ]
 
-                    req = requests.get(url)
-                    if req.status_code in [200, 304]:
-                        with open(file, 'wb') as outfile:
-                            outfile.write(req.content)
+                for file in files:
+                    if (file,) not in race.logfile_set.values_list("file"):
+                        print(f"{file} unprocessed, checking...")
+                        url = base_url.format(
+                            season=race.season.name,
+                            division=division_map.get(race.season.division.name),
+                            round_number=race.round_number,
+                            race=race.short_name,
+                            filename=file
+                        )
 
-                        logfile = LogFile(race=race, file=file)
-                        print(f"Processing {file}... ", end="")
-                        logfile.process()
-                        print(f"done.")
-                    else:
-                        print(f"[{req.status_code}] {file} not found, or other error")
+                        req = requests.get(url)
+                        if req.status_code in [200, 304]:
+                            with open(file, 'wb') as outfile:
+                                outfile.write(req.content)
+
+                            logfile = LogFile(race=race, file=file)
+                            print(f"Processing {file}... ", end="")
+                            logfile.process()
+                            print(f"done.")
+                        else:
+                            print(f"[{req.status_code}] {file} not found, or other error")
