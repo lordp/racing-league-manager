@@ -81,11 +81,11 @@ def expire_view_cache(path, meta, key_prefix=None):
     from django.core.cache import cache
     from django.http import HttpRequest
     from django.utils.cache import get_cache_key
+    from django.core.handlers.wsgi import WSGIRequest
 
     # Create a fake request object
-    request = HttpRequest()
+    request = WSGIRequest(meta)
     request.method = 'GET'
-    request.META = meta
     request.path = path
 
     if 'admin' in path:
