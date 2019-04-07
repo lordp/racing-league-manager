@@ -3,6 +3,7 @@ from datetime import datetime
 import pytz
 from standings.models import Race, LogFile
 import requests
+import os
 
 
 division_map = {
@@ -70,5 +71,7 @@ class Command(BaseCommand):
                             print(f"Processing {file}... ", end="")
                             logfile.process()
                             print(f"done.")
+
+                            os.remove(file)
                         else:
                             print(f"[{req.status_code}] {file} not found, or other error")
