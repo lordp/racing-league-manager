@@ -123,6 +123,11 @@ div [class*="right floated"] {
     font-size: larger;
 }
 
+.tyre-wear-line {
+    border: 1px solid #999;
+    margin: 0 4px;
+}
+
 .team-ferrari {
     color: white;
     background-color: rgb(224, 8, 29);
