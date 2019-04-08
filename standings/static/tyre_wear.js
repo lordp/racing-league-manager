@@ -107,3 +107,20 @@ function tyre_wear_box(canvas) {
     draw_wear_box(ctx, 'twrl', canvas.parentElement.getAttribute("data-twrl"));
     draw_wear_box(ctx, 'twrr', canvas.parentElement.getAttribute("data-twrr"));
 }
+
+function tyre_wear_total(canvas) {
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#000";
+
+    var tyre_wear = [
+        canvas.parentElement.getAttribute("data-twfl"),
+        canvas.parentElement.getAttribute("data-twfr"),
+        canvas.parentElement.getAttribute("data-twrl"),
+        canvas.parentElement.getAttribute("data-twrr")
+    ].map(function(v) { return (v * 100).toFixed(v < 1 ? 1 : 0) });
+
+    ctx.fillText(tyre_wear[0],2,7);
+    ctx.fillText(tyre_wear[1],26,7);
+    ctx.fillText(tyre_wear[2],2,19);
+    ctx.fillText(tyre_wear[3],26,19);
+}

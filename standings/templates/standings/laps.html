@@ -28,6 +28,7 @@
             <td class="ui center aligned">{{ lap.sector_3|format_time }}</td>
             <td class="ui center aligned">{{ lap.lap_time|format_time }}</td>
             <td class="ui center aligned collapsing" data-lap="{{ lap.lap_number }}" data-twfl="{{ lap.wear_fl }}" data-twfr="{{ lap.wear_fr }}" data-twrl="{{ lap.wear_rl }}" data-twrr="{{ lap.wear_rr }}">
+                <canvas class="tyre-wear-total" width="45" height="20"></canvas>
                 <canvas class="tyre-wear-line" width="60" height="20"></canvas>
                 <canvas class="tyre-wear-box" width="60" height="20"></canvas>
             </td>
@@ -47,6 +48,10 @@
 
     $('.tyre-wear-box').each(function() {
         tyre_wear_box(this);
+    });
+
+    $('.tyre-wear-total').each(function() {
+        tyre_wear_total(this);
     });
 </script>
 {% endblock %}
