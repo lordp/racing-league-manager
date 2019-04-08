@@ -21,14 +21,13 @@
             $('#options_list').transition('toggle');
             return false;
         });
+
+        $('#forum_button').on('click', function() {
+            location.href = $(this).data('url');
+            return false;
+        });
     });
 </script>
-
-{% if season.division.url %}
-<div class="ui basic center aligned segment" style="padding: 0; margin: 0;">
-    <a class="ui mini green button" href="{{ season.division.url }}">Go To Forum</a>
-</div>
-{% endif %}
 
 <div style="display: inline-block;">
 <div>
