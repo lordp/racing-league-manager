@@ -650,7 +650,11 @@ class SeasonStats(models.Model):
         self.winner = False
 
         standings = self.season.get_standings(use_position=True)
-        self.season_position = [r for r in standings[0] if r['driver'] == self.driver][0]['position']
+        try:
+            self.season_position = [r for r in standings[0] if r['driver'] == self.driver][0]['position']
+        except IndexError:
+            self.delete()
+            return False
 
         try:
             ps_season = self.season.point_system.to_dict()
