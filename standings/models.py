@@ -919,7 +919,7 @@ class LogFile(models.Model):
                     lap_obj.sector_3 = self.get_float(lap.get('s3'))
                     lap_obj.pitstop = lap.get('pit') == '1'
                     lap_obj.lap_time = self.get_float(lap.text)
-                    lap_obj.compound = re.sub(compound_re, '\g<1>', lap.get('fcompound')).\
+                    lap_obj.compound = re.sub(compound_re, r'\g<1>', lap.get('fcompound')).\
                         strip().replace(' ', '_').lower()
                     lap_obj.wear_fl = self.get_float(lap.get('twfl'))
                     lap_obj.wear_fr = self.get_float(lap.get('twfr'))
