@@ -5,7 +5,7 @@ django-countries==5.3.3
 djangorestframework==3.9.2
 django-cors-headers==2.5.2
 lxml==4.3.3
-Pillow==5.4.1
-psycopg2==2.8
-pytz==2018.9
+Pillow==6.0.0
+psycopg2==2.8.2
+pytz==2019.1
 inflect==2.1.0
