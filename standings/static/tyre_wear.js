@@ -1,12 +1,12 @@
 function to_hex(d) {
-    return ("0" + (Number(d).toString(16))).slice(-2)
+    return Number(d).toString(16)
 }
 
 function fill_style(num, type) {
     if (type === 'line') {
-        num = to_hex((70 + (num * 170)).toFixed());
+        num = to_hex((70 + Math.floor(num * 170)).toFixed());
     } else if (type === 'box') {
-        num = to_hex((255 - (num * 170) / 5.0).toFixed());
+        num = to_hex((255 - Math.floor(num * 170) / 5.0).toFixed());
     }
 
     return "#CC" + num + "33";
