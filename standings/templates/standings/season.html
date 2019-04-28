@@ -99,7 +99,7 @@
         {% for driver in drivers %}
         <tr>
             <td class="ui center aligned">{{ driver.position }}</td>
-            <td><a href="{% url 'driver' driver.driver.id %}">{{ driver.driver.name }}</a></td>
+            <td><a href="{% url 'driver_slug' driver.driver.slug %}">{{ driver.driver.name }}</a></td>
             <td class="ui center aligned">{{ driver.driver.country|show_flag }}</td>
             <td class="driver-points ui center aligned"{% if driver.season_penalty %} data-tooltip="{{ driver.season_penalty }}"{% endif %}>
                 {{ driver.points|format_float }}
