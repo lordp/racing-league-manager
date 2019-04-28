@@ -1,0 +1,65 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block after_related_objects %}
+    <fieldset class="module aligned">
+        <h2>Overwrite - uncheck to ignore</h2>
+        <h3>Result fields</h3>
+        <div class="form-row">
+            <div class="checkbox-row">
+                <label for="race_time" class="vCheckboxLabel">
+                    <input type="checkbox" id="race_time" name="race_time" title="Race Time" checked="checked" />
+                    Race Time
+                </label>
+            </div>
+            <div class="checkbox-row">
+                <label for="car" class="vCheckboxLabel">
+                    <input type="checkbox" id="car" name="car" title="Car" checked="checked" />
+                    Car
+                </label>
+            </div>
+            <div class="checkbox-row">
+                <label for="car_class" class="vCheckboxLabel">
+                    <input type="checkbox" id="car_class" name="car_class" title="Car Class" checked="checked" />
+                    Car Class
+                </label>
+            </div>
+            <div class="checkbox-row">
+                <label for="fastest_lap" class="vCheckboxLabel">
+                    <input type="checkbox" id="fastest_lap" name="fastest_lap" title="Fastest Lap" checked="checked" />
+                    Fastest Lap
+                </label>
+            </div>
+            <div class="checkbox-row">
+                <label for="qualifying" class="vCheckboxLabel">
+                    <input type="checkbox" id="qualifying" name="qualifying" title="Qualifying" checked="checked" />
+                    Qualifying
+                </label>
+            </div>
+            <div class="checkbox-row">
+                <label for="position" class="vCheckboxLabel">
+                    <input type="checkbox" id="position" name="position" title="Position" checked="checked" />
+                    Position
+                </label>
+            </div>
+            <div class="checkbox-row">
+                <label for="race_laps" class="vCheckboxLabel">
+                    <input type="checkbox" id="race_laps" name="race_laps" title="Race Laps" checked="checked" />
+                    Race Laps
+                </label>
+            </div>
+            <div class="checkbox-row">
+                <label for="qualifying_laps" class="vCheckboxLabel">
+                    <input type="checkbox" id="qualifying_laps" name="qualifying_laps" title="Qualifying Laps" checked="checked" />
+                    Qualifying Laps
+                </label>
+            </div>
+            <div class="checkbox-row">
+                <label for="dnf_reason" class="vCheckboxLabel">
+                    <input type="checkbox" id="dnf_reason" name="dnf_reason" title="DNF Reason" checked="checked" />
+                    DNF Reason
+                </label>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}

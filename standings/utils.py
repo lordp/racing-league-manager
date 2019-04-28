@@ -154,3 +154,14 @@ def unique_slug_generator(model_instance, title):
         slug = f"{slug}-{slug_identifer}"
 
     return slug
+
+
+def check_field_overwrite(result, post_fields, new_result):
+    overwritable_fields = [
+        'fastest_lap', 'car', 'car_class', 'qualifying', 'position',
+        'race_laps', 'qualifying_laps', 'race_time', 'dnf_reason'
+    ]
+
+    refresh_fields = [x for x in overwritable_fields if x not in post_fields]
+    if len(refresh_fields) > 0 and not new_result:
+        result.refresh_from_db(fields=refresh_fields)
