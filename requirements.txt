@@ -9,4 +9,4 @@ Pillow==6.0.0
 psycopg2==2.8.2
 pytz==2019.1
 inflect==2.1.0
-requests=2.21.0
+requests==2.21.0
