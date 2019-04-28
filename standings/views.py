@@ -5,6 +5,7 @@ from .models import Season, Driver, Team, League, Division, Race, Track, Result,
 from standings.utils import sort_counter, calculate_average, truncate_point_system, grouper
 from collections import Counter
 from django_countries.fields import Country
+from django.utils.text import slugify
 
 
 def index_view(request):
@@ -149,7 +150,12 @@ def team_view(request, team_id):
     return render(request, 'standings/team.html', context)
 
 
-def driver_view(request, driver_id):
+def driver_view_slug(request, slug):
+    driver = get_object_or_404(Driver, slug=slug)
+    return driver_view(request, driver.id, from_slug=True)
+
+
+def driver_view(request, driver_id, from_slug=False):
     seasons = {}
     driver = get_object_or_404(Driver, pk=driver_id)
     stats = SeasonStats.objects.filter(driver=driver).prefetch_related('season__division')
@@ -219,6 +225,12 @@ def driver_view(request, driver_id):
         'seasons': sorted_seasons,
         'stats': driver_stats,
     }
+
+    if from_slug:
+        slug_check = slugify(driver.name)
+        see_also = Driver.objects.filter(slug__startswith=slug_check).exclude(id=driver.id)
+
+        context['see_also'] = see_also
 
     return render(request, 'standings/driver.html', context)
 

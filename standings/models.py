@@ -6,7 +6,7 @@ from datetime import date
 from lxml import etree
 import os
 import standings.utils
-from .utils import apply_positions, despacify
+from .utils import apply_positions, despacify, unique_slug_generator
 import json
 import random
 import re
@@ -505,6 +505,7 @@ class Driver(models.Model):
     birthday = models.DateField(null=True, blank=True)
     city = models.CharField(max_length=50, blank=True)
     helmet = models.CharField(max_length=50, blank=True)
+    slug = models.SlugField(unique=True, null=True, max_length=100, blank=True)
 
     def __str__(self):
         return "{} ({})".format(self.name, self.country)
@@ -513,6 +514,9 @@ class Driver(models.Model):
         for driver in Driver.objects.filter(id__in=other_driver_ids):
             driver.result_set.update(driver=self)
 
+    def save(self, *args, **kwargs):
+        self.slug = unique_slug_generator(self, self.name)
+        super().save(*args, **kwargs)
 
 class Team(models.Model):
     name = models.CharField(max_length=50)

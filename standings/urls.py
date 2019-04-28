@@ -8,6 +8,7 @@ urlpatterns = [
     path('season/<int:season_id>/stats', views.season_stats_view, name='season_stats'),
     path('team/<int:team_id>/', views.team_view, name='team'),
     path('driver/<int:driver_id>/', views.driver_view, name='driver'),
+    path('driver/<str:slug>/', views.driver_view_slug, name='driver_slug'),
     path('league/<int:league_id>/', views.league_view, name='league'),
     path('division/<int:division_id>/', views.division_view, name='division'),
     path('race/<int:race_id>/', views.race_view, name='race'),

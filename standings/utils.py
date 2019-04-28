@@ -2,6 +2,7 @@ from inflect import engine
 from collections import Iterable
 import re
 from itertools import zip_longest
+from django.utils.text import slugify
 
 
 def format_time(seconds):
@@ -140,3 +141,16 @@ def truncate_point_system(ps_dict):
 def grouper(iterable, n, fillvalue=None):
     args = [iter(iterable)] * n
     return zip_longest(*args, fillvalue=fillvalue)
+
+
+def unique_slug_generator(model_instance, title):
+    slug = slugify(title)
+    model_class = model_instance.__class__
+
+    slug_identifer = 0
+
+    while model_class._default_manager.filter(slug=slug).exists():
+        slug_identifer += 1
+        slug = f"{slug}-{slug_identifer}"
+
+    return slug
