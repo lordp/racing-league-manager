@@ -523,6 +523,7 @@ class Team(models.Model):
     url = models.CharField(max_length=100, blank=True)
     country = CountryField(blank=True)
     parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
+    slug = models.SlugField(unique=True, null=True, max_length=100, blank=True)
 
     def __str__(self):
         return "{} ({})".format(self.name, self.id)
@@ -530,6 +531,10 @@ class Team(models.Model):
     def collect_results(self, other_team_ids):
         for team in Team.objects.filter(id__in=other_team_ids):
             team.result_set.update(team=self)
+
+    def save(self, *args, **kwargs):
+        self.slug = unique_slug_generator(self, self.name)
+        super().save(*args, **kwargs)
 
 
 class TrackRecord(models.Model):

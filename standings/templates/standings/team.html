@@ -15,6 +15,7 @@
 </script>
 
 <h1>{{ team.name }} {{ team.country|show_flag }}</h1>
+{% if see_also %}See also: {% for team in see_also %}<a href="{% url 'team_slug' team.slug %}">{{ team.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}
 <div class="ui top attached tabular menu">
     <a class="item active" data-tab="qualifying">Qualifying Stats</a>
     <a class="item" data-tab="race">Race Stats</a>

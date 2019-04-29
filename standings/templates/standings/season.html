@@ -143,7 +143,7 @@
         <tr>
                 {% if forloop.first %}
             <td class="ui center aligned" rowspan="{{ team.driver_count }}">{{ team.position }}</td>
-            <td class="team-{{ team.team.css_class }}" rowspan="{{ team.driver_count }}"><a href="{% url 'team' team.team.id %}">{{ team.team.name }}</a></td>
+            <td class="team-{{ team.team.css_class }}" rowspan="{{ team.driver_count }}"><a href="{% url 'team_slug' team.team.slug %}">{{ team.team.name }}</a></td>
             <td class="ui center aligned" rowspan="{{ team.driver_count }}">{{ team.team.country|show_flag }}</td>
             <td rowspan="{{ team.driver_count }}" class="ui center aligned"{% if team.season_penalty %} data-tooltip="{{ team.season_penalty }}"{% endif %}>
                 {{ team.points|format_float }}

@@ -60,7 +60,12 @@ def season_stats_view(request, season_id):
     return render(request, 'standings/season_stats.html', context)
 
 
-def team_view(request, team_id):
+def team_view_slug(request, slug):
+    team = get_object_or_404(Team, slug=slug)
+    return team_view(request, team.id, from_slug=True)
+
+
+def team_view(request, team_id, from_slug=False):
     seasons = {}
     team = get_object_or_404(Team, pk=team_id)
 
@@ -146,6 +151,10 @@ def team_view(request, team_id):
         'seasons': sorted_seasons,
         'stats': team_stats
     }
+
+    if from_slug:
+        see_also = Team.objects.filter(name__exact=team.name).exclude(id=team.id)
+        context['see_also'] = see_also
 
     return render(request, 'standings/team.html', context)
 
