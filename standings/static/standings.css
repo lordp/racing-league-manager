@@ -80,10 +80,6 @@ div [class*="right floated"] {
     margin-bottom: 0.25em;
 }
 
-.ui.structured.celled.table tr td {
-    border-right: none !important;
-}
-
 .flex-column {
     flex-direction: column;
     display: flex;
