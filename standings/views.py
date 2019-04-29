@@ -410,12 +410,14 @@ def country_view(request, country_id, division=None):
 
     stats = {}
     query = Result.objects.filter(position__range=[1, 10], driver_id__in=drivers, race__season__division_id=division).\
-        values('driver_id', 'position').annotate(Count('position')).order_by('position', '-position__count')
+        values('driver_id', 'position', 'driver_id').annotate(Count('position')).\
+        order_by('position', '-position__count')
 
     for row in query:
         if row['driver_id'] not in stats:
             stats[row['driver_id']] = {i: 0 for i in range(1, 11)}
             stats[row['driver_id']]['name'] = drivers.get(pk=row['driver_id']).name
+            stats[row['driver_id']]['slug'] = drivers.get(pk=row['driver_id']).slug
         stats[row['driver_id']][row['position']] = row['position__count']
 
     sorted_stats = {}
