@@ -236,9 +236,7 @@ def driver_view(request, driver_id, from_slug=False):
     }
 
     if from_slug:
-        slug_check = slugify(driver.name)
-        see_also = Driver.objects.filter(slug__startswith=slug_check).exclude(id=driver.id)
-
+        see_also = Driver.objects.filter(name__exact=driver.name).exclude(id=driver.id)
         context['see_also'] = see_also
 
     return render(request, 'standings/driver.html', context)
