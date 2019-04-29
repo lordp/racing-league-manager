@@ -190,7 +190,7 @@
     <tbody>
         {% for _, team in season.teams.items %}
         <tr>
-            <td><a href="{% url 'team' team.team.id %}">{{ team.team.name }}</a></td>
+            <td><a href="{% url 'team_slug' team.team.slug %}">{{ team.team.name }}</a></td>
             <td class="ui center aligned">{{ season.position|ordinal }}</td>
             <td class="ui center aligned">{{ team.points|format_float }}</td>
             {% for race in season.season.race_set.all %}
@@ -216,7 +216,7 @@
     <tbody>
         {% for penalty in season.penalties %}
         <tr>
-            <td>{% if penalty.team %}<a href="{% url 'team' penalty.team.id %}">{{ penalty.team.name }}</a>{% else %}Driver Penalty{% endif %}</td>
+            <td>{% if penalty.team %}<a href="{% url 'team_slug' penalty.team.slug %}">{{ penalty.team.name }}</a>{% else %}Driver Penalty{% endif %}</td>
             <td class="ui center aligned">{{ penalty.points|format_float }}</td>
         </tr>
         {% endfor %}

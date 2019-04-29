@@ -39,7 +39,7 @@
     <tbody>
         {% for driver_id, pos_stats in stats.items %}
         <tr>
-            <td><a href="{% url 'driver' driver_id %}">{{ pos_stats.name }}</a></td>
+            <td><a href="{% url 'driver_slug' driver.slug %}">{{ pos_stats.name }}</a></td>
             {% for pos in positions %}
                 {% with count=pos_stats|find_position:pos %}
             <td class="ui center aligned">{{ count }}</td>

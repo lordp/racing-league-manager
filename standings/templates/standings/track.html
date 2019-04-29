@@ -31,7 +31,7 @@
             <td><a href="{% url 'season' record.season_id %}">{{ record.season.name }}</a></td>
             <td><a href="{% url 'race' record.race_id %}">{{ record.race.name }}</a></td>
             <td>{{ record.session_type|capfirst }}</td>
-            <td><a href="{% url 'driver' record.driver_id %}">{{ record.driver.name }}</a></td>
+            <td><a href="{% url 'driver_slug' record.driver.slug %}">{{ record.driver.name }}</a></td>
             <td>{{ record.lap_time|format_time }}</td>
         </tr>
 {% endfor %}

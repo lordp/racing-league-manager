@@ -189,7 +189,7 @@
     <tbody>
         {% for driver in season.drivers %}
         <tr>
-            <td><a href="{% url 'driver' driver.driver.id %}">{{ driver.driver.name }}</a></td>
+            <td><a href="{% url 'driver_slug' driver.driver.slug %}">{{ driver.driver.name }}</a></td>
             <td class="ui center aligned">{{ driver.points|format_float }}</td>
             {% for race in season.season.race_set.all %}
                 {% with result=driver.results|find_result:race %}
@@ -214,7 +214,7 @@
     <tbody>
         {% for penalty in season.penalties %}
         <tr>
-            <td>{% if penalty.driver %}<a href="{% url 'driver' penalty.driver.id %}">{{ penalty.driver.name }}</a>{% else %}Team Penalty{% endif %}</td>
+            <td>{% if penalty.driver %}<a href="{% url 'driver_slug' penalty.driver.slug %}">{{ penalty.driver.name }}</a>{% else %}Team Penalty{% endif %}</td>
             <td class="ui center aligned">{{ penalty.points|format_float }}</td>
         </tr>
         {% endfor %}

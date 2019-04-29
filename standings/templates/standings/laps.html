@@ -3,7 +3,7 @@
 
 {% block content %}
 <script src="{% static 'tyre_wear.js' %}"></script>
-<h3><a href="{% url 'race' result.race.id %}">{{ result.race.name }}</a> / <a href="{% url 'driver' result.driver.id %}">{{ result.driver.name }}</a></h3>
+<h3><a href="{% url 'race' result.race.id %}">{{ result.race.name }}</a> / <a href="{% url 'driver_slug' result.driver.slug %}">{{ result.driver.name }}</a></h3>
 <table class="ui small selectable compact celled striped table">
     <thead>
         <tr>

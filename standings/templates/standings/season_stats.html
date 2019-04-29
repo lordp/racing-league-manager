@@ -44,7 +44,7 @@
         {% for stat in stats.all %}
             {% with best_finish=stat.best_result.position %}
         <tr>
-            <td><a href="{% url 'driver' stat.driver.id %}">{{ stat.driver.name }}</a></td>
+            <td><a href="{% url 'driver_slug' stat.driver.slug %}">{{ stat.driver.name }}</a></td>
             <td class="ui center aligned collapsing">{{ stat.attendance }}</td>
             <td class="ui center aligned collapsing">{{ stat.wins }}</td>
             <td class="ui center aligned collapsing">{{ stat.points_finishes }}</td>
