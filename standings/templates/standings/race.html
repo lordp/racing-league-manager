@@ -46,11 +46,11 @@
             <tbody>
             {% for result in race.race_order.all %}
                 <tr>
-                    <td class="center aligned collapsing">
+                    <td class="center aligned collapsing"><label for="chart"></label>
                         {% if disable_charts == 'true' %}
-                        <input title="Charts disabled" name="chart" type="checkbox" class="add-to-charts" value="{{ result.driver_id }}" data-name="{{ result.driver.name }}" disabled="disabled" />
+                        <input title="Charts disabled" id="chart" name="chart" type="checkbox" class="add-to-charts" value="{{ result.driver_id }}" data-name="{{ result.driver.name }}" disabled="disabled" />
                         {% else %}
-                        <input title="Add driver to charts" name="chart" type="checkbox" class="add-to-charts" value="{{ result.driver_id }}" data-name="{{ result.driver.name }}"/>
+                        <input title="Add driver to charts" id="chart" name="chart" type="checkbox" class="add-to-charts" value="{{ result.driver_id }}" data-name="{{ result.driver.name }}"/>
                         {% endif %}
                     </td>
                     <td class="center aligned collapsing">{% if result.classified %}{{ result.position }}{% else %}NC{% endif %}</td>
