@@ -5,7 +5,7 @@ from .models import Season, Driver, Team, League, Division, Race, Track, Result,
 from standings.utils import sort_counter, calculate_average, truncate_point_system, grouper
 from collections import Counter
 from django_countries.fields import Country
-from django.utils.text import slugify
+from datetime import datetime
 
 
 def index_view(request):
