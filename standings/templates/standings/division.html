@@ -4,8 +4,8 @@
 {% include 'standings/breadcrumb.html' with object=division.breadcrumbs %}
 
 {% if current_season %}
-    <div>
-        <h4>Current Season</h4>
+    <div class="current-season">
+        <h3>Current Season</h3>
         <table class="ui small fixed compact celled table">
             <thead>
                 <tr>
@@ -23,7 +23,7 @@
             </tbody>
         </table>
     </div>
-    <h4>Previous Seasons</h4>
+    <h3>Previous Seasons</h3>
 {% endif %}
 <table class="ui small fixed compact celled table">
     <thead>

@@ -124,6 +124,10 @@ div [class*="right floated"] {
     margin: 0 4px;
 }
 
+.current-season {
+    margin-top: 1em;
+}
+
 .team-ferrari {
     color: white;
     background-color: rgb(224, 8, 29);
