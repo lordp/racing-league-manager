@@ -260,9 +260,21 @@ def division_view(request, division_id):
         annotate(incomplete=Count('race', filter=Q(race__result__isnull=True))).\
         values('id', 'name', 'race_count', 'incomplete')
 
+    today = datetime.utcnow()
+    try:
+        current_season = division.season_set.filter(start_date__lte=today, end_date__gte=today).\
+            annotate(race_count=Count('race', distinct=True)).\
+            annotate(incomplete=Count('race', filter=Q(race__result__isnull=True))).\
+            values('id', 'name', 'race_count', 'incomplete').first()
+
+        seasons = seasons.exclude(id=current_season['id'])
+    except TypeError:
+        current_season = None
+
     context = {
         'division': division,
-        'seasons': seasons
+        'seasons': seasons,
+        'current_season': current_season
     }
 
     return render(request, 'standings/division.html', context)

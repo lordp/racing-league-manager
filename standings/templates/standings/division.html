@@ -2,6 +2,29 @@
 
 {% block content %}
 {% include 'standings/breadcrumb.html' with object=division.breadcrumbs %}
+
+{% if current_season %}
+    <div>
+        <h4>Current Season</h4>
+        <table class="ui small fixed compact celled table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="ui center aligned">Races</th>
+                    <th class="ui center aligned">Incomplete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="{% url 'season' current_season.id %}">{{ current_season.name }}</a></td>
+                    <td class="ui center aligned">{{ current_season.race_count }}</td>
+                    <td class="ui center aligned">{{ current_season.incomplete }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <h4>Previous Seasons</h4>
+{% endif %}
 <table class="ui small fixed compact celled table">
     <thead>
         <tr>
