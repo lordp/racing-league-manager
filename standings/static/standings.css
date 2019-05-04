@@ -89,6 +89,10 @@ div [class*="right floated"] {
     flex-grow: 1;
 }
 
+.flex-column-table > table {
+    height: 100%;
+}
+
 .subtable tr:not(:first-child) td {
     border-top: 1px solid rgba(34,36,38,.1) !important;
 }
