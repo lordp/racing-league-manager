@@ -24,7 +24,7 @@ def index_view(request):
 def season_view(request, season_id):
     season = get_object_or_404(Season, pk=season_id)
 
-    upto = int(re.sub(r"[^0-9]+", "", request.GET.get('upto', None)))
+    upto = int(re.sub(r"[^0-9]+", "", request.GET.get('upto', str(season.race_set.count()))))
     standings_driver, standings_team = season.get_standings(upto=upto)
 
     ps = season.point_system
