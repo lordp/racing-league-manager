@@ -1,14 +1,12 @@
 {% extends 'standings/base.html' %}
+{% load static %}
 
 {% block content %}
+<script src="{% static 'components/tablesort.min.js' %}"></script>
+<script src="{% static 'components/tablesort.number.min.js' %}"></script>
 <script>
     $(document).ready(function() {
-        ts = $('table').tablesort({
-            default_direction: 'desc'
-        });
-        $('thead th.number').data('sortBy', function (th, td, tablesort) {
-            return parseInt(td.text());
-        });
+        new Tablesort(document.getElementById('stats-table'));
         $('th span.tooltip').popup();
     });
 </script>
@@ -16,12 +14,12 @@
 <h1>Season Stats</h1>
 {% include 'standings/breadcrumb.html' with object=season.breadcrumbs %}
 
-<table class="ui sortable small compact celled table">
+<table class="ui sortable small compact celled table" id="stats-table">
     <thead>
         <tr>
             <th class="ui">Driver</th>
             <th class="ui center aligned number"><span class='tooltip' data-html="Attendance">Att</span></th>
-            <th class="ui center aligned number sorted descending">Wins</th>
+            <th class="ui center aligned number">Wins</th>
             <th class="ui center aligned number"><span class='tooltip' data-html="Points Finishes">Pts Fins</span></th>
             <th class="ui center aligned number">Podiums</th>
             <th class="ui center aligned number">Poles</th>
