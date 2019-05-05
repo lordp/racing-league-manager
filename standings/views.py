@@ -6,6 +6,7 @@ from standings.utils import sort_counter, calculate_average, truncate_point_syst
 from collections import Counter
 from django_countries.fields import Country
 from datetime import datetime
+import re
 
 
 def index_view(request):
@@ -23,7 +24,7 @@ def index_view(request):
 def season_view(request, season_id):
     season = get_object_or_404(Season, pk=season_id)
 
-    upto = request.GET.get('upto', None)
+    upto = int(re.sub(r"[^0-9]+", "", request.GET.get('upto', None)))
     standings_driver, standings_team = season.get_standings(upto=upto)
 
     ps = season.point_system
