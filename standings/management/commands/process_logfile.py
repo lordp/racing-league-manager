@@ -42,12 +42,12 @@ class Command(BaseCommand):
                     qualifying_filename.format(
                         year=race.start_time.strftime('%y'),
                         division=division_map.get(race.season.division.name),
-                        round_number=race.round_number
+                        round_number=f"{race.round_number:02d}"
                     ),
                     race_filename.format(
                         year=race.start_time.strftime('%y'),
                         division=division_map.get(race.season.division.name),
-                        round_number=race.round_number
+                        round_number=f"{race.round_number:02d}"
                     )
                 ]
 
@@ -57,7 +57,7 @@ class Command(BaseCommand):
                         url = base_url.format(
                             season=race.season.name,
                             division=division_map.get(race.season.division.name),
-                            round_number=race.round_number,
+                            round_number=f"{race.round_number:02d}",
                             race=race.short_name,
                             filename=file
                         )
