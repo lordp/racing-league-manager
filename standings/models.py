@@ -850,7 +850,7 @@ class LogFile(models.Model):
             {"url": "logfile", "object": self},
         ]
 
-    def process(self, request):
+    def process(self, request = None):
         with open(self.file.name) as infile:
             tree = etree.XML(infile.read().encode('utf-8'))
 
@@ -911,7 +911,7 @@ class LogFile(models.Model):
                 except IndexError:
                     result.dnf_reason = ''
 
-            check_field_overwrite(result, request.POST, created)
+            if request is not None: check_field_overwrite(result, request.POST, created)
             result.save()
 
             race_time = 0
@@ -962,7 +962,7 @@ class LogFile(models.Model):
                 if result.qualifying_time == 0:
                     result.qualifying_time = race_time
 
-            check_field_overwrite(result, request.POST, created)
+            if request is not None: check_field_overwrite(result, request.POST, created)
             result.save()
 
         if len(lap_errors) > 0 and self.session == 'race':
