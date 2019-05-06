@@ -119,7 +119,10 @@ def calculate_average(values, key):
 
 
 def despacify(text):
-    return re.sub(r' {2,}', ' ', text).strip()
+    try:
+        return re.sub(r' {2,}', ' ', text).strip()
+    except TypeError:
+        return "Unknown"
 
 
 def truncate_point_system(ps_dict):
