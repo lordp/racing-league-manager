@@ -25,18 +25,23 @@ def apply_positions(table, key='points', use_position=False):
     position_diff = 1
 
     previous_item = None
+    leader_points = 0
 
     for index, row in enumerate(table):
         if index == 0:
             row['position'] = 1
+            row['gap'] = {'to_leader': "-", "to_last_pos": "-"}
+            leader_points = row['points']
         else:
             if row[key] == previous_item[key]:
                 position_diff += 1
                 same_position = True
+                row['gap'] = {'to_leader': leader_points - row[key], "to_last_pos": 0}
             else:
                 position += position_diff
                 position_diff = 1
                 same_position = False
+                row['gap'] = {'to_leader': leader_points - row[key], "to_last_pos": previous_item[key] - row[key]}
 
             row['position'] = '-' if same_position and not use_position else position
 
