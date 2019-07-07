@@ -17,7 +17,7 @@ def format_time(seconds):
 
 
 def format_float(num):
-    return format(num, '.15g')
+    return format(num, '.15g') if isinstance(num, float) else num
 
 
 def apply_positions(table, key='points', use_position=False):
