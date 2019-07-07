@@ -80,6 +80,7 @@
             <th>Name</th>
             <th class="ui center aligned"></th>
             <th class="ui center aligned">Points</th>
+            <th class="ui center aligned">Gap</th>
             {% for race in season.race_set.all %}
                 <th class="ui center aligned"><div class='tooltip' data-html="{{ race.tooltip }}">
                     {{ race.round_number }}<br/>
@@ -99,6 +100,10 @@
             <td class="driver-points ui center aligned"{% if driver.season_penalty %} data-tooltip="{{ driver.season_penalty }}"{% endif %}>
                 {{ driver.points|format_float }}
                 {% if driver.season_penalty %}<div class="note"></div>{% endif %}
+            </td>
+            <td class="driver-points-gap ui center aligned">
+                {{ driver.gap.to_last_pos|format_float }}
+                {% if driver.gap.to_leader != driver.gap.to_last_pos %} / {{ driver.gap.to_leader|format_float }}{% endif %}
             </td>
             {% for race in season.race_set.all %}
                 {% with result=driver.results|find_result:race %}
@@ -122,6 +127,7 @@
             <th>Name</th>
             <th></th>
             <th class="ui center aligned">Points</th>
+            <th class="ui center aligned">Gap</th>
             <th></th>
             {% for race in season.race_set.all %}
                 <th class="ui center aligned"><div class='tooltip' data-html="{{ race.tooltip }}">
@@ -143,6 +149,10 @@
             <td rowspan="{{ team.driver_count }}" class="ui center aligned"{% if team.season_penalty %} data-tooltip="{{ team.season_penalty }}"{% endif %}>
                 {{ team.points|format_float }}
                 {% if team.season_penalty %}<div class="note"></div>{% endif %}
+            </td>
+            <td rowspan="{{ team.driver_count }}" class="ui center aligned">
+                {{ team.gap.to_last_pos|format_float }}
+                {% if team.gap.to_leader != team.gap.to_last_pos %} / {{ team.gap.to_leader|format_float }}{% endif %}
             </td>
                 {% endif %}
             <td class="team-driver-position">{{ driver.driver.name }}</td>
