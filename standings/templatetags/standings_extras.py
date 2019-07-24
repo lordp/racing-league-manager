@@ -7,26 +7,35 @@ import textwrap
 register = template.Library()
 
 
+def dnf_star(result):
+    total_laps = result.race.result_set.get(position=1).race_laps
+    if result.race.season.allocate_points(total_laps, result.race_laps):
+        return True
+
+    return False
+
+
 def position_display(result):
     if result is None:
         return '-'
 
+    dnfstar = dnf_star(result)
+    original_position = result.position
     if result.race_penalty_dsq:
         result.position = -2
     elif result.dnf_reason and result.race.season.classification_type != '':
         result.position = -1
-        total_laps = result.race.result_set.get(position=1).race_laps
-        if result.race.season.allocate_points(total_laps, result.race_laps):
-            result.position = -4
 
     special_positions = {
         None: '-',
         0: '-',
         -1: 'DNF',
         -2: 'DSQ',
-        -3: 'DNS',
-        -4: 'DNF*'
+        -3: 'DNS'
     }
+
+    if result.position == -1 and dnfstar:
+        return f"{original_position}*"
 
     return special_positions.get(result.position, result.position)
 
@@ -144,7 +153,7 @@ def get_css_classes(result, season):
     if result is not None:
         if result.race_penalty_dsq:
             ret.append('pos-black')
-        elif result.dnf_reason:
+        elif result.dnf_reason and not dnf_star(result):
             ret.append('pos-retired')
         else:
             ret.append(position_colour(result, season))
