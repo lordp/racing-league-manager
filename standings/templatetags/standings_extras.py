@@ -21,10 +21,11 @@ def position_display(result):
 
     dnfstar = dnf_star(result)
     original_position = result.position
+    shown_position = result.position
     if result.race_penalty_dsq:
-        result.position = -2
+        shown_position = -2
     elif result.dnf_reason and result.race.season.classification_type != '':
-        result.position = -1
+        shown_position = -1
 
     special_positions = {
         None: '-',
@@ -34,10 +35,10 @@ def position_display(result):
         -3: 'DNS'
     }
 
-    if result.position == -1 and dnfstar:
+    if shown_position == -1 and dnfstar:
         return f"{original_position}*"
 
-    return special_positions.get(result.position, result.position)
+    return special_positions.get(shown_position, result.position)
 
 
 def position_colour(result, season):
