@@ -248,8 +248,6 @@ class Season(models.Model):
                     constructor_max[result.race_id][result.team_id] = 0
 
                 if result.team_id not in teams:
-                    if self.constructor_max > 0:
-                        result.team_points_allocated = True
                     teams[result.team_id] = {
                         'team': result.team,
                         'points': result.points,
@@ -272,7 +270,7 @@ class Season(models.Model):
                             constructor_max[result.race_id][result.team_id] < self.constructor_max:
                         teams[result.team_id]['points'] += result.points
                         constructor_max[result.race_id][result.team_id] += 1
-                        if self.constructor_max > 0:
+                        if self.constructor_max > 0 and result.classified:
                             result.team_points_allocated = True
 
                     teams[result.team_id]['results'].append(result)
