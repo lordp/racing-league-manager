@@ -264,6 +264,7 @@ class Season(models.Model):
                         pass
 
                     constructor_max[result.race_id][result.team_id] += 1
+                    result.team_points_allocated = True
 
                 else:
                     if self.constructor_max == 0 or \
