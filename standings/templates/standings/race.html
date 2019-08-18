@@ -16,6 +16,7 @@
         <a class="item" data-tab="qualifying">Qualifying</a>
         <a class="item" data-tab="lap-chart">Lap Chart</a>
         <a class="item" data-tab="gap-chart">Gap Chart</a>
+        <a class="item" data-tab="pitstops">Pitstops</a>
     </div>
     <div class="ui bottom attached active tab segment" data-tab="race">
         {% if disable_charts == 'true' %}
@@ -218,5 +219,24 @@
             });
         </script>
     </div>
-
+    <div class="ui bottom attached tab segment" data-tab="pitstops">
+        <table class="ui small selectable compact celled striped table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Tyres</th>
+                <th class="ui center aligned">Laps</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for result in race.race_order.all %}
+                <tr>
+                    <td class="ui collapsing"><a href="{% url 'driver_slug' result.driver.slug %}">{{ result.driver.name }}</a></td>
+                    <td class="ui single line pitstops">{{ pitstops|find_driver_pitstops:result.driver_id }}</td>
+                    <td class="center aligned collapsing">{{ result.race_laps }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

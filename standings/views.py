@@ -299,11 +299,15 @@ def race_view(request, race_id):
             q_first = lap['time']
         lap['diff'] = lap['time'] - q_first
 
+    pitstops = {}
     lap_times = {}
     drivers = {}
     for result in race.result_set.all():
         lap_times[result.driver_id] = [lap[0] for lap in result.race_lap_set().values_list('lap_time')]
         drivers[result.driver_id] = result.driver.name
+        pitstops[result.driver_id] = [
+            lap for lap in result.race_lap_set().values_list("compound", "pitstop", "lap_number")
+        ]
 
     compounds = {}
     compound_list = Lap.objects.filter(result__race_id=race_id, session='race').\

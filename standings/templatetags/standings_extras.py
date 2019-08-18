@@ -269,3 +269,21 @@ def find_driver_qcompound(results, driver_id):
 @register.filter(name='find_diff')
 def find_diff(laps, driver_id):
     return round(laps[driver_id]['diff'], 3) if driver_id in laps else 0
+
+
+@register.filter(name='find_driver_pitstops')
+def find_driver_pitstops(results, driver_id):
+    if driver_id not in results:
+        return ''
+
+    tyre = '<div class="tyre-blob tyre-blob-{compound}">&nbsp;</div>'
+    pit = '<div class="ui center aligned tyre-blob tyre-blob-{compound} tyre-blob-pitstop">{lap_number}</div>'
+
+    laps = []
+    for entry in results[driver_id]:
+        if entry[1]:
+            laps.append(pit.format(compound=entry[0], lap_number=entry[2]))
+        else:
+            laps.append(tyre.format(compound=entry[0]))
+
+    return mark_safe(''.join(laps))

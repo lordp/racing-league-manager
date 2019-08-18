@@ -132,6 +132,49 @@ div [class*="right floated"] {
     margin-top: 1em;
 }
 
+.tyre-blob {
+    width: 13px;
+    display: inline-block;
+    /*margin-right: 1px;*/
+    font-size: .6em;
+    border-top: solid 1px black;
+    border-bottom: solid 1px black;
+}
+
+.tyre-blob-pitstop {
+    border: solid 2px black !important;
+    /*width: 15px;*/
+}
+
+.tyre-blob-medium {
+    background-color: white;
+}
+
+.tyre-blob-ultra {
+    background-color: #D70AD5;
+    color: white;
+}
+
+.tyre-blob-hard {
+    background-color: #FE6F29;
+}
+
+.tyre-blob-soft {
+    background-color: #FACA08;
+}
+
+.tyre-blob-super-soft {
+    background-color: #F20704;
+}
+
+.tyre-blob:first-child {
+    border-left: solid 1px black;
+}
+
+.tyre-blob:last-child {
+    border-right: solid 1px black;
+}
+
 .team-ferrari {
     color: white;
     background-color: rgb(224, 8, 29);
