@@ -341,7 +341,8 @@ def race_view(request, race_id):
         'disable_charts': 'true' if len(labels) == 0 else 'false',
         'compounds': compounds,
         'q_compounds': q_compounds,
-        'qualifying_gaps': q_laps
+        'qualifying_gaps': q_laps,
+        'pitstops': pitstops
     }
 
     return render(request, 'standings/race.html', context)
