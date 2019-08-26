@@ -396,6 +396,7 @@ class SeasonPenaltyAdmin(admin.ModelAdmin):
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'result_count', 'country', 'parent')
+    search_fields = ['name']
     ordering = ('name',)
     actions = ['merge_results']
 
