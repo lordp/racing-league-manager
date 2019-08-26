@@ -517,6 +517,7 @@ class Driver(models.Model):
         self.slug = unique_slug_generator(self, self.name)
         super().save(*args, **kwargs)
 
+
 class Team(models.Model):
     name = models.CharField(max_length=50)
     url = models.CharField(max_length=100, blank=True)
@@ -849,7 +850,7 @@ class LogFile(models.Model):
             {"url": "logfile", "object": self},
         ]
 
-    def process(self, request = None):
+    def process(self, request=None):
         with open(self.file.name) as infile:
             tree = etree.XML(infile.read().encode('utf-8'))
 
@@ -910,7 +911,9 @@ class LogFile(models.Model):
                 except IndexError:
                     result.dnf_reason = ''
 
-            if request is not None: check_field_overwrite(result, request.POST, created)
+            if request is not None:
+                check_field_overwrite(result, request.POST, created)
+
             result.save()
 
             race_time = 0
@@ -961,7 +964,9 @@ class LogFile(models.Model):
                 if result.qualifying_time == 0:
                     result.qualifying_time = race_time
 
-            if request is not None: check_field_overwrite(result, request.POST, created)
+            if request is not None:
+                check_field_overwrite(result, request.POST, created)
+
             result.save()
 
         if len(lap_errors) > 0 and self.session == 'race':
