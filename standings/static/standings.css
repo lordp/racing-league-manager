@@ -163,8 +163,9 @@ div [class*="right floated"] {
     background-color: #FACA08;
 }
 
-.tyre-blob-super-soft {
+.tyre-blob-super {
     background-color: #F20704;
+    color: white;
 }
 
 .tyre-blob:first-child {
