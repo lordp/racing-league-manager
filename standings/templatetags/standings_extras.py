@@ -15,6 +15,8 @@ def position_display(result):
     shown_position = result.position
     if result.race_penalty_dsq:
         shown_position = -2
+    elif result.dnf_reason == "DNS":
+        shown_position = -3
     elif result.dnf_reason and result.race.season.classification_type != '':
         shown_position = -1
 
