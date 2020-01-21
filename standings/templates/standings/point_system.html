@@ -1,0 +1,28 @@
+{% load standings_extras %}
+
+<tr>
+    <td colspan="99" style="text-align: center;"><strong>{{ ps.name }} {{ max_pos }}</strong></td>
+</tr>
+<tr class="points-row">
+    <td><strong>Position</strong></td>
+    {% for pos, points in ps.race.points.items %}
+    <td class="ui center aligned {{ pos|pos_colour:season }}">{{ pos }}{% if forloop.last and ps.race.truncated %}+{% endif %}</td>
+    {% endfor %}
+</tr>
+<tr class="points-row">
+    <td><strong>Points</strong></td>
+    {% for pos, points in ps.race.points.items %}
+    <td class="ui center aligned {{ pos|pos_colour:season }}">{{ points|format_float }}</td>
+    {% endfor %}
+</tr>
+{% if ps.extras_present %}
+<tr>
+    <td><strong>Extras</strong></td>
+    <td colspan="50">
+        <strong>Led a lap:</strong> {{ ps.lead_lap|format_float }},
+        <strong>Fastest Lap:</strong> {{ ps.fastest_lap|format_float }},
+        <strong>Pole Position:</strong> {{ ps.pole|format_float }},
+        <strong>Most Laps Led:</strong> {{ ps.most_laps_lead|format_float }}
+    </td>
+</tr>
+{% endif %}

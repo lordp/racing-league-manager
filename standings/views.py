@@ -1,7 +1,7 @@
 from django.views.decorators.cache import cache_page
 from django.db.models import Count, Q, Sum
 from django.shortcuts import get_object_or_404, render
-from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty, Lap
+from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty, Lap, PointSystem
 from standings.utils import sort_counter, calculate_average, truncate_point_system, grouper
 from collections import Counter
 from django_countries.fields import Country
@@ -28,7 +28,8 @@ def season_view(request, season_id):
     standings_driver, standings_team = season.get_standings(upto=upto)
 
     ps = season.point_system
-    point_system = {
+    point_systems = { "season": {
+        'name': ps.name,
         'race': truncate_point_system(ps.to_dict()),
         'qualifying': truncate_point_system(ps.to_dict(False)),
         'pole': ps.pole_position,
@@ -36,14 +37,26 @@ def season_view(request, season_id):
         'fastest_lap': ps.fastest_lap,
         'most_laps_lead': ps.most_laps_lead,
         'extras_present': ps.extras_present()
-    }
+    }, "races": []}
+
+    for ps in PointSystem.objects.filter(race__season_id=season.id).exclude(id=ps.id).distinct():
+        point_systems["races"].append({
+            'name': ps.name,
+            'race': truncate_point_system(ps.to_dict()),
+            'qualifying': truncate_point_system(ps.to_dict(False)),
+            'pole': ps.pole_position,
+            'lead_lap': ps.lead_lap,
+            'fastest_lap': ps.fastest_lap,
+            'most_laps_lead': ps.most_laps_lead,
+            'extras_present': ps.extras_present()
+        })
 
     context = {
         "upto": int(upto or season.race_set.count()),
         "season": season,
         "drivers": standings_driver,
         "teams": standings_team,
-        "point_system": point_system
+        "point_systems": point_systems
     }
 
     return render(request, 'standings/season.html', context)

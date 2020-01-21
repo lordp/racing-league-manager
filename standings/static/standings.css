@@ -176,6 +176,10 @@ div [class*="right floated"] {
     border-right: solid 1px black;
 }
 
+.points-row td:last-child {
+    border-right: 1px solid rgba(34,36,38,.1);
+}
+
 .team-ferrari {
     color: white;
     background-color: rgb(224, 8, 29);
