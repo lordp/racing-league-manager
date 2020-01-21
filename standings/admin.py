@@ -11,6 +11,7 @@ from .models import *
 import os
 import contextlib
 from .utils import format_time, expire_view_cache
+from .filters import RLMFilter
 
 admin.site.site_header = 'FSR Admin'
 admin.site.site_title = "FSR Admin"
@@ -35,11 +36,11 @@ class ResultAdmin(admin.ModelAdmin):
     list_display = ('race', 'season', 'driver', 'team', 'position', 'classified')
     list_select_related = ['race', 'race__season', 'race__season__division', 'race__season__division__league']
     list_filter = (
-        ('race__season__division__league', RelatedDropdownFilter),
-        ('race__season__division', RelatedDropdownFilter),
-        ('race__season', RelatedDropdownFilter),
-        ('race', RelatedDropdownFilter),
-        ('driver', RelatedDropdownFilter),
+        ('race__season__division__league', RLMFilter),
+        ('race__season__division', RLMFilter),
+        ('race__season', RLMFilter),
+        ('race', RLMFilter),
+        ('driver', RLMFilter),
     )
     search_fields = ['driver__name']
 
