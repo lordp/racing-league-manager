@@ -276,19 +276,20 @@ def division_view(request, division_id):
 
     today = datetime.utcnow()
     try:
-        current_season = division.season_set.filter(start_date__lte=today, end_date__gte=today).\
+        current_seasons = division.season_set.filter(start_date__lte=today, end_date__gte=today).\
             annotate(race_count=Count('race', distinct=True)).\
             annotate(incomplete=Count('race', filter=Q(race__result__isnull=True))).\
-            values('id', 'name', 'race_count', 'incomplete').first()
+            values('id', 'name', 'race_count', 'incomplete')
+        current_seasons_ids = [season['id'] for season in current_seasons]
 
-        seasons = seasons.exclude(id=current_season['id'])
+        seasons = seasons.exclude(id__in=current_seasons_ids)
     except TypeError:
         current_season = None
 
     context = {
         'division': division,
         'seasons': seasons,
-        'current_season': current_season
+        'current_seasons': current_seasons
     }
 
     return render(request, 'standings/division.html', context)

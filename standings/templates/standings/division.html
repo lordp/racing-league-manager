@@ -3,9 +3,9 @@
 {% block content %}
 {% include 'standings/breadcrumb.html' with object=division.breadcrumbs %}
 
-{% if current_season %}
+{% if current_seasons %}
     <div class="current-season">
-        <h3>Current Season</h3>
+        <h3>Current Seasons</h3>
         <table class="ui small fixed compact celled table">
             <thead>
                 <tr>
@@ -15,11 +15,13 @@
                 </tr>
             </thead>
             <tbody>
+                {% for season in current_seasons %}
                 <tr>
-                    <td><a href="{% url 'season' current_season.id %}">{{ current_season.name }}</a></td>
-                    <td class="ui center aligned">{{ current_season.race_count }}</td>
-                    <td class="ui center aligned">{{ current_season.incomplete }}</td>
+                    <td><a href="">{{ season.name }}</a></td>
+                    <td class="ui center aligned">{{ season.race_count }}</td>
+                    <td class="ui center aligned">{{ season.incomplete }}</td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
