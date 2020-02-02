@@ -382,6 +382,7 @@ class Race(models.Model):
     short_name = models.CharField(max_length=3, null=True)
     start_time = models.DateTimeField(db_index=True)
     track = models.ForeignKey(Track, on_delete=models.SET_NULL, null=True)
+    abandoned = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['round_number']
