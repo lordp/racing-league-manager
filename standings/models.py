@@ -176,7 +176,7 @@ class Season(models.Model):
 
     def race_count(self):
         return {
-            "incomplete": self.race_set.annotate(Count('result')).filter(result__isnull=True).count(),
+            "incomplete": self.race_set.annotate(Count('result')).filter(result__isnull=True, abandoned=False).count(),
             "total": self.race_set.annotate(Count('result')).count()
         }
 
