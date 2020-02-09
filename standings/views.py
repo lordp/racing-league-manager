@@ -278,7 +278,7 @@ def division_view(request, division_id):
     try:
         current_seasons = division.season_set.filter(start_date__lte=today, end_date__gte=today).\
             annotate(race_count=Count('race', distinct=True)).\
-            annotate(incomplete=Count('race', filter=Q(race__result__isnull=True))).\
+            annotate(incomplete=Count('race', filter=Q(race__result__isnull=True, abandoned=False))).\
             values('id', 'name', 'race_count', 'incomplete')
         current_seasons_ids = [season['id'] for season in current_seasons]
 
