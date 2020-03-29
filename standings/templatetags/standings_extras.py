@@ -283,10 +283,10 @@ def find_driver_pitstops(results, driver_id):
 
     laps = []
     for entry in results[driver_id]:
-        entry[0] = entry[0].replace("_", "-")
+        compound = entry[0].replace("_", "-")
         if entry[1]:
-            laps.append(pit.format(compound=entry[0], lap_number=entry[2]))
+            laps.append(pit.format(compound=compound, lap_number=entry[2]))
         else:
-            laps.append(tyre.format(compound=entry[0]))
+            laps.append(tyre.format(compound=compound))
 
     return mark_safe(''.join(laps))
