@@ -172,3 +172,15 @@ def check_field_overwrite(result, post_fields, new_result):
     refresh_fields = [x for x in overwritable_fields if x not in post_fields]
     if len(refresh_fields) > 0 and not new_result:
         result.refresh_from_db(fields=refresh_fields)
+
+
+def map_compound(stm, compound):
+    if not stm:
+        return compound
+
+    try:
+        result = [f"c{x + 1}" for x in range(5) if getattr(stm, f"c{x + 1}").lower() == compound.lower()][0]
+    except IndexError:
+        result = compound
+
+    return result

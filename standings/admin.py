@@ -189,6 +189,12 @@ class RaceInline(admin.TabularInline):
     exclude = ('point_system',)
 
 
+class TyreMapInline(admin.TabularInline):
+    model = SeasonTyreMap
+    max_num = 1
+    can_delete = False
+
+
 @admin.register(Season)
 class SeasonAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
@@ -207,7 +213,7 @@ class SeasonAdmin(admin.ModelAdmin):
     list_filter = ('division', 'division__league')
     actions = ['generate_top10', 'update_stats', 'clear_cache']
     ordering = ['start_date']
-    inlines = [RaceInline, CarNumberInline]
+    inlines = [RaceInline, CarNumberInline, TyreMapInline]
 
     def get_queryset(self, request):
         return Season.objects.annotate(race_count=Count('race'))

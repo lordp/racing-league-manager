@@ -1,8 +1,8 @@
 from django.views.decorators.cache import cache_page
 from django.db.models import Count, Q, Sum
 from django.shortcuts import get_object_or_404, render
-from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty, Lap, PointSystem
-from standings.utils import sort_counter, calculate_average, truncate_point_system, grouper
+from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty, Lap, PointSystem, SeasonTyreMap
+from standings.utils import sort_counter, calculate_average, truncate_point_system, grouper, map_compound
 from collections import Counter
 from django_countries.fields import Country
 from datetime import datetime
@@ -297,6 +297,7 @@ def division_view(request, division_id):
 
 def race_view(request, race_id):
     race = get_object_or_404(Race, pk=race_id)
+    stm = SeasonTyreMap.objects.filter(season_id=race.season_id).first()
 
     try:
         labels = [lap[0] for lap in race.result_set.get(position=1).race_lap_set().values_list('lap_number')]
@@ -331,7 +332,8 @@ def race_view(request, race_id):
             compounds[result['result__driver_id']] = [{'lap_count': 0}]
 
         compounds[result['result__driver_id']][-1]['lap_count'] += 1
-        compounds[result['result__driver_id']][-1]['compound'] = result['compound']
+        compound_map = map_compound(stm, result['compound'])
+        compounds[result['result__driver_id']][-1]['compound'] = compound_map
         if result['pitstop'] == 1:
             compounds[result['result__driver_id']].append({'lap_count': 0})
 
