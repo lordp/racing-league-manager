@@ -20,6 +20,10 @@ race_filename = "{division}{year}_R{round_number}_R.xml"
 class Command(BaseCommand):
     help = 'Search for and download log files to process for specific races'
 
+    def debug(self, msg):
+        now = str(datetime.now().replace(microsecond=0))
+        print(f"[{now}] {msg}")
+
     def add_arguments(self, parser):
         parser.add_argument('--date', type=str)
 
@@ -37,7 +41,7 @@ class Command(BaseCommand):
         races = Race.objects.filter(start_time__gte=start, start_time__lte=end)
         for race in races:
             if race.start_time < now:
-                print(f"Found {race.name}")
+                self.debug(f"Found {race.name}")
                 files = [
                     qualifying_filename.format(
                         year=race.start_time.strftime('%y'),
@@ -53,7 +57,7 @@ class Command(BaseCommand):
 
                 for file in files:
                     if (file,) not in race.logfile_set.values_list("file"):
-                        print(f"{file} unprocessed, checking...")
+                        self.debug(f"{file} unprocessed, checking...")
                         url = base_url.format(
                             season=race.season.name,
                             division=division_map.get(race.season.division.name),
@@ -68,10 +72,10 @@ class Command(BaseCommand):
                                 outfile.write(req.content)
 
                             logfile = LogFile(race=race, file=file)
-                            print(f"Processing {file}... ", end="")
+                            self.debug(f"Processing {file}... ")
                             logfile.process()
-                            print(f"done.")
+                            self.debug(f"done.")
 
                             os.remove(file)
                         else:
-                            print(f"[{req.status_code}] {file} not found, or other error")
+                            self.debug(f"{file} not found, or other error ({req.status_code})")
