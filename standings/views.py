@@ -320,9 +320,9 @@ def race_view(request, race_id):
     for result in race.result_set.all():
         lap_times[result.driver_id] = [lap[0] for lap in result.race_lap_set().values_list('lap_time')]
         drivers[result.driver_id] = result.driver.name
-        pitstops[result.driver_id] = [
-            lap for lap in result.race_lap_set().values_list("compound", "pitstop", "lap_number")
-        ]
+        pitstops[result.driver_id] = []
+        for lap in result.race_lap_set():
+            pitstops[result.driver_id].append([map_compound(stm, lap.compound), lap.pitstop, lap.lap_number])
 
     compounds = {}
     compound_list = Lap.objects.filter(result__race_id=race_id, session='race').\
@@ -379,10 +379,19 @@ def track_view(request, track_id):
 def laps_view(request, result_id):
     result = get_object_or_404(Result, pk=result_id)
     laps = result.lap_set.filter(session='race').order_by('lap_number')
+    try:
+        stm = SeasonTyreMap.objects.get(season_id=result.race.season_id)
+    except SeasonTyreMap.DoesNotExist:
+        stm = None
+
+    mapped_laps = []
+    for lap in laps:
+        lap.compound = map_compound(stm, lap.compound)
+        mapped_laps.append(lap)
 
     context = {
         'result': result,
-        'laps': laps,
+        'laps': mapped_laps,
     }
 
     return render(request, 'standings/laps.html', context)

@@ -146,24 +146,24 @@ div [class*="right floated"] {
     /*width: 15px;*/
 }
 
-.tyre-blob-medium {
+.tyre-blob-medium, .tyre-blob-c2 {
     background-color: white;
 }
 
-.tyre-blob-ultra {
+.tyre-blob-ultra, .tyre-blob-c5 {
     background-color: #D70AD5;
     color: white;
 }
 
-.tyre-blob-hard {
+.tyre-blob-hard, .tyre-blob-c1 {
     background-color: #FE6F29;
 }
 
-.tyre-blob-soft {
+.tyre-blob-soft, .tyre-blob-c3 {
     background-color: #FACA08;
 }
 
-.tyre-blob-super-soft {
+.tyre-blob-super-soft, .tyre-blob-c4 {
     background-color: #F20704;
     color: white;
 }
