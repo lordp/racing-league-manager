@@ -217,7 +217,7 @@ class Season(models.Model):
 
                 drivers[result.driver_id] = {
                     'driver': result.driver,
-                    'team': result.team,
+                    'teams': [result.team],
                     'points': result.points,
                     'results': [result],
                     'position': 0,
@@ -236,6 +236,8 @@ class Season(models.Model):
             else:
                 drivers[result.driver_id]['results'].append(result)
                 drivers[result.driver_id]['points'] += result.points
+                if result.team not in drivers[result.driver_id]['teams']:
+                    drivers[result.driver_id]['teams'].append(result.team)
 
             if not self.teams_disabled:
                 result.team_points_allocated = False

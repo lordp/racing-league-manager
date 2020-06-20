@@ -227,16 +227,18 @@ class Standings(APIView):
                     }
 
                     if not season.teams_disabled:
-                        try:
-                            tmp['team'] = {
-                                'name': row['team'].name,
-                                'id': row['team'].id,
-                            }
-                        except AttributeError:
-                            tmp['team'] = {
-                                'name': 'Unknown',
-                                'id': 0,
-                            }
+                        tmp['teams'] = []
+                        for tmp_team in row['teams']:
+                            try:
+                                tmp['teams'].append({
+                                    'name': tmp_team.name,
+                                    'id': tmp_team.id,
+                                })
+                            except AttributeError:
+                                tmp['teams'].append({
+                                    'name': 'Unknown',
+                                    'id': 0,
+                                })
 
                     data.append(tmp)
             return Response(data)
