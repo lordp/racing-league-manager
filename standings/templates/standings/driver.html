@@ -175,6 +175,7 @@
 </div>
 <div class="ui bottom attached tab segment" data-tab="seasons">
 {% for _, season in seasons.items %}
+<div class="ui {{ season.season|segment_colour }} segment">
 {% include 'standings/breadcrumb.html' with object=season.season.breadcrumbs %}
 <table class="ui small selectable collapsing compact celled table">
     <thead>
@@ -223,6 +224,7 @@
     </tbody>
 </table>
 {% endif %}
+</div>
 {% endfor %}
 </div>
 {% endblock %}

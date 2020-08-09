@@ -184,6 +184,10 @@ div [class*="right floated"] {
     background-color: rgba(255, 0, 0, .5) !important;
 }
 
+.ui.blue.segment:not(.inverted), .ui.purple.segment:not(.inverted), .ui.green.segment:not(.inverted) {
+    border-top-width: 6px !important;
+}
+
 .team-ferrari {
     color: white;
     background-color: rgb(224, 8, 29);
