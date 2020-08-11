@@ -292,7 +292,7 @@ def division_view(request, division_id):
 
         seasons = seasons.exclude(id__in=current_seasons_ids)
     except TypeError:
-        current_season = None
+        current_seasons = None
 
     context = {
         'division': division,
