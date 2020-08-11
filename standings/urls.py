@@ -17,4 +17,5 @@ urlpatterns = [
     path('laps/<int:result_id>', views.laps_view, name='laps'),
     re_path(r'^countries/(?:(?P<division>\d+)/)?$', views.countries_view, name='countries'),
     re_path(r'^country/(?P<country_id>[A-Z]+)/(?:(?P<division>\d+)/)?$', views.country_view, name='country'),
+    path('<slug:division>/<slug:season>', views.season_view_alternate, name='season_alternate'),
 ]

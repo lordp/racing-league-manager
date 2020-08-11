@@ -58,6 +58,7 @@ class Division(models.Model):
     description = models.CharField(max_length=250, blank=True)
     url = models.CharField(max_length=100, blank=True)
     order = models.CharField(max_length=50, blank=True)
+    slug = models.CharField(max_length=150, blank=True)
 
     class Meta:
         ordering = ['order']
@@ -163,6 +164,7 @@ class Season(models.Model):
     constructor_max = models.IntegerField(default=0, help_text="The maximum number of drivers that can score points "
                                                                "for their team (0 = disabled)")
     team_points_allocated = True
+    slug = models.CharField(max_length=150, blank=True)
 
     def __str__(self):
         return "{} ({})".format(self.name, self.division.name)
