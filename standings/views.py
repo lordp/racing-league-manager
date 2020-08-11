@@ -20,6 +20,14 @@ def index_view(request):
     return render(request, 'standings/index.html', context)
 
 
+def season_view_alternate(request, division, season):
+    tmp = Season.objects.get(slug=season, division__slug=division)
+    if not tmp:
+        raise Http404("Season not found.")
+
+    return season_view(request, tmp.id)
+
+
 @cache_page(None)
 def season_view(request, season_id):
     season = get_object_or_404(Season, pk=season_id)
@@ -272,14 +280,14 @@ def division_view(request, division_id):
     division = get_object_or_404(Division, pk=division_id)
     seasons = division.season_set.annotate(race_count=Count('race', distinct=True)).\
         annotate(incomplete=Count('race', filter=Q(race__result__isnull=True))).\
-        values('id', 'name', 'race_count', 'incomplete')
+        values('id', 'name', 'slug', 'race_count', 'incomplete')
 
     today = datetime.utcnow()
     try:
         current_seasons = division.season_set.filter(start_date__lte=today, end_date__gte=today).\
             annotate(race_count=Count('race', distinct=True)).\
             annotate(incomplete=Count('race', filter=Q(race__result__isnull=True, race__abandoned=False))).\
-            values('id', 'name', 'race_count', 'incomplete')
+            values('id', 'name', 'slug', 'race_count', 'incomplete')
         current_seasons_ids = [season['id'] for season in current_seasons]
 
         seasons = seasons.exclude(id__in=current_seasons_ids)

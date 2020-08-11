@@ -17,7 +17,7 @@
             <tbody>
                 {% for season in current_seasons %}
                 <tr>
-                    <td><a href="{% url 'season' season.id %}">{{ season.name }}</a></td>
+                    <td><a href="{% url 'season_alternate' division.slug season.slug %}">{{ season.name }}</a></td>
                     <td class="ui center aligned">{{ season.race_count }}</td>
                     <td class="ui center aligned">{{ season.incomplete }}</td>
                 </tr>
@@ -38,7 +38,7 @@
     <tbody>
         {% for season in seasons %}
         <tr>
-            <td><a href="{% url 'season' season.id %}">{{ season.name }}</a></td>
+            <td><a href="{% url 'season_alternate' division.slug season.slug %}">{{ season.name }}</a></td>
             <td class="ui center aligned">{{ season.race_count }}</td>
             <td class="ui center aligned">{{ season.incomplete }}</td>
         </tr>
