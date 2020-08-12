@@ -179,7 +179,7 @@ def map_compound(stm, compound):
         return compound
 
     try:
-        result = [f"c{x + 1}" for x in range(5) if getattr(stm, f"c{x + 1}").lower() in compound.lower() and getattr(stm, f"c{x + 1}")][0]
+        result = [f"c{x + 1}" for x in range(7) if getattr(stm, f"c{x + 1}").lower() in compound.lower() and getattr(stm, f"c{x + 1}")][0]
     except IndexError:
         result = compound
 

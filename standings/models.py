@@ -1048,10 +1048,12 @@ class SeasonTyreMap(models.Model):
     c3 = models.CharField(max_length=15, blank=True)
     c4 = models.CharField(max_length=15, blank=True)
     c5 = models.CharField(max_length=15, blank=True)
+    c6 = models.CharField(max_length=15, blank=True)
+    c7 = models.CharField(max_length=15, blank=True)
 
     class Meta:
         verbose_name_plural = 'Season Compound Map'
 
     def __str__(self):
-        tyre_map = ["c{} = {}".format(x + 1, getattr(self, f"c{x + 1}")) for x in range(0,5) if getattr(self, f"c{x + 1}")]
+        tyre_map = ["c{} = {}".format(x + 1, getattr(self, f"c{x + 1}")) for x in range(0,7) if getattr(self, f"c{x + 1}")]
         return ", ".join(tyre_map)
