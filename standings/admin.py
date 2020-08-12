@@ -7,6 +7,7 @@ from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 from django.db.models import Max, F
+from django.forms import TextInput
 from .models import *
 import os
 import contextlib
@@ -193,6 +194,9 @@ class TyreMapInline(admin.TabularInline):
     model = SeasonTyreMap
     max_num = 1
     can_delete = False
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size':'15'})},
+    }
 
 
 @admin.register(Season)
