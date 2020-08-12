@@ -352,7 +352,7 @@ def race_view(request, race_id):
         if result['result__driver_id'] not in q_compounds or \
                 result['lap_time'] < q_compounds[result['result__driver_id']]['lap_time']:
             q_compounds[result['result__driver_id']] = {
-                'compound': result['compound'],
+                'compound': map_compound(stm, result['compound']),
                 'lap_time': result['lap_time']
             }
 
