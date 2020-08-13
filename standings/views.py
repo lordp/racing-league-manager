@@ -22,11 +22,11 @@ def index_view(request):
 
 
 def season_view_alternate(request, division, season):
-    tmp = Season.objects.get(slug=season, division__slug=division)
-    if not tmp:
+    try:
+        tmp = Season.objects.get(slug=season, division__slug=division)
+        return season_view(request, tmp.id)
+    except Season.DoesNotExist:
         raise Http404("Season not found.")
-
-    return season_view(request, tmp.id)
 
 
 @cache_page(None)
