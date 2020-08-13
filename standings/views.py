@@ -1,6 +1,7 @@
 from django.views.decorators.cache import cache_page
 from django.db.models import Count, Q, Sum
 from django.shortcuts import get_object_or_404, render
+from django.http import Http404
 from .models import Season, Driver, Team, League, Division, Race, Track, Result, SeasonStats, SeasonPenalty, Lap, PointSystem, SeasonTyreMap
 from standings.utils import sort_counter, calculate_average, truncate_point_system, grouper, map_compound
 from collections import Counter
