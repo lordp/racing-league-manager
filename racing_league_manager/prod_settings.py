@@ -170,3 +170,11 @@ CACHES = {
         'LOCATION': '{}/.cache'.format(BASE_DIR),
     }
 }
+
+with open('/home/isrclubadmin/.config/gpcos_sentry_io_dsn.txt') as f:
+    SENTRY_DSN = f.read().strip()
+
+sentry_sdk.init(
+    dsn=SENTRY_DSN,
+    integrations=[DjangoIntegration()]
+)
