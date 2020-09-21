@@ -174,6 +174,9 @@ CACHES = {
 with open('/home/isrclubadmin/.config/gpcos_sentry_io_dsn.txt') as f:
     SENTRY_DSN = f.read().strip()
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 sentry_sdk.init(
     dsn=SENTRY_DSN,
     integrations=[DjangoIntegration()]
