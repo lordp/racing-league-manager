@@ -817,7 +817,7 @@ class Lap(models.Model):
     sector_3 = models.FloatField(default=0)
     lap_time = models.FloatField(default=0)
     race_time = models.FloatField(default=0)
-    compound = models.CharField(max_length=10, verbose_name="Tyre Compound", blank=True)
+    compound = models.CharField(max_length=20, verbose_name="Tyre Compound", blank=True)
     wear_fl = models.FloatField(default=0, verbose_name="Wear (Front Left)")
     wear_fr = models.FloatField(default=0, verbose_name="Wear (Front Right)")
     wear_rl = models.FloatField(default=0, verbose_name="Wear (Rear Left)")
