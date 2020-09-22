@@ -26,6 +26,10 @@ class ResultAdmin(admin.ModelAdmin):
             reverse('season', args=[obj.race.season.id]),
             meta=request.META
         )
+        expire_view_cache(
+            reverse('season_alternate', args=[obj.race.season.division.slug, obj.race.season.slug]),
+            meta=request.META
+        )
 
         (stats, _) = SeasonStats.objects.get_or_create(season=obj.race.season, driver=obj.driver)
         stats.update_stats()
@@ -157,6 +161,10 @@ class RaceAdmin(admin.ModelAdmin):
                     reverse('season', args=[race.season_id]),
                     meta=request.META
                 )
+                expire_view_cache(
+                    reverse('season_alternate', args=[race.season.division.slug, race.season.slug]),
+                    meta=request.META
+                )
 
             messages.add_message(request, messages.INFO, "Results for '{}' updated".format(race.name))
             return redirect(
@@ -248,11 +256,19 @@ class SeasonAdmin(admin.ModelAdmin):
                 reverse('season', args=[obj.id]),
                 meta=request.META
             )
+            expire_view_cache(
+                reverse('season_alternate', args=[obj.division.slug, obj.slug]),
+                meta=request.META
+            )
 
             for race in obj.race_set.all():
                 request.META['QUERY_STRING'] = f'upto={race.round_number}'
                 expire_view_cache(
                     reverse('season', args=[obj.id]),
+                    meta=request.META
+                )
+                expire_view_cache(
+                    reverse('season_alternate', args=[obj.division.slug, obj.slug]),
                     meta=request.META
                 )
 
