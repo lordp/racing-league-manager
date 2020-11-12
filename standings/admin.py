@@ -111,12 +111,12 @@ class RaceAdmin(admin.ModelAdmin):
             race = Race.objects.get(pk=request.POST.get('_selected_action'))
             dsq = []
             pens = set()
+            pos_pens = set()
             max_pos = race.result_set.aggregate(Max('position'))['position__max']
 
             for result in race.result_set.all():
                 result.position = request.POST.get('position-{}'.format(result.id))
                 result.race_time = request.POST.get('race-time-{}'.format(result.id))
-                result.race_penalty_positions = request.POST.get('pen-pos-{}'.format(result.id), 0)
                 result.race_penalty_description = request.POST.get('pen-desc-{}'.format(result.id), '')
                 result.qualifying_penalty_bog = True if 'qpen-bog-{}'.format(result.id) in request.POST else False
                 result.qualifying_penalty_sfp = True if 'qpen-sfp-{}'.format(result.id) in request.POST else False
@@ -138,6 +138,11 @@ class RaceAdmin(admin.ModelAdmin):
                     result.race_time = float(result.race_time) + diff_pen_time
                     pens.add(result.race_laps)
 
+                posted_pen_pos = int(request.POST.get('pen-pos-{}'.format(result.id), 0))
+                if posted_pen_pos > result.race_penalty_positions and posted_pen_pos > 0:
+                    pos_pens.add(result)
+                    result.race_penalty_positions = posted_pen_pos
+
                 result.save()
 
             for result in dsq:
@@ -152,6 +157,12 @@ class RaceAdmin(admin.ModelAdmin):
                 for index, result in enumerate(results):
                     result.position = highest_position + index
                     result.save()
+
+            for result in pos_pens:
+                old_position = result.position
+                result.position = result.position + result.race_penalty_positions
+                result.save()
+                results = race.result_set.exclude(id=result.id).filter(position__lte=result.position, position__gt=old_position).update(position=F('position') - 1)
 
             if dsq or pens:
                 race.fill_attributes()
