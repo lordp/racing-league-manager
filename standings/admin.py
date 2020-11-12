@@ -115,7 +115,7 @@ class RaceAdmin(admin.ModelAdmin):
             max_pos = race.result_set.aggregate(Max('position'))['position__max']
 
             for result in race.result_set.all():
-                result.position = request.POST.get('position-{}'.format(result.id))
+                result.position = int(request.POST.get('position-{}'.format(result.id)))
                 result.race_time = request.POST.get('race-time-{}'.format(result.id))
                 result.race_penalty_description = request.POST.get('pen-desc-{}'.format(result.id), '')
                 result.qualifying_penalty_bog = True if 'qpen-bog-{}'.format(result.id) in request.POST else False
