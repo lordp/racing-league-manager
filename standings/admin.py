@@ -139,8 +139,8 @@ class RaceAdmin(admin.ModelAdmin):
                     pens.add(result.race_laps)
 
                 posted_pen_pos = int(request.POST.get('pen-pos-{}'.format(result.id), 0))
-                if posted_pen_pos > result.race_penalty_positions and posted_pen_pos > 0:
-                    pos_pens.add(result)
+                if posted_pen_pos != result.race_penalty_positions:
+                    result.position = result.position + (posted_pen_pos - result.race_penalty_positions)
                     result.race_penalty_positions = posted_pen_pos
 
                 result.save()
@@ -158,11 +158,9 @@ class RaceAdmin(admin.ModelAdmin):
                     result.position = highest_position + index
                     result.save()
 
-            for result in pos_pens:
-                old_position = result.position
-                result.position = result.position + result.race_penalty_positions
+            for idx, result in enumerate(race.result_set.order_by("position", "race_penalty_positions")):
+                result.position = idx + 1
                 result.save()
-                results = race.result_set.exclude(id=result.id).filter(position__lte=result.position, position__gt=old_position).update(position=F('position') - 1)
 
             if dsq or pens:
                 race.fill_attributes()
