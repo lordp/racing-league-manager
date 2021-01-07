@@ -4,7 +4,7 @@ django-admin-select2==1.0.1
 django-countries==6.1.2
 djangorestframework==3.11.0
 django-cors-headers==3.2.1
-lxml==4.5.0
+lxml==4.6.2
 Pillow==7.1.1
 psycopg2==2.7.7
 pytz==2019.3
