@@ -9,7 +9,8 @@ import os
 division_map = {
     "World Championship": "WC",
     "PRO": "PRO",
-    "Academy": "ACA"
+    "Academy": "ACA",
+    "AMA": "AMA"
 }
 
 base_url = "http://racefiles.formula-simracing.net/{season}/ResultsReplays/{division}/{round_number}-{race}/{filename}"
