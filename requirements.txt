@@ -2,7 +2,7 @@ django==2.2.13
 django-admin-list-filter-dropdown==1.0.3
 django-admin-select2==1.0.1
 django-countries==6.1.2
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 django-cors-headers==3.2.1
 lxml==4.5.0
 Pillow==7.1.1
