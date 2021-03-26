@@ -158,7 +158,15 @@ class RaceAdmin(admin.ModelAdmin):
                     result.position = highest_position + index
                     result.save()
 
-            for idx, result in enumerate(race.result_set.order_by("position", "race_penalty_positions")):
+            sorted_results = sorted(race.result_set.all(), key=lambda item: item.classified, reverse=True) # classified
+            sorted_results = sorted(sorted_results, key=lambda item: item.race_penalty_time, reverse=True) # penalty time
+            sorted_results = sorted(sorted_results, key=lambda item: item.race_penalty_positions, reverse=True) # penalty positions
+            sorted_results = sorted(sorted_results, key=lambda item: item.race_time, reverse=True) # race time
+            sorted_results = sorted(sorted_results, key=lambda item: item.race_laps, reverse=True) # race laps
+            sorted_results = sorted(sorted_results, key=lambda item: item.position) # original position
+            sorted_results = sorted(sorted_results, key=lambda item: item.race_penalty_dsq) # dsq
+
+            for idx, result in enumerate(sorted_results):
                 result.position = idx + 1
                 result.save()
 
