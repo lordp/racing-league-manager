@@ -6,13 +6,6 @@ import requests
 import os
 
 
-division_map = {
-    "World Championship": "WC",
-    "PRO": "PRO",
-    "Academy": "ACA",
-    "AMA": "AMA"
-}
-
 base_url = "http://racefiles.formula-simracing.net/{season}/ResultsReplays/{division}/{round_number}-{race}/{filename}"
 qualifying_filename = "{division}{year}_R{round_number}_Q.xml"
 race_filename = "{division}{year}_R{round_number}_R.xml"
@@ -41,17 +34,18 @@ class Command(BaseCommand):
 
         races = Race.objects.filter(start_time__gte=start, start_time__lte=end)
         for race in races:
+            log_file_tag = race.season.division.log_file_tag
             if race.start_time < now:
                 self.debug(f"Found {race.name}")
                 files = [
                     qualifying_filename.format(
                         year=race.start_time.strftime('%y'),
-                        division=division_map.get(race.season.division.name),
+                        division=log_file_tag,
                         round_number=f"{race.round_number:02d}"
                     ),
                     race_filename.format(
                         year=race.start_time.strftime('%y'),
-                        division=division_map.get(race.season.division.name),
+                        division=log_file_tag,
                         round_number=f"{race.round_number:02d}"
                     )
                 ]
@@ -61,7 +55,7 @@ class Command(BaseCommand):
                         self.debug(f"{file} unprocessed, checking...")
                         url = base_url.format(
                             season=race.season.name,
-                            division=division_map.get(race.season.division.name),
+                            division=log_file_tag,
                             round_number=f"{race.round_number:02d}",
                             race=race.short_name,
                             filename=file

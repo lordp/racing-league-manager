@@ -59,6 +59,7 @@ class Division(models.Model):
     url = models.CharField(max_length=100, blank=True)
     order = models.CharField(max_length=50, blank=True)
     slug = models.CharField(max_length=150, blank=True)
+    log_file_tag = models.CharField(max_length=10, blank=True)
 
     class Meta:
         ordering = ['order']
