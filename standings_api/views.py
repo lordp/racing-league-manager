@@ -1,4 +1,4 @@
-from standings.models import Driver, Result, Race, Team, SeasonStats, Season, Division, SeasonCarNumber
+from standings.models import Driver, Result, Race, Team, SeasonStats, Season, Division, SeasonCarNumber, PointSystem
 from standings_api.serializers import DriverSerializer, ResultSerializer, RaceSerializer, TeamSerializer
 from standings.utils import calculate_average
 from rest_framework.views import APIView
@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from collections import Counter
+from django.utils.text import slugify
 
 
 class DriverList(mixins.ListModelMixin, generics.GenericAPIView):
@@ -104,6 +105,65 @@ class TeamDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+
+class SeasonDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
+    @staticmethod
+    def get(request, season_id):
+        try:
+            season = Season.objects.get(pk=season_id)
+            races = []
+            for race in season.race_set.order_by('round_number'):
+                this_race = {
+                    'id': race.id,
+                    'name': race.name,
+                    'round_number': race.round_number,
+                    'start_time': race.start_time,
+                    'point_system': None
+                }
+
+                if race.point_system:
+                    ps = race.point_system
+                    this_race['point_system'] = slugify(ps.name)
+
+                races.append(this_race)
+
+                point_systems = {}
+                ps = season.point_system
+                point_systems[slugify(ps.name)] = {
+                    'name': ps.name,
+                    'race': ps.to_dict(),
+                    'qualifying': ps.to_dict(False),
+                    'pole': ps.pole_position,
+                    'lead_lap': ps.lead_lap,
+                    'fastest_lap': ps.fastest_lap,
+                    'most_laps_lead': ps.most_laps_lead,
+                    'extras_present': ps.extras_present()
+                }
+
+                for ps in PointSystem.objects.filter(race__season_id=season.id).exclude(id=ps.id).distinct():
+                    point_systems[slugify(ps.name)] = {
+                        'name': ps.name,
+                        'race': ps.to_dict(),
+                        'qualifying': ps.to_dict(False),
+                        'pole': ps.pole_position,
+                        'lead_lap': ps.lead_lap,
+                        'fastest_lap': ps.fastest_lap,
+                        'most_laps_lead': ps.most_laps_lead,
+                        'extras_present': ps.extras_present()
+                    }
+
+
+            detail = {
+                "name": season.name,
+                "division": season.division.name,
+                "race_count": season.race_set.count(),
+                "races": races,
+                "point_systems": point_systems
+            }
+            return Response(detail)
+        except (Season.DoesNotExist, IndexError):
+            return Response({'error': 'Season not found'}, status=404)
 
 
 class RaceDetail(APIView):
