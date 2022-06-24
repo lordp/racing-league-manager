@@ -166,6 +166,7 @@ class Season(models.Model):
                                                                "for their team (0 = disabled)")
     team_points_allocated = True
     slug = models.CharField(max_length=150, blank=True)
+    countback_range = models.IntegerField(default=10, help_text="How far into result positions to count back for tie breaker rules")
 
     def __str__(self):
         return "{} ({})".format(self.name, self.division.name)
