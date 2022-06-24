@@ -3,46 +3,18 @@
 {% block content %}
 {% include 'standings/breadcrumb.html' with object=division.breadcrumbs %}
 
-{% if current_seasons %}
-    <div class="current-season">
-        <h3>Current Seasons</h3>
-        <table class="ui small fixed compact celled table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th class="ui center aligned">Races</th>
-                    <th class="ui center aligned">Incomplete</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for season in current_seasons %}
-                <tr>
-                    <td><a href="{% url 'season_alternate' division.slug season.slug %}">{{ season.name }}</a></td>
-                    <td class="ui center aligned">{{ season.race_count }}</td>
-                    <td class="ui center aligned">{{ season.incomplete }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <h3>Previous Seasons</h3>
-{% endif %}
-<table class="ui small fixed compact celled table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th class="ui center aligned">Races</th>
-            <th class="ui center aligned">Incomplete</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for season in seasons %}
-        <tr>
-            <td><a href="{% url 'season_alternate' division.slug season.slug %}">{{ season.name }}</a></td>
-            <td class="ui center aligned">{{ season.race_count }}</td>
-            <td class="ui center aligned">{{ season.incomplete }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="ui six doubling cards">
+    {% for season in seasons %}
+    <a class="ui raised {% if season.incomplete > 0 %}green {% else %}red {% endif %}card" href="{% url 'season_alternate' division.slug season.slug %}">
+        <div class="content">
+            <div class="header">
+                {{ season.name }}
+            </div>
+            <div class="description">
+                {{ season.race_count }} races{% if season.incomplete > 0 %}, {{ season.incomplete }} remaining{% endif %}
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
 {% endblock %}
