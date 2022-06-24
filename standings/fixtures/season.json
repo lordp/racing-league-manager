@@ -1,0 +1,53 @@
+[
+  {
+    "model": "standings.season",
+    "pk": 1,
+    "fields": {
+      "division": 3,
+      "name": "2018",
+      "description": "",
+      "start_date": "2018-03-25",
+      "end_date": "2018-10-08",
+      "finalized": false,
+      "point_system": 1,
+      "classification_type": "",
+      "percent_classified": 0,
+      "laps_classified": 0,
+      "teams_disabled": false
+    }
+  },
+  {
+    "model": "standings.season",
+    "pk": 2,
+    "fields": {
+      "division": 1,
+      "name": "2018",
+      "description": "",
+      "start_date": "2018-03-01",
+      "end_date": "2018-11-30",
+      "finalized": false,
+      "point_system": 3,
+      "classification_type": "Percent",
+      "percent_classified": 90,
+      "laps_classified": 0,
+      "teams_disabled": false
+    }
+  },
+  {
+    "model": "standings.season",
+    "pk": 3,
+    "fields": {
+      "division": 2,
+      "name": "2018",
+      "description": "",
+      "start_date": "2018-03-01",
+      "end_date": "2018-11-30",
+      "finalized": false,
+      "point_system": 2,
+      "classification_type": "",
+      "percent_classified": 90,
+      "laps_classified": 0,
+      "teams_disabled": false
+    }
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "model": "standings.division",
+    "pk": 1,
+    "fields": {
+      "league": 1,
+      "name": "World Championship",
+      "description": "",
+      "url": "http://forum.formula-simracing.net/index.php?forums/world-championship.12/",
+      "order": "1"
+    }
+  },
+  {
+    "model": "standings.division",
+    "pk": 2,
+    "fields": {
+      "league": 1,
+      "name": "ACE",
+      "description": "",
+      "url": "",
+      "order": "2"
+    }
+  },
+  {
+    "model": "standings.division",
+    "pk": 3,
+    "fields": {
+      "league": 1,
+      "name": "PRO",
+      "description": "",
+      "url": "",
+      "order": "3"
+    }
+  }
+]

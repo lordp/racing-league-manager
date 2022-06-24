@@ -1,0 +1,352 @@
+[
+    {
+        "model": "standings.team",
+        "pk": 1,
+        "fields": {
+            "name": "Flag-to-Flag SimRacing",
+            "url": "",
+            "country": "NL",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 2,
+        "fields": {
+            "name": "Avid Chronic Racing",
+            "url": "",
+            "country": "US",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 3,
+        "fields": {
+            "name": "Invictus Motorsport",
+            "url": "",
+            "country": "GB",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 4,
+        "fields": {
+            "name": "NetRex Grand Prix",
+            "url": "",
+            "country": "IT",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 5,
+        "fields": {
+            "name": "Musto Racing",
+            "url": "",
+            "country": "IT",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 6,
+        "fields": {
+            "name": "ACR Academy",
+            "url": "",
+            "country": "US",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 7,
+        "fields": {
+            "name": "Invictus Motorsport 3",
+            "url": "",
+            "country": "GB",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 8,
+        "fields": {
+            "name": "GhostSpeed Racing",
+            "url": "",
+            "country": "PT",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 9,
+        "fields": {
+            "name": "Drillers Academy",
+            "url": "",
+            "country": "NL",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 10,
+        "fields": {
+            "name": "NetRex Traditional",
+            "url": "",
+            "country": "IT",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 11,
+        "fields": {
+            "name": "Avid Chronic Racing SimSport",
+            "url": "",
+            "country": "US",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 12,
+        "fields": {
+            "name": "Sabema Racing",
+            "url": "",
+            "country": "IT",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 13,
+        "fields": {
+            "name": "isimRS Academy",
+            "url": "",
+            "country": "US",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 14,
+        "fields": {
+            "name": "Toro Bresso",
+            "url": "",
+            "country": "IE",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 15,
+        "fields": {
+            "name": "Disruptive Tech Racing",
+            "url": "",
+            "country": "EN",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 16,
+        "fields": {
+            "name": "Idos Engineering",
+            "url": "",
+            "country": "GB",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 17,
+        "fields": {
+            "name": "Drillers Motorsport",
+            "url": "",
+            "country": "NL",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 18,
+        "fields": {
+            "name": "Invictus Motorsport 2",
+            "url": "",
+            "country": "GB",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 19,
+        "fields": {
+            "name": "Breslin Grand Prix",
+            "url": "",
+            "country": "IE",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 20,
+        "fields": {
+            "name": "Twister Racing",
+            "url": "",
+            "country": "IT",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 21,
+        "fields": {
+            "name": "Orimila Grand Prix",
+            "url": "",
+            "country": "IT",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 36,
+        "fields": {
+            "name": "Avid Chronic Racing Engineering",
+            "url": "",
+            "country": "US",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 43,
+        "fields": {
+            "name": "Flag-to-Flag Orange",
+            "url": "",
+            "country": "NL",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 44,
+        "fields": {
+            "name": "GS Engineering",
+            "url": "",
+            "country": "PT",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 47,
+        "fields": {
+            "name": "BelgradeRacingTeam - BRT",
+            "url": "",
+            "country": "RS",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 48,
+        "fields": {
+            "name": "NRWO Motorsports",
+            "url": "",
+            "country": "WA",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 50,
+        "fields": {
+            "name": "Drace Motorsport",
+            "url": "",
+            "country": "DE",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 55,
+        "fields": {
+            "name": "F1aXion Racing Team",
+            "url": "",
+            "country": "",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 56,
+        "fields": {
+            "name": "Torrent Motorsports IP Forge",
+            "url": "",
+            "country": "",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 57,
+        "fields": {
+            "name": "Idos Engineering ",
+            "url": "",
+            "country": "",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 58,
+        "fields": {
+            "name": "Torrent Motorsports",
+            "url": "",
+            "country": "",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 59,
+        "fields": {
+            "name": "Roadrunner Racing",
+            "url": "",
+            "country": "",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 64,
+        "fields": {
+            "name": "PRO Championship",
+            "url": "",
+            "country": "",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 65,
+        "fields": {
+            "name": "Drillers Motorsport II",
+            "url": "",
+            "country": "",
+            "parent": null
+        }
+    },
+    {
+        "model": "standings.team",
+        "pk": 66,
+        "fields": {
+            "name": "Team Horizon",
+            "url": "",
+            "country": "",
+            "parent": null
+        }
+    }
+]

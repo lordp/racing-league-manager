@@ -1,0 +1,9 @@
+[
+  {
+    "model": "standings.league",
+    "pk": 1,
+    "fields": {
+      "name": "Formula SimRacing World Championship"
+    }
+  }
+]

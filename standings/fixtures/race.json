@@ -1,0 +1,158 @@
+[
+  {
+    "model": "standings.race",
+    "pk": 2,
+    "fields": {
+      "season": 1,
+      "point_system": 1,
+      "round_number": 1,
+      "name": "Australian Grand Prix",
+      "short_name": "AUS",
+      "start_time": "2018-03-25T12:00:00Z",
+      "track": 1
+    }
+  },
+  {
+    "model": "standings.race",
+    "pk": 4,
+    "fields": {
+      "season": 1,
+      "point_system": 1,
+      "round_number": 2,
+      "name": "Bahrain Grand Prix",
+      "short_name": "BAH",
+      "start_time": "2018-04-08T13:00:00Z",
+      "track": 2
+    }
+  },
+  {
+    "model": "standings.race",
+    "pk": 42,
+    "fields": {
+      "season": 1,
+      "point_system": null,
+      "round_number": 3,
+      "name": "Paul Ricard HTTT",
+      "short_name": "CPR",
+      "start_time": "2018-04-24T09:06:55Z",
+      "track": 25
+    }
+  },
+  {
+    "model": "standings.race",
+    "pk": 45,
+    "fields": {
+      "season": 1,
+      "point_system": null,
+      "round_number": 4,
+      "name": "Canadian Grand Prix",
+      "short_name": "CAN",
+      "start_time": "2018-05-05T12:00:00Z",
+      "track": 6
+    }
+  },
+  {
+    "model": "standings.race",
+    "pk": 49,
+    "fields": {
+      "season": 1,
+      "point_system": null,
+      "round_number": 5,
+      "name": "British Grand Prix",
+      "short_name": "GBR",
+      "start_time": "2018-05-20T12:00:00Z",
+      "track": 7
+    }
+  },
+  {
+    "model": "standings.race",
+    "pk": 51,
+    "fields": {
+      "season": 1,
+      "point_system": null,
+      "round_number": 6,
+      "name": "German Grand Prix",
+      "short_name": "GER",
+      "start_time": "2018-06-03T12:00:00Z",
+      "track": 8
+    }
+  },
+  {
+    "model": "standings.race",
+    "pk": 56,
+    "fields": {
+      "season": 1,
+      "point_system": null,
+      "round_number": 7,
+      "name": "Belgian Grand Prix",
+      "short_name": "BEL",
+      "start_time": "2018-06-17T12:00:00Z",
+      "track": 18
+    }
+  },
+  {
+    "model": "standings.race",
+    "pk": 57,
+    "fields": {
+      "season": 1,
+      "point_system": null,
+      "round_number": 8,
+      "name": "Italian Grand Prix",
+      "short_name": "ITA",
+      "start_time": "2018-07-15T12:00:00Z",
+      "track": 26
+    }
+  },
+  {
+    "model": "standings.race",
+    "pk": 61,
+    "fields": {
+      "season": 1,
+      "point_system": null,
+      "round_number": 9,
+      "name": "Singapore Grand Prix",
+      "short_name": "SIN",
+      "start_time": "2018-08-19T12:00:00Z",
+      "track": 27
+    }
+  },
+  {
+    "model": "standings.race",
+    "pk": 64,
+    "fields": {
+      "season": 1,
+      "point_system": null,
+      "round_number": 10,
+      "name": "Japanese Grand Prix",
+      "short_name": "JAP",
+      "start_time": "2018-09-09T12:00:00Z",
+      "track": 28
+    }
+  },
+  {
+    "model": "standings.race",
+    "pk": 67,
+    "fields": {
+      "season": 1,
+      "point_system": null,
+      "round_number": 11,
+      "name": "USA Grand Prix",
+      "short_name": "USA",
+      "start_time": "2018-09-23T12:00:00Z",
+      "track": 29
+    }
+  },
+  {
+    "model": "standings.race",
+    "pk": 70,
+    "fields": {
+      "season": 1,
+      "point_system": null,
+      "round_number": 12,
+      "name": "Brazillian Grand Prix",
+      "short_name": "BRA",
+      "start_time": "2018-10-07T12:00:00Z",
+      "track": 15
+    }
+  }
+]

@@ -1,0 +1,171 @@
+[
+  {
+    "model": "standings.pointsystem",
+    "pk": 1,
+    "fields": {
+      "name": "FSR PRO",
+      "race_points": "25,20,17,15,13,11,9,8,7,6,5,4,3,2,1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 0.0,
+      "fastest_lap": 0.0,
+      "most_laps_lead": 0.0
+    }
+  },
+  {
+    "model": "standings.pointsystem",
+    "pk": 2,
+    "fields": {
+      "name": "FSR ACE",
+      "race_points": "25,20,17,15,13,11,9,8,7,6,5,4,3,2,1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 0.0,
+      "fastest_lap": 0.0,
+      "most_laps_lead": 0.0
+    }
+  },
+  {
+    "model": "standings.pointsystem",
+    "pk": 3,
+    "fields": {
+      "name": "FSR WC",
+      "race_points": "25,18,15,12,10,8,6,4,2,1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 0.0,
+      "fastest_lap": 0.0,
+      "most_laps_lead": 0.0
+    }
+  },
+  {
+    "model": "standings.pointsystem",
+    "pk": 4,
+    "fields": {
+      "name": "2018 WinterS Feature",
+      "race_points": "25,20,17,15,13,11,9,8,7,6,5,4,3,2,1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 0.0,
+      "fastest_lap": 0.0,
+      "most_laps_lead": 0.0
+    }
+  },
+  {
+    "model": "standings.pointsystem",
+    "pk": 5,
+    "fields": {
+      "name": "2018 WinterS Sprint",
+      "race_points": "15,13,11,9,7,5,4,3,2,1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 0.0,
+      "fastest_lap": 0.0,
+      "most_laps_lead": 0.0
+    }
+  },
+  {
+    "model": "standings.pointsystem",
+    "pk": 6,
+    "fields": {
+      "name": "2017 WinterS Feature",
+      "race_points": "25,20,17,15,13,11,9,8,7,6,5,4,3,2,1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 0.0,
+      "fastest_lap": 2.0,
+      "most_laps_lead": 0.0
+    }
+  },
+  {
+    "model": "standings.pointsystem",
+    "pk": 7,
+    "fields": {
+      "name": "2017 WinterS Sprint",
+      "race_points": "15,13,11,9,7,5,4,3,2,1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 0.0,
+      "fastest_lap": 2.0,
+      "most_laps_lead": 0.0
+    }
+  },
+  {
+    "model": "standings.pointsystem",
+    "pk": 8,
+    "fields": {
+      "name": "F1 1992",
+      "race_points": "10,6,4,3,2,1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 0.0,
+      "fastest_lap": 0.0,
+      "most_laps_lead": 0.0
+    }
+  },
+  {
+    "model": "standings.pointsystem",
+    "pk": 9,
+    "fields": {
+      "name": "2016 WinterS IndyCar",
+      "race_points": "30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 1.0,
+      "fastest_lap": 0.0,
+      "most_laps_lead": 2.0
+    }
+  },
+  {
+    "model": "standings.pointsystem",
+    "pk": 10,
+    "fields": {
+      "name": "FSR WC 2001",
+      "race_points": "14,10, 8, 7, 6, 5, 4, 3, 2, 1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 0.0,
+      "fastest_lap": 0.0,
+      "most_laps_lead": 0.0
+    }
+  },
+  {
+    "model": "standings.pointsystem",
+    "pk": 11,
+    "fields": {
+      "name": "FSR WC 2003",
+      "race_points": "20, 17, 15, 13, 12, 11, 10, 9, 8, 7, 6, 5, 3, 1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 0.0,
+      "fastest_lap": 0.0,
+      "most_laps_lead": 0.0
+    }
+  },
+  {
+    "model": "standings.pointsystem",
+    "pk": 12,
+    "fields": {
+      "name": "FSR WC 2004",
+      "race_points": "13, 10, 8, 7, 6, 5, 4, 3, 2, 1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 0.0,
+      "fastest_lap": 0.0,
+      "most_laps_lead": 0.0
+    }
+  },
+  {
+    "model": "standings.pointsystem",
+    "pk": 13,
+    "fields": {
+      "name": "FSR WC 2005",
+      "race_points": "10, 8, 6, 5, 4, 3, 2, 1",
+      "qualifying_points": "",
+      "pole_position": 0.0,
+      "lead_lap": 0.0,
+      "fastest_lap": 0.0,
+      "most_laps_lead": 0.0
+    }
+  }
+]

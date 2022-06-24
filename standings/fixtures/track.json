@@ -1,0 +1,122 @@
+[
+    {
+        "model": "standings.track",
+        "pk": 1,
+        "fields": {
+            "name": "Melbourne Grand Prix Circuit",
+            "length": 5277.8,
+            "version": "GP Circuit",
+            "country": "AU"
+        }
+    },
+    {
+        "model": "standings.track",
+        "pk": 2,
+        "fields": {
+            "name": "Bahrain International Circuit",
+            "length": 5412.0,
+            "version": "GP Circuit",
+            "country": "BH"
+        }
+    },
+    {
+        "model": "standings.track",
+        "pk": 6,
+        "fields": {
+            "name": "Circuit Gilles Villeneuve",
+            "length": 4361.0,
+            "version": "2002",
+            "country": "CA"
+        }
+    },
+    {
+        "model": "standings.track",
+        "pk": 7,
+        "fields": {
+            "name": "Silverstone Circuit",
+            "length": 5891.0,
+            "version": "Arena GP 2011",
+            "country": "GB"
+        }
+    },
+    {
+        "model": "standings.track",
+        "pk": 8,
+        "fields": {
+            "name": "Hockenheimring",
+            "length": 4574.0,
+            "version": "GP 2002",
+            "country": "DE"
+        }
+    },
+    {
+        "model": "standings.track",
+        "pk": 15,
+        "fields": {
+            "name": "Aut\u00f3dromo Jos\u00e9 Carlos Pace",
+            "length": 4309.0,
+            "version": "2000",
+            "country": "BR"
+        }
+    },
+    {
+        "model": "standings.track",
+        "pk": 18,
+        "fields": {
+            "name": "Circuit de Spa-Francorchamps",
+            "length": 7004.0,
+            "version": "2007",
+            "country": "BE"
+        }
+    },
+    {
+        "model": "standings.track",
+        "pk": 25,
+        "fields": {
+            "name": "Circuit Paul Ricard",
+            "length": 5673.1,
+            "version": "FSR2018_FRAv2",
+            "country": "FR"
+        }
+    },
+    {
+        "model": "standings.track",
+        "pk": 26,
+        "fields": {
+            "name": "Autodromo Nazionale Monza",
+            "length": 5793.0,
+            "version": "1",
+            "country": "IT"
+        }
+    },
+    {
+        "model": "standings.track",
+        "pk": 27,
+        "fields": {
+            "name": "Singapore",
+            "length": 5065.0,
+            "version": "1",
+            "country": "SG"
+        }
+    },
+    {
+        "model": "standings.track",
+        "pk": 28,
+        "fields": {
+            "name": "Suzuka",
+            "length": 5807.0,
+            "version": "1",
+            "country": "JP"
+        }
+    },
+    {
+        "model": "standings.track",
+        "pk": 29,
+        "fields": {
+            "name": "Circuit of the Americas",
+            "length": 5513.0,
+            "version": "1",
+            "country": "US"
+        }
+    }
+]
