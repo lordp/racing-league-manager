@@ -280,7 +280,7 @@ def league_view(request, league_id):
 def division_view(request, division_id):
     division = get_object_or_404(Division, pk=division_id)
     seasons = division.season_set.annotate(race_count=Count('race', distinct=True)).\
-        annotate(incomplete=Count('race', filter=Q(race__result__isnull=True))).\
+        annotate(incomplete=Count('race', filter=Q(race__result__isnull=True, race__abandoned=False))).\
         values('id', 'name', 'slug', 'race_count', 'incomplete')
 
     today = datetime.utcnow()
@@ -297,7 +297,7 @@ def division_view(request, division_id):
 
     context = {
         'division': division,
-        'seasons': seasons,
+        'seasons': seasons.order_by('-start_date'),
         'current_seasons': current_seasons
     }
 
