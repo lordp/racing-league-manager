@@ -224,11 +224,15 @@ class Season(models.Model):
                     'teams': [result.team],
                     'points': result.points,
                     'results': [result],
+                    'positions': {x + 1: 0 for x in range(self.countback_range)},
                     'position': 0,
                     'best_finish': best_finish,
                     'best_result': best_result,
                     'season_penalty': None
                 }
+
+                if result.position <= self.countback_range:
+                    drivers[result.driver_id]['positions'][result.position] += 1
 
                 try:
                     sp = season_penalty.get(driver=result.driver)
@@ -242,6 +246,9 @@ class Season(models.Model):
                 drivers[result.driver_id]['points'] += result.points
                 if result.team not in drivers[result.driver_id]['teams']:
                     drivers[result.driver_id]['teams'].append(result.team)
+
+                if result.position <= self.countback_range:
+                    drivers[result.driver_id]['positions'][result.position] += 1
 
             if not self.teams_disabled:
                 result.team_points_allocated = False
@@ -293,7 +300,15 @@ class Season(models.Model):
                 teams[result.team_id]['driver_count'] = len(teams[result.team_id]['drivers'])
 
         sorted_drivers = []
+
+        # sort on best finish
         driver_sort = sorted(drivers, key=lambda item: drivers[item]['best_finish'])
+
+        # countback sort
+        for position in reversed(range(self.countback_range)):
+            driver_sort = sorted(driver_sort, key=lambda item: drivers[item]['positions'][position + 1], reverse=True)
+
+        # finally a basic points sort
         driver_sort = sorted(driver_sort, key=lambda item: drivers[item]['points'], reverse=True)
         for pos, driver in enumerate(driver_sort):
             sorted_drivers.append(drivers[driver])
@@ -316,6 +331,10 @@ class Season(models.Model):
             teams[team]['drivers'] = teams[team]['sorted_drivers']
             del teams[team]['sorted_drivers']
 
+        for idx, driver in enumerate(sorted_drivers):
+            driver["position"] = idx + 1
+
+        return sorted_drivers, apply_positions(sorted_teams, use_position=use_position)
         return apply_positions(sorted_drivers, use_position=use_position), \
             apply_positions(sorted_teams, use_position=use_position)
 
