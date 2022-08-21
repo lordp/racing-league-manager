@@ -6,7 +6,7 @@ from .models import Season, Driver, Team, League, Division, Race, Track, Result,
 from standings.utils import sort_counter, calculate_average, truncate_point_system, grouper, map_compound
 from collections import Counter
 from django_countries.fields import Country
-from datetime import datetime
+from datetime import date, datetime
 import re
 
 
@@ -284,21 +284,33 @@ def division_view(request, division_id):
         values('id', 'name', 'slug', 'race_count', 'incomplete')
 
     today = datetime.utcnow()
-    try:
-        current_seasons = division.season_set.filter(start_date__lte=today, end_date__gte=today).\
-            annotate(race_count=Count('race', distinct=True)).\
-            annotate(incomplete=Count('race', filter=Q(race__result__isnull=True, race__abandoned=False))).\
-            values('id', 'name', 'slug', 'race_count', 'incomplete')
-        current_seasons_ids = [season['id'] for season in current_seasons]
+    seasons = division.season_set.\
+        annotate(race_count=Count('race', distinct=True)).\
+        annotate(incomplete=Count('race', filter=Q(race__result__isnull=True, race__abandoned=False))).\
+        values('id', 'name', 'slug', 'race_count', 'incomplete', 'start_date', 'end_date')
 
-        seasons = seasons.exclude(id__in=current_seasons_ids)
-    except TypeError:
-        current_seasons = None
+    season_list = []
+    for season in seasons.order_by('-start_date'):
+        start_date = datetime(
+            year=season['start_date'].year,
+            month=season['start_date'].month,
+            day=season['start_date'].day
+        )
+
+        end_date = datetime(
+            year=season['end_date'].year,
+            month=season['end_date'].month,
+            day=season['end_date'].day
+        )
+
+        if start_date < today < end_date:
+            season.current = True
+
+        season_list.append(season)
 
     context = {
         'division': division,
-        'seasons': seasons.order_by('-start_date'),
-        'current_seasons': current_seasons
+        'seasons': season_list
     }
 
     return render(request, 'standings/division.html', context)
