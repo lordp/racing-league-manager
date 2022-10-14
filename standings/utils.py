@@ -1,5 +1,5 @@
 from inflect import engine
-from collections import Iterable
+from collections.abc import Iterable
 import re
 from itertools import zip_longest
 from django.utils.text import slugify
