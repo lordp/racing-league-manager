@@ -21,13 +21,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-with open('/home/isrclubadmin/.config/gpcos_secret_key.txt') as f:
+with open('/home/fsr/.config/fsr_secret_key.txt') as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['results.formula-simracing.net', '154.49.213.140']
+ALLOWED_HOSTS = ['results.formula-simracing.net']
 INTERNAL_IPS = ['127.0.0.1']
 
 ADMINS = [('Darryl', 'darryl@addict.net.nz')]
@@ -96,8 +96,8 @@ WSGI_APPLICATION = 'racing_league_manager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'gpcos',
-        'USER': 'isrclubadmin',
+        'NAME': 'fsr',
+        'USER': 'fsr',
     }
 }
 
@@ -171,7 +171,7 @@ CACHES = {
     }
 }
 
-with open('/home/isrclubadmin/.config/gpcos_sentry_io_dsn.txt') as f:
+with open('/home/fsr/.config/fsr_sentry_io_dsn.txt') as f:
     SENTRY_DSN = f.read().strip()
 
 import sentry_sdk
