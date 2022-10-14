@@ -14,8 +14,8 @@ import re
 
 class PointSystem(models.Model):
     name = models.CharField(max_length=50)
-    race_points = models.CharField(max_length=100)
-    qualifying_points = models.CharField(max_length=100, blank=True)
+    race_points = models.CharField(max_length=150)
+    qualifying_points = models.CharField(max_length=150, blank=True)
     pole_position = models.FloatField(default=0)
     lead_lap = models.FloatField(default=0)
     fastest_lap = models.FloatField(default=0)
