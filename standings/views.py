@@ -304,7 +304,7 @@ def division_view(request, division_id):
         )
 
         if start_date < today < end_date:
-            season.current = True
+            season['current'] = True
 
         season_list.append(season)
 
