@@ -231,7 +231,7 @@ class Season(models.Model):
                     'season_penalty': None
                 }
 
-                if result.position <= self.countback_range:
+                if result.position <= self.countback_range and result.position in drivers[result.driver_id]['positions']:
                     drivers[result.driver_id]['positions'][result.position] += 1
 
                 try:
