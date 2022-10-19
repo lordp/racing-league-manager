@@ -27,7 +27,7 @@ with open('/home/fsr/.config/fsr_secret_key.txt') as f:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['results.formula-simracing.net']
+ALLOWED_HOSTS = ['results.formula-simracing.net', '217.160.159.208']
 INTERNAL_IPS = ['127.0.0.1']
 
 ADMINS = [('Darryl', 'darryl@addict.net.nz')]
@@ -139,7 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/gpcos-static/'
+STATIC_ROOT = '/home/fsr/rlm-static'
 
 LOGGING = {
     'version': 1,
