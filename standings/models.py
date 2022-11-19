@@ -838,7 +838,7 @@ class Lap(models.Model):
     sector_3 = models.FloatField(default=0)
     lap_time = models.FloatField(default=0)
     race_time = models.FloatField(default=0)
-    compound = models.CharField(max_length=20, verbose_name="Tyre Compound", blank=True)
+    compound = models.CharField(max_length=50, verbose_name="Tyre Compound", blank=True)
     wear_fl = models.FloatField(default=0, verbose_name="Wear (Front Left)")
     wear_fr = models.FloatField(default=0, verbose_name="Wear (Front Right)")
     wear_rl = models.FloatField(default=0, verbose_name="Wear (Rear Left)")
@@ -1064,13 +1064,13 @@ class SeasonCarNumber(models.Model):
 
 class SeasonTyreMap(models.Model):
     season = models.ForeignKey(Season, on_delete=models.CASCADE)
-    c1 = models.CharField(max_length=15, blank=True)
-    c2 = models.CharField(max_length=15, blank=True)
-    c3 = models.CharField(max_length=15, blank=True)
-    c4 = models.CharField(max_length=15, blank=True)
-    c5 = models.CharField(max_length=15, blank=True)
-    c6 = models.CharField(max_length=15, blank=True)
-    c7 = models.CharField(max_length=15, blank=True)
+    c1 = models.CharField(max_length=50, blank=True)
+    c2 = models.CharField(max_length=50, blank=True)
+    c3 = models.CharField(max_length=50, blank=True)
+    c4 = models.CharField(max_length=50, blank=True)
+    c5 = models.CharField(max_length=50, blank=True)
+    c6 = models.CharField(max_length=50, blank=True)
+    c7 = models.CharField(max_length=50, blank=True)
 
     class Meta:
         verbose_name_plural = 'Season Compound Map'
