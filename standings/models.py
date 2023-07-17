@@ -247,7 +247,7 @@ class Season(models.Model):
                 if result.team not in drivers[result.driver_id]['teams']:
                     drivers[result.driver_id]['teams'].append(result.team)
 
-                if result.position <= self.countback_range:
+                if result.position <= self.countback_range and result.position > 0:
                     drivers[result.driver_id]['positions'][result.position] += 1
 
             if not self.teams_disabled:
